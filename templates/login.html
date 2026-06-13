@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to Medical Chatbot — AI-powered medical consultation assistant">
+    <title>Login — Medical Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <div class="auth-logo">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Sign in to continue your medical consultations</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert-custom alert-{{ category }}">
+                            <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="" id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                    <div class="field-message" id="emailMsg"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn-primary-custom" id="loginBtn">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Don't have an account? <a href="{{ url_for('signup') }}">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            const icon = this.querySelector('i');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pwd.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+
+        // Client-side email validation
+        document.getElementById('email').addEventListener('blur', function() {
+            const msg = document.getElementById('emailMsg');
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value && !re.test(this.value)) {
+                this.classList.add('error');
+                this.classList.remove('success');
+                msg.textContent = 'Please enter a valid email address';
+                msg.className = 'field-message error';
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                msg.textContent = '';
+                msg.className = 'field-message';
+            } else {
+                this.classList.remove('error', 'success');
+                msg.textContent = '';
+                msg.className = 'field-message';
+            }
+        });
+
+        // Form submission validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!re.test(email.value)) {
+                e.preventDefault();
+                email.classList.add('error');
+                document.getElementById('emailMsg').textContent = 'Please enter a valid email address';
+                document.getElementById('emailMsg').className = 'field-message error';
+                email.focus();
+                return;
+            }
+
+            if (password.value.length < 1) {
+                e.preventDefault();
+                password.focus();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

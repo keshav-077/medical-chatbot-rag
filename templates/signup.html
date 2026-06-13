@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your Medical Chatbot account — AI-powered medical consultation assistant">
+    <title>Sign Up — Medical Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <div class="auth-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Create Account</h1>
+                <p>Join Medical Chatbot for AI-powered health insights</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert-custom alert-{{ category }}">
+                            <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="" id="signupForm" novalidate>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
+                    <div class="field-message" id="nameMsg"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+                    <div class="field-message" id="emailMsg"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="At least 6 characters" required autocomplete="new-password">
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="strengthMeter">
+                        <div class="bar" id="bar1"></div>
+                        <div class="bar" id="bar2"></div>
+                        <div class="bar" id="bar3"></div>
+                        <div class="bar" id="bar4"></div>
+                    </div>
+                    <div class="field-message" id="passwordMsg"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" required autocomplete="new-password">
+                        <button type="button" class="password-toggle" id="toggleConfirm" aria-label="Toggle confirm password visibility">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="field-message" id="confirmMsg"></div>
+                </div>
+
+                <button type="submit" class="btn-primary-custom" id="signupBtn">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggles
+        function setupToggle(toggleId, inputId) {
+            document.getElementById(toggleId).addEventListener('click', function() {
+                const inp = document.getElementById(inputId);
+                const icon = this.querySelector('i');
+                if (inp.type === 'password') {
+                    inp.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    inp.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        }
+        setupToggle('togglePassword', 'password');
+        setupToggle('toggleConfirm', 'confirm_password');
+
+        // Email validation
+        document.getElementById('email').addEventListener('blur', function() {
+            const msg = document.getElementById('emailMsg');
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value && !re.test(this.value)) {
+                this.classList.add('error');
+                this.classList.remove('success');
+                msg.textContent = 'Please enter a valid email address';
+                msg.className = 'field-message error';
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                msg.textContent = '';
+                msg.className = 'field-message';
+            } else {
+                this.classList.remove('error', 'success');
+                msg.textContent = '';
+            }
+        });
+
+        // Name validation
+        document.getElementById('name').addEventListener('blur', function() {
+            const msg = document.getElementById('nameMsg');
+            if (this.value && this.value.trim().length < 2) {
+                this.classList.add('error');
+                msg.textContent = 'Name must be at least 2 characters';
+                msg.className = 'field-message error';
+            } else if (this.value) {
+                this.classList.remove('error');
+                this.classList.add('success');
+                msg.textContent = '';
+            } else {
+                this.classList.remove('error', 'success');
+                msg.textContent = '';
+            }
+        });
+
+        // Password strength meter
+        document.getElementById('password').addEventListener('input', function() {
+            const val = this.value;
+            const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+            const msg = document.getElementById('passwordMsg');
+
+            // Reset
+            bars.forEach(b => b.className = 'bar');
+            msg.textContent = '';
+            msg.className = 'field-message';
+
+            if (!val) return;
+
+            let strength = 0;
+            if (val.length >= 6) strength++;
+            if (val.length >= 10) strength++;
+            if (/[A-Z]/.test(val) && /[a-z]/.test(val)) strength++;
+            if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) strength++;
+
+            const levels = ['weak', 'weak', 'medium', 'strong', 'strong'];
+            const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+            const colors = ['', 'error', '', 'success', 'success'];
+
+            for (let i = 0; i < strength; i++) {
+                bars[i].classList.add(levels[strength]);
+            }
+
+            if (strength > 0) {
+                msg.textContent = labels[strength];
+                msg.className = 'field-message ' + colors[strength];
+            }
+
+            // Also check confirm match if filled
+            checkConfirmMatch();
+        });
+
+        // Confirm password match
+        document.getElementById('confirm_password').addEventListener('input', checkConfirmMatch);
+
+        function checkConfirmMatch() {
+            const pwd = document.getElementById('password').value;
+            const conf = document.getElementById('confirm_password');
+            const msg = document.getElementById('confirmMsg');
+
+            if (!conf.value) {
+                conf.classList.remove('error', 'success');
+                msg.textContent = '';
+                return;
+            }
+
+            if (conf.value === pwd) {
+                conf.classList.remove('error');
+                conf.classList.add('success');
+                msg.textContent = 'Passwords match';
+                msg.className = 'field-message success';
+            } else {
+                conf.classList.remove('success');
+                conf.classList.add('error');
+                msg.textContent = 'Passwords do not match';
+                msg.className = 'field-message error';
+            }
+        }
+
+        // Form submit validation
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirm = document.getElementById('confirm_password');
+
+            let valid = true;
+
+            if (name.value.trim().length < 2) {
+                e.preventDefault();
+                name.classList.add('error');
+                document.getElementById('nameMsg').textContent = 'Name is required';
+                document.getElementById('nameMsg').className = 'field-message error';
+                valid = false;
+            }
+
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!re.test(email.value)) {
+                e.preventDefault();
+                email.classList.add('error');
+                document.getElementById('emailMsg').textContent = 'Valid email is required';
+                document.getElementById('emailMsg').className = 'field-message error';
+                valid = false;
+            }
+
+            if (password.value.length < 6) {
+                e.preventDefault();
+                document.getElementById('passwordMsg').textContent = 'Password must be at least 6 characters';
+                document.getElementById('passwordMsg').className = 'field-message error';
+                valid = false;
+            }
+
+            if (password.value !== confirm.value) {
+                e.preventDefault();
+                confirm.classList.add('error');
+                document.getElementById('confirmMsg').textContent = 'Passwords do not match';
+                document.getElementById('confirmMsg').className = 'field-message error';
+                valid = false;
+            }
+
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

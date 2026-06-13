@@ -1,81 +1,340 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Chatbot</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}"/>
-	</head>
-	
-	
-	<body>
-		<div class="container-fluid h-100">
-			<div class="row justify-content-center h-100">		
-				<div class="col-md-8 col-xl-6 chat">
-					<div class="card">
-						<div class="card-header msg_head">
-							<div class="d-flex bd-highlight">
-								<div class="img_cont">
-									<img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="rounded-circle user_img">
-									<!-- <img src="https://www.prdistribution.com/spirit/uploads/pressreleases/2019/newsreleases/d83341deb75c4c4f6b113f27b1e42cd8-chatbot-florence-already-helps-thousands-of-patients-to-remember-their-medication.png" class="rounded-circle user_img"> -->
-									<span class="online_icon"></span>
-								</div>
-								<div class="user_info">
-									<span>Medical Chatbot</span>
-									<p>Ask me anything!</p>
-								</div>
-							</div>
-						</div>
-						<div id="messageFormeight" class="card-body msg_card_body">
-							
-							
-						</div>
-						<div class="card-footer">
-							<form id="messageArea" class="input-group">
-                                <input type="text" id="text" name="msg" placeholder="Type your message..." autocomplete="off" class="form-control type_msg" required/>
-								<div class="input-group-append">
-									<button type="submit" id="send" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<script>
-			$(document).ready(function() {
-				$("#messageArea").on("submit", function(event) {
-					const date = new Date();
-					const hour = date.getHours();
-					const minute = date.getMinutes();
-					const str_time = hour+":"+minute;
-					var rawText = $("#text").val();
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Medical Chatbot — AI-powered medical consultation assistant with RAG">
+    <title>Medical Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Mobile sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-					var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + rawText + '<span class="msg_time_send">'+ str_time + '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg"></div></div>';
-					
-					$("#text").val("");
-					$("#messageFormeight").append(userHtml);
+    <div class="app-container">
+        <!-- ===== Sidebar ===== -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile" onclick="window.location.href='{{ url_for('profile') }}'">
+                    <div class="user-avatar">{{ current_user.name[0]|upper }}</div>
+                    <div>
+                        <div class="user-name">{{ current_user.name }}</div>
+                        <div class="user-email">{{ current_user.email }}</div>
+                    </div>
+                </div>
 
-					$.ajax({
-						data: {
-							msg: rawText,	
-						},
-						type: "POST",
-						url: "/get",
-					}).done(function(data) {
-						var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn-icons-png.flaticon.com/512/387/387569.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + data + '<span class="msg_time">' + str_time + '</span></div></div>';
-						$("#messageFormeight").append($.parseHTML(botHtml));
-					});
-					event.preventDefault();
-				});
-			});
-		</script>
-        
-    </body>
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i> New Chat
+                </button>
+            </div>
+
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversations loaded dynamically -->
+            </div>
+
+            <div class="sidebar-footer">
+                <form action="{{ url_for('logout') }}" method="get">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== Main Content ===== -->
+        <div class="main-content">
+            <div class="header">
+                <button class="mobile-menu-btn" id="menuBtn" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title">
+                    <i class="fas fa-heartbeat"></i> Medical Chatbot
+                </div>
+                <div></div>
+            </div>
+
+            <div class="chat-area" id="chatArea">
+                <div class="message-container" id="messagesContainer">
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-stethoscope"></i>
+                        </div>
+                        <h3>Start a New Conversation</h3>
+                        <p>Ask me anything about medical topics. I'll use AI-powered retrieval to provide accurate, evidence-based answers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-container">
+                    <form id="messageArea" class="input-form">
+                        <textarea id="text" name="msg" class="input-textarea" placeholder="Type your medical question..." rows="1" required></textarea>
+                        <button type="submit" id="send" class="send-btn" aria-label="Send message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    <div class="input-hint">
+                        Press <kbd>Enter</kbd> to send · <kbd>Shift + Enter</kbd> for new line
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        let currentConversationId = null;
+        const userName = '{{ current_user.name[0]|upper }}';
+
+        $(document).ready(function() {
+            loadConversations();
+
+            // Mobile sidebar toggle
+            $('#menuBtn').click(function() {
+                $('#sidebar').toggleClass('show');
+                $('#sidebarOverlay').toggleClass('show');
+            });
+
+            // Close sidebar on overlay click
+            $('#sidebarOverlay').click(function() {
+                $('#sidebar').removeClass('show');
+                $(this).removeClass('show');
+            });
+
+            // New chat
+            $('#newChatBtn').click(function() {
+                startNewChat();
+                // Close mobile sidebar
+                if ($(window).width() <= 768) {
+                    $('#sidebar').removeClass('show');
+                    $('#sidebarOverlay').removeClass('show');
+                }
+            });
+
+            // Form submit
+            $('#messageArea').on('submit', function(event) {
+                event.preventDefault();
+                const msg = $('#text').val().trim();
+                if (!msg) return;
+
+                const now = new Date();
+                const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+                // Add user message
+                appendMessage(msg, true, timeStr);
+                $('#text').val('');
+                $('#text').css('height', 'auto');
+
+                // Show shimmer loading
+                const loadingId = appendLoading();
+
+                $.ajax({
+                    data: {
+                        msg: msg,
+                        conversation_id: currentConversationId || ''
+                    },
+                    type: "POST",
+                    url: "/get",
+                }).done(function(data) {
+                    $('#' + loadingId).remove();
+                    if (data.error) {
+                        appendMessage('Error: ' + escapeHtml(data.error), false, timeStr);
+                    } else {
+                        appendMessage(data.answer, false, timeStr);
+                        currentConversationId = data.conversation_id;
+                        loadConversations();
+                    }
+                }).fail(function() {
+                    $('#' + loadingId).remove();
+                    appendMessage('Sorry, an error occurred. Please try again.', false, timeStr);
+                });
+            });
+
+            // Enter to send, Shift+Enter for newline
+            $('#text').on('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    $('#messageArea').submit();
+                }
+            });
+
+            // Auto-resize textarea
+            $('#text').on('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+            });
+        });
+
+        // ---- HTML Escaping (XSS prevention) ----
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(str));
+            return div.innerHTML;
+        }
+
+        // ---- Append message ----
+        function appendMessage(content, isUser, time) {
+            const container = $('#messagesContainer');
+            // Remove empty state
+            $('#emptyState').remove();
+
+            const safeContent = escapeHtml(content);
+            const avatar = isUser
+                ? userName
+                : '<i class="fas fa-user-md"></i>';
+
+            const messageHtml = `
+                <div class="message ${isUser ? 'user' : 'assistant'}">
+                    <div class="message-avatar">${avatar}</div>
+                    <div class="message-content">
+                        <div>${safeContent}</div>
+                        <div class="message-time">${escapeHtml(time)}</div>
+                    </div>
+                </div>
+            `;
+            container.append(messageHtml);
+            scrollToBottom();
+        }
+
+        // ---- Shimmer loading ----
+        function appendLoading() {
+            const container = $('#messagesContainer');
+            $('#emptyState').remove();
+
+            const loadingId = 'loading-' + Date.now();
+            const loadingHtml = `
+                <div class="message assistant" id="${loadingId}">
+                    <div class="message-avatar"><i class="fas fa-user-md"></i></div>
+                    <div class="message-content">
+                        <div class="shimmer-loading">
+                            <div class="shimmer-line"></div>
+                            <div class="shimmer-line"></div>
+                            <div class="shimmer-line"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.append(loadingHtml);
+            scrollToBottom();
+            return loadingId;
+        }
+
+        // ---- Scroll ----
+        function scrollToBottom() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'smooth' });
+        }
+
+        // ---- New chat ----
+        function startNewChat() {
+            currentConversationId = null;
+            $('#messagesContainer').html(`
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3>Start a New Conversation</h3>
+                    <p>Ask me anything about medical topics. I'll use AI-powered retrieval to provide accurate, evidence-based answers.</p>
+                </div>
+            `);
+            $('.conversation-item').removeClass('active');
+        }
+
+        // ---- Load conversations with date grouping ----
+        function loadConversations() {
+            $.ajax({
+                url: '/get-conversations',
+                type: 'GET',
+            }).done(function(data) {
+                const list = $('#conversationsList');
+                list.empty();
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const lastWeek = new Date(today);
+                lastWeek.setDate(lastWeek.getDate() - 7);
+
+                const groups = { 'Today': [], 'Yesterday': [], 'Previous 7 Days': [], 'Older': [] };
+
+                data.conversations.forEach(function(conv) {
+                    const updated = new Date(conv.updated_at);
+                    updated.setHours(0, 0, 0, 0);
+
+                    if (updated >= today) {
+                        groups['Today'].push(conv);
+                    } else if (updated >= yesterday) {
+                        groups['Yesterday'].push(conv);
+                    } else if (updated >= lastWeek) {
+                        groups['Previous 7 Days'].push(conv);
+                    } else {
+                        groups['Older'].push(conv);
+                    }
+                });
+
+                Object.keys(groups).forEach(function(groupName) {
+                    const convs = groups[groupName];
+                    if (convs.length === 0) return;
+
+                    list.append(`<div class="conv-date-group">${groupName}</div>`);
+
+                    convs.forEach(function(conv) {
+                        const safeTitle = escapeHtml(conv.title);
+                        const item = $(`
+                            <div class="conversation-item ${conv.id === currentConversationId ? 'active' : ''}" data-id="${conv.id}">
+                                <div class="conversation-title">${safeTitle}</div>
+                                <button class="delete-btn" onclick="event.stopPropagation(); deleteConversation(${conv.id});" aria-label="Delete conversation">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        `);
+                        item.click(function() {
+                            loadConversation(conv.id);
+                        });
+                        list.append(item);
+                    });
+                });
+            });
+        }
+
+        // ---- Load conversation ----
+        function loadConversation(conversationId) {
+            currentConversationId = conversationId;
+            $.ajax({
+                url: '/load-chat/' + conversationId,
+                type: 'GET',
+            }).done(function(data) {
+                $('#messagesContainer').empty();
+                data.messages.forEach(function(msg) {
+                    appendMessage(msg.content, msg.is_user, msg.timestamp);
+                });
+                $('.conversation-item').removeClass('active');
+                $('.conversation-item[data-id="' + conversationId + '"]').addClass('active');
+
+                // Close mobile sidebar
+                if ($(window).width() <= 768) {
+                    $('#sidebar').removeClass('show');
+                    $('#sidebarOverlay').removeClass('show');
+                }
+            });
+        }
+
+        // ---- Delete conversation ----
+        function deleteConversation(conversationId) {
+            if (!confirm('Delete this conversation? This cannot be undone.')) return;
+
+            $.ajax({
+                url: '/delete-chat/' + conversationId,
+                type: 'POST',
+            }).done(function() {
+                if (currentConversationId === conversationId) {
+                    startNewChat();
+                }
+                loadConversations();
+            });
+        }
+    </script>
+</body>
 </html>

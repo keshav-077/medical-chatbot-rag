@@ -1,124 +1,166 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Login to Medical Chatbot — AI-powered medical consultation assistant">
-    <title>Login — Medical Chatbot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="auth-page">
-        <div class="auth-card">
-            <div class="auth-card-header">
-                <div class="auth-logo">
-                    <i class="fas fa-heartbeat"></i>
+{% extends "base.html" %}
+
+{% block title %}Login — Medical Chatbot{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1280px] mx-auto px-5 py-5 flex flex-col min-h-screen justify-between relative z-10">
+    <!-- Header -->
+    <header class="flex items-center justify-between h-[65px] px-4 mb-3">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-[#E3256B] flex items-center justify-center text-white shadow-lg shadow-[#E3256B]/20">
+                <i class="ti ti-heart-handshake text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="font-heading font-bold text-lg tracking-tight text-[#4A5D23] leading-none">bloom</h1>
+                <span class="text-xs text-[#4A5D23]/60 font-semibold tracking-wide uppercase">Organic Care</span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="clay-card rounded-full p-1.5 flex gap-1 z-30">
+            <a href="{{ url_for('index') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold text-[#4A5D23]/70 hover:text-[#4A5D23] transition-all duration-300">
+                <i class="ti ti-brand-telegram text-base mr-1.5 align-middle"></i>Empathic Chatbot
+            </a>
+            <a href="{{ url_for('login') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold clay-pill-active">
+                <i class="ti ti-lock-open text-base mr-1.5 align-middle"></i>Warm Sign In
+            </a>
+            <a href="{{ url_for('signup') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold text-[#4A5D23]/70 hover:text-[#4A5D23] transition-all duration-300">
+                <i class="ti ti-user-plus text-base mr-1.5 align-middle"></i>Friendly Sign Up
+            </a>
+        </nav>
+
+        <!-- Dummy space to match chatbot page balance -->
+        <div class="w-[180px] hidden md:block"></div>
+    </header>
+
+    <!-- Main Content Portal (Login Card) -->
+    <div class="flex-1 flex items-center justify-center py-10">
+        <div class="w-full max-w-md h-[580px] relative rounded-[32px] overflow-hidden clay-card flex flex-col justify-end animate-slide-up">
+            <!-- Warm Welcome Top Panel -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#FFE4E1] to-[#FFF5EE] p-8 flex flex-col justify-start">
+                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#E3256B] mb-4 shadow-sm">
+                    <i class="ti ti-keytext text-2xl"></i>
                 </div>
-                <h1>Welcome Back</h1>
-                <p>Sign in to continue your medical consultations</p>
+                <h2 class="text-3xl font-heading font-bold text-[#4A5D23] leading-none">Welcome Back</h2>
+                <p class="text-sm text-[#4A5D23]/70 mt-2">Sign in to check your organic medical records.</p>
             </div>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert-custom alert-{{ category }}">
-                            <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            <!-- Form Container -->
+            <div class="relative bg-white/95 rounded-t-[36px] p-6 shadow-2xl border-t border-white flex flex-col gap-4 z-10 max-h-[75%] overflow-y-auto custom-scroll">
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flex items-center gap-3 {% if category == 'danger' %}bg-rose-50 border border-rose-200/50 text-rose-800{% else %}bg-emerald-50 border border-emerald-200/50 text-emerald-800{% endif %} p-3 rounded-2xl text-xs font-medium">
+                                <i class="{% if category == 'danger' %}ti ti-alert-circle text-rose-600{% else %}ti ti-circle-check-filled text-emerald-600{% endif %} text-lg shrink-0"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
 
-            <form method="POST" action="" id="loginForm" novalidate>
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
-                    <div class="field-message" id="emailMsg"></div>
+                <div class="flex items-center gap-3 bg-emerald-50 border border-emerald-200/50 p-3 rounded-2xl text-xs text-emerald-800 font-medium hidden" id="clientSuccessMsg">
+                    <i class="ti ti-circle-check-filled text-lg text-emerald-600 shrink-0"></i>
+                    <span id="clientSuccessText"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
-                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                <form method="POST" action="" id="loginForm" novalidate class="flex flex-col gap-3.5">
+                    <div>
+                        <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1.5 ml-1" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" value="kesavardhan775@gmail.com" required autocomplete="email" class="w-full clay-input rounded-[18px] py-2.5 px-4 text-sm font-medium text-[#4A5D23]">
+                        <div class="text-xs text-rose-500 font-bold mt-1 ml-1 hidden" id="emailMsg"></div>
                     </div>
-                </div>
 
-                <div class="form-check">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Remember me</label>
-                </div>
+                    <div>
+                        <div class="flex justify-between mb-1.5 ml-1">
+                            <label class="text-xs font-heading font-bold text-[#4A5D23]" for="password">Password</label>
+                            <a href="#" class="text-xs text-[#E3256B] font-bold hover:underline">Forgot?</a>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" value="Realmegt3t@" required autocomplete="current-password" class="w-full clay-input rounded-[18px] py-2.5 px-[44px] px-4 text-sm font-medium text-[#4A5D23]">
+                            <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#4A5D23]/60 hover:text-[#4A5D23] text-lg">
+                                <i class="ti ti-eye"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                <button type="submit" class="btn-primary-custom" id="loginBtn">
-                    Sign In
-                </button>
-            </form>
+                    <div class="flex items-center gap-2 ml-1">
+                        <input type="checkbox" id="remember" name="remember" checked class="w-4 h-4 rounded accent-[#E3256B]">
+                        <label for="remember" class="text-xs font-semibold text-[#4A5D23]/70 select-none cursor-pointer">Remember my secure session</label>
+                    </div>
 
-            <div class="auth-footer">
-                Don't have an account? <a href="{{ url_for('signup') }}">Create one</a>
+                    <button type="submit" class="w-full bg-[#E3256B] hover:bg-[#E3256B]/90 text-white font-heading font-bold py-3.5 rounded-[18px] transition-all razz-shadow cursor-pointer text-sm">
+                        Sign In Securely
+                    </button>
+                </form>
+
+                <p class="text-center text-xs text-[#4A5D23]/60 font-semibold mt-1">
+                    Don't have an organic account? 
+                    <a href="{{ url_for('signup') }}" class="text-[#E3256B] font-bold hover:underline">Friendly Sign Up</a>
+                </p>
             </div>
         </div>
     </div>
 
-    <script>
-        // Password visibility toggle
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const pwd = document.getElementById('password');
-            const icon = this.querySelector('i');
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                pwd.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        });
+    <!-- Footer copyright note -->
+    <p class="text-center text-xs text-[#4A5D23]/50 font-bold mb-2">
+        &copy; 2026 bloom. Empowering healthcare with empathic companions.
+    </p>
+</div>
+{% endblock %}
 
-        // Client-side email validation
-        document.getElementById('email').addEventListener('blur', function() {
-            const msg = document.getElementById('emailMsg');
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (this.value && !re.test(this.value)) {
-                this.classList.add('error');
-                this.classList.remove('success');
-                msg.textContent = 'Please enter a valid email address';
-                msg.className = 'field-message error';
-            } else if (this.value) {
-                this.classList.remove('error');
-                this.classList.add('success');
-                msg.textContent = '';
-                msg.className = 'field-message';
-            } else {
-                this.classList.remove('error', 'success');
-                msg.textContent = '';
-                msg.className = 'field-message';
-            }
-        });
+{% block scripts %}
+<script>
+    // Password visibility toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const pwd = document.getElementById('password');
+        const icon = this.querySelector('i');
+        if (pwd.type === 'password') {
+            pwd.type = 'text';
+            icon.classList.replace('ti-eye', 'ti-eye-off');
+        } else {
+            pwd.type = 'password';
+            icon.classList.replace('ti-eye-off', 'ti-eye');
+        }
+    });
 
-        // Form submission validation
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const email = document.getElementById('email');
-            const password = document.getElementById('password');
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Client-side email validation
+    document.getElementById('email').addEventListener('blur', function() {
+        const msg = document.getElementById('emailMsg');
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (this.value && !re.test(this.value)) {
+            this.classList.add('border-rose-500');
+            msg.textContent = 'Please enter a valid email address';
+            msg.classList.remove('hidden');
+        } else {
+            this.classList.remove('border-rose-500');
+            msg.classList.add('hidden');
+        }
+    });
 
-            if (!re.test(email.value)) {
-                e.preventDefault();
-                email.classList.add('error');
-                document.getElementById('emailMsg').textContent = 'Please enter a valid email address';
-                document.getElementById('emailMsg').className = 'field-message error';
-                email.focus();
-                return;
-            }
+    // Form submission validation
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const msg = document.getElementById('emailMsg');
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (password.value.length < 1) {
-                e.preventDefault();
-                password.focus();
-                return;
-            }
-        });
-    </script>
-</body>
-</html>
+        if (!re.test(email.value)) {
+            e.preventDefault();
+            email.classList.add('border-rose-500');
+            msg.textContent = 'Please enter a valid email address';
+            msg.classList.remove('hidden');
+            email.focus();
+            return;
+        }
+
+        if (password.value.length < 1) {
+            e.preventDefault();
+            password.focus();
+            return;
+        }
+    });
+</script>
+{% endblock %}

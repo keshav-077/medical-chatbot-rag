@@ -1,193 +1,331 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Your profile — Medical Chatbot">
-    <title>Profile — Medical Chatbot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="auth-page">
-        <a href="{{ url_for('index') }}" class="profile-back-link" style="position: absolute; top: 24px; left: 28px; z-index: 10;">
-            <i class="fas fa-arrow-left"></i> Back to Chat
-        </a>
+{% extends "base.html" %}
 
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="profile-avatar">{{ current_user.name[0]|upper }}</div>
-                <h1>{{ current_user.name }}</h1>
-                <p>{{ current_user.email }}</p>
+{% block title %}My Profile — bloom{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1280px] mx-auto px-5 py-5 flex flex-col min-h-screen justify-between relative z-10">
+    <!-- Header -->
+    <header class="flex items-center justify-between h-[65px] px-4 mb-3">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <a href="{{ url_for('index') }}" class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-[#E3256B] flex items-center justify-center text-white shadow-lg shadow-[#E3256B]/20 shrink-0">
+                    <i class="ti ti-heart-handshake text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-bold text-lg tracking-tight text-[#4A5D23] leading-none">bloom</h1>
+                    <span class="text-xs text-[#4A5D23]/60 font-semibold tracking-wide uppercase">Organic Care</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="clay-card rounded-full p-1.5 flex gap-1 z-30">
+            <a href="{{ url_for('index') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold text-[#4A5D23]/70 hover:text-[#4A5D23] transition-all duration-300">
+                <i class="ti ti-brand-telegram text-base mr-1.5 align-middle"></i>Empathic Chatbot
+            </a>
+            <a href="{{ url_for('profile') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold clay-pill-active">
+                <i class="ti ti-user text-base mr-1.5 align-middle"></i>My Profile
+            </a>
+            <a href="{{ url_for('logout') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold text-[#4A5D23]/70 hover:text-[#4A5D23] transition-all duration-300">
+                <i class="ti ti-logout text-base mr-1.5 align-middle"></i>Log Out
+            </a>
+        </nav>
+
+        <!-- User Profile Badge -->
+        <div class="flex items-center gap-3 clay-card px-4 py-2 rounded-full hidden sm:flex">
+            <div class="relative">
+                <img src="https://i.pravatar.cc/100?u={{ current_user.email }}" alt="User Avatar" class="w-9 h-9 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] border-2 border-[#E3256B]/30 object-cover" decoding="async" loading="lazy">
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white"></div>
+            </div>
+            <div class="text-left">
+                <p class="text-xs font-heading font-bold leading-none text-[#4A5D23]">{{ current_user.name }}</p>
+                <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Premium Care</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Portal -->
+    <div class="flex-1 flex items-center justify-center py-6">
+        <div class="w-full max-w-2xl relative rounded-[32px] overflow-hidden clay-card p-6 md:p-8 animate-slide-up flex flex-col gap-6 max-h-[85vh] overflow-y-auto custom-scroll">
+            
+            <!-- Profile Info Top Section -->
+            <div class="flex flex-col sm:flex-row items-center gap-5 pb-5 border-b border-[#4A5D23]/10 text-center sm:text-left">
+                <div class="relative">
+                    <img src="https://i.pravatar.cc/120?u={{ current_user.email }}" alt="User Avatar" class="w-20 h-20 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] border-4 border-[#E3256B]/30 object-cover" decoding="async" loading="lazy">
+                    <div class="absolute bottom-1 right-1 w-4.5 h-4.5 bg-emerald-500 rounded-full border-2 border-white"></div>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-heading font-extrabold text-[#4A5D23]">{{ current_user.name }}</h2>
+                    <p class="text-sm text-[#4A5D23]/70 font-semibold">{{ current_user.email }}</p>
+                    <span class="inline-block mt-2 text-[10px] text-emerald-600 font-bold uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/50">
+                        <i class="ti ti-shield-check mr-1 align-middle text-xs"></i>Active Member
+                    </span>
+                </div>
             </div>
 
-            <div class="profile-body">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert-custom alert-{{ category }}">
-                                <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
-                                {{ message }}
+            <!-- Flash Messages / Custom Alerts -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flex items-center gap-3 {% if category == 'danger' %}bg-rose-50 border border-rose-200/50 text-rose-800{% else %}bg-emerald-50 border border-emerald-200/50 text-emerald-800{% endif %} p-4 rounded-2xl text-xs font-medium">
+                            <i class="{% if category == 'danger' %}ti ti-alert-circle text-rose-600{% else %}ti ti-circle-check-filled text-emerald-600{% endif %} text-lg shrink-0"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Profile Info Details Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 border-b border-[#4A5D23]/10">
+                <div class="clay-card p-3.5 rounded-2xl bg-white/40 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#E3256B] border border-[#E3256B]/15">
+                        <i class="ti ti-user text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-heading font-bold text-[#4A5D23]/55 uppercase tracking-wider block">Full Name</span>
+                        <span class="text-sm font-bold text-[#4A5D23]">{{ current_user.name }}</span>
+                    </div>
+                </div>
+                <div class="clay-card p-3.5 rounded-2xl bg-white/40 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#E3256B] border border-[#E3256B]/15">
+                        <i class="ti ti-mail text-lg"></i>
+                    </div>
+                    <div class="overflow-hidden">
+                        <span class="text-[10px] font-heading font-bold text-[#4A5D23]/55 uppercase tracking-wider block">Email Address</span>
+                        <span class="text-sm font-bold text-[#4A5D23] truncate block">{{ current_user.email }}</span>
+                    </div>
+                </div>
+                <div class="clay-card p-3.5 rounded-2xl bg-white/40 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#E3256B] border border-[#E3256B]/15">
+                        <i class="ti ti-calendar text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-heading font-bold text-[#4A5D23]/55 uppercase tracking-wider block">Member Since</span>
+                        <span class="text-sm font-bold text-[#4A5D23]">{{ current_user.created_at.strftime('%B %d, %Y') }}</span>
+                    </div>
+                </div>
+                <div class="clay-card p-3.5 rounded-2xl bg-white/40 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-pink-50 flex items-center justify-center text-[#E3256B] border border-[#E3256B]/15">
+                        <i class="ti ti-history text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-heading font-bold text-[#4A5D23]/55 uppercase tracking-wider block">Last Login</span>
+                        <span class="text-sm font-bold text-[#4A5D23]">{{ current_user.last_login.strftime('%B %d, %Y at %H:%M') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password Form -->
+            <div>
+                <div class="flex items-center gap-2.5 mb-4">
+                    <div class="w-7 h-7 rounded-lg bg-rose-50 flex items-center justify-center text-[#E3256B] border border-[#E3256B]/10">
+                        <i class="ti ti-lock text-sm"></i>
+                    </div>
+                    <h3 class="font-heading font-extrabold text-sm text-[#4A5D23]">Secure Password Transition</h3>
+                </div>
+
+                <form method="POST" action="{{ url_for('change_password') }}" id="passwordForm" novalidate class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1.5 ml-1" for="current_password">Current Password</label>
+                        <div class="relative">
+                            <input type="password" id="current_password" name="current_password" placeholder="Enter current password" required class="w-full clay-input rounded-[18px] py-2.5 px-4 text-sm font-medium text-[#4A5D23]">
+                            <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#4A5D23]/60 hover:text-[#4A5D23] text-lg" onclick="togglePwd('current_password', this)" aria-label="Toggle password visibility">
+                                <i class="ti ti-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1.5 ml-1" for="new_password">New Password</label>
+                        <div class="relative">
+                            <input type="password" id="new_password" name="new_password" placeholder="At least 6 characters" required class="w-full clay-input rounded-[18px] py-2.5 px-4 text-sm font-medium text-[#4A5D23]">
+                            <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#4A5D23]/60 hover:text-[#4A5D23] text-lg" onclick="togglePwd('new_password', this)" aria-label="Toggle password visibility">
+                                <i class="ti ti-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Password strength indicators -->
+                        <div class="flex items-center gap-2 mt-2 ml-1">
+                            <div class="flex gap-1" id="strengthBars">
+                                <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar1"></span>
+                                <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar2"></span>
+                                <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar3"></span>
+                                <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar4"></span>
                             </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-
-                <div class="profile-info-row">
-                    <span class="profile-info-label">Full Name</span>
-                    <span class="profile-info-value">{{ current_user.name }}</span>
-                </div>
-                <div class="profile-info-row">
-                    <span class="profile-info-label">Email</span>
-                    <span class="profile-info-value">{{ current_user.email }}</span>
-                </div>
-                <div class="profile-info-row">
-                    <span class="profile-info-label">Member Since</span>
-                    <span class="profile-info-value">{{ current_user.created_at.strftime('%B %d, %Y') }}</span>
-                </div>
-                <div class="profile-info-row">
-                    <span class="profile-info-label">Last Login</span>
-                    <span class="profile-info-value">{{ current_user.last_login.strftime('%B %d, %Y at %H:%M') }}</span>
-                </div>
-
-                <div class="profile-section-title">
-                    <i class="fas fa-lock" style="margin-right: 6px; opacity: 0.6;"></i>
-                    Change Password
-                </div>
-
-                <form method="POST" action="{{ url_for('change_password') }}" id="passwordForm" novalidate>
-                    <div class="form-group">
-                        <label for="current_password">Current Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="current_password" name="current_password" placeholder="Enter current password" required>
-                            <button type="button" class="password-toggle" onclick="togglePwd('current_password', this)" aria-label="Toggle visibility">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                            <span class="text-[11px] text-[#4A5D23]/70 font-bold hidden" id="passwordStrengthLabel">Weak</span>
+                            <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md hidden" id="matchBadge">
+                                <i class="ti ti-circle-check-filled mr-1"></i>Passwords match
+                            </span>
                         </div>
+                        <div class="text-xs text-rose-500 font-bold mt-1 ml-1 hidden" id="newPwdMsg"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="new_password">New Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="new_password" name="new_password" placeholder="At least 6 characters" required>
-                            <button type="button" class="password-toggle" onclick="togglePwd('new_password', this)" aria-label="Toggle visibility">
-                                <i class="fas fa-eye"></i>
+                    <div>
+                        <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1.5 ml-1" for="confirm_new_password">Confirm New Password</label>
+                        <div class="relative">
+                            <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Re-enter new password" required class="w-full clay-input rounded-[18px] py-2.5 px-4 text-sm font-medium text-[#4A5D23]">
+                            <button type="button" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#4A5D23]/60 hover:text-[#4A5D23] text-lg" onclick="togglePwd('confirm_new_password', this)" aria-label="Toggle password visibility">
+                                <i class="ti ti-eye"></i>
                             </button>
                         </div>
-                        <div class="password-strength" id="strengthMeter">
-                            <div class="bar" id="bar1"></div>
-                            <div class="bar" id="bar2"></div>
-                            <div class="bar" id="bar3"></div>
-                            <div class="bar" id="bar4"></div>
-                        </div>
-                        <div class="field-message" id="newPwdMsg"></div>
+                        <div class="text-xs text-rose-500 font-bold mt-1 ml-1 hidden" id="confirmMsg"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="confirm_new_password">Confirm New Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Re-enter new password" required>
-                            <button type="button" class="password-toggle" onclick="togglePwd('confirm_new_password', this)" aria-label="Toggle visibility">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="field-message" id="confirmMsg"></div>
-                    </div>
-
-                    <button type="submit" class="btn-primary-custom">
+                    <button type="submit" class="w-full bg-[#E3256B] hover:bg-[#E3256B]/90 text-white font-heading font-bold py-3.5 rounded-[18px] transition-all razz-shadow cursor-pointer text-sm mt-2">
                         Update Password
                     </button>
                 </form>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="{{ url_for('logout') }}" style="color: var(--text-muted); font-size: 13px; text-decoration: none; transition: color 0.2s;">
-                        <i class="fas fa-sign-out-alt"></i> Sign Out
-                    </a>
-                </div>
             </div>
+
+            <!-- Bottom logout / back links -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 pt-4 border-t border-[#4A5D23]/10">
+                <a href="{{ url_for('index') }}" class="text-xs font-heading font-bold text-[#E3256B] hover:underline flex items-center gap-1.5">
+                    <i class="ti ti-arrow-left"></i> Return to Chatbot
+                </a>
+                <a href="{{ url_for('logout') }}" class="text-xs font-heading font-bold text-[#4A5D23]/60 hover:text-rose-600 transition-colors flex items-center gap-1.5">
+                    <i class="ti ti-logout"></i> Sign Out of Session
+                </a>
+            </div>
+
         </div>
     </div>
 
-    <script>
-        function togglePwd(inputId, btn) {
-            const inp = document.getElementById(inputId);
-            const icon = btn.querySelector('i');
-            if (inp.type === 'password') {
-                inp.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                inp.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
+    <!-- Footer copyright note -->
+    <p class="text-center text-xs text-[#4A5D23]/50 font-bold mb-2">
+        &copy; 2026 bloom. Empowering healthcare with empathic companions.
+    </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function togglePwd(inputId, btn) {
+        const inp = document.getElementById(inputId);
+        const icon = btn.querySelector('i');
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            icon.classList.replace('ti-eye', 'ti-eye-off');
+        } else {
+            inp.type = 'password';
+            icon.classList.replace('ti-eye-off', 'ti-eye');
+        }
+    }
+
+    // Password strength logic
+    document.getElementById('new_password').addEventListener('input', function() {
+        const val = this.value;
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const bar3 = document.getElementById('bar3');
+        const bar4 = document.getElementById('bar4');
+        const label = document.getElementById('passwordStrengthLabel');
+        const msg = document.getElementById('newPwdMsg');
+
+        // Reset strength indicators
+        const bars = [bar1, bar2, bar3, bar4];
+        bars.forEach(b => {
+            b.className = 'w-4 h-1.5 rounded-full bg-gray-200 block transition-all';
+        });
+        label.classList.add('hidden');
+        msg.textContent = '';
+        msg.classList.add('hidden');
+
+        if (!val) return;
+
+        let strength = 0;
+        if (val.length >= 6) strength++;
+        if (val.length >= 10) strength++;
+        if (/[A-Z]/.test(val) && /[a-z]/.test(val)) strength++;
+        if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) strength++;
+
+        const colors = [
+            ['bg-rose-500', 'bg-gray-200', 'bg-gray-200', 'bg-gray-200'], // Weak
+            ['bg-amber-500', 'bg-amber-500', 'bg-gray-200', 'bg-gray-200'], // Fair
+            ['bg-teal-500', 'bg-teal-500', 'bg-teal-500', 'bg-gray-200'], // Good
+            ['bg-emerald-500', 'bg-emerald-500', 'bg-emerald-500', 'bg-emerald-500'] // Strong
+        ];
+
+        const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+        const labelColors = ['text-rose-500', 'text-amber-500', 'text-teal-500', 'text-emerald-500'];
+
+        if (strength > 0) {
+            const idx = strength - 1;
+            for (let i = 0; i < 4; i++) {
+                bars[i].className = `w-4 h-1.5 rounded-full ${colors[idx][i]} block transition-all`;
             }
+            label.textContent = labels[idx];
+            label.className = `text-[11px] font-bold ${labelColors[idx]}`;
+            label.classList.remove('hidden');
         }
 
-        // Password strength
-        document.getElementById('new_password').addEventListener('input', function() {
-            const val = this.value;
-            const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
-            const msg = document.getElementById('newPwdMsg');
-            bars.forEach(b => b.className = 'bar');
-            msg.textContent = '';
-            msg.className = 'field-message';
-            if (!val) return;
+        checkMatch();
+    });
 
-            let strength = 0;
-            if (val.length >= 6) strength++;
-            if (val.length >= 10) strength++;
-            if (/[A-Z]/.test(val) && /[a-z]/.test(val)) strength++;
-            if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) strength++;
+    document.getElementById('confirm_new_password').addEventListener('input', checkMatch);
 
-            const levels = ['weak', 'weak', 'medium', 'strong', 'strong'];
-            const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-            const colors = ['', 'error', '', 'success', 'success'];
+    function checkMatch() {
+        const pwd = document.getElementById('new_password').value;
+        const conf = document.getElementById('confirm_new_password');
+        const badge = document.getElementById('matchBadge');
+        const msg = document.getElementById('confirmMsg');
 
-            for (let i = 0; i < strength; i++) {
-                bars[i].classList.add(levels[strength]);
-            }
-            if (strength > 0) {
-                msg.textContent = labels[strength];
-                msg.className = 'field-message ' + colors[strength];
-            }
-            checkMatch();
-        });
+        msg.textContent = '';
+        msg.classList.add('hidden');
+        conf.classList.remove('border-rose-500');
 
-        document.getElementById('confirm_new_password').addEventListener('input', checkMatch);
-
-        function checkMatch() {
-            const pwd = document.getElementById('new_password').value;
-            const conf = document.getElementById('confirm_new_password');
-            const msg = document.getElementById('confirmMsg');
-            if (!conf.value) { conf.classList.remove('error', 'success'); msg.textContent = ''; return; }
-            if (conf.value === pwd) {
-                conf.classList.remove('error'); conf.classList.add('success');
-                msg.textContent = 'Passwords match'; msg.className = 'field-message success';
-            } else {
-                conf.classList.remove('success'); conf.classList.add('error');
-                msg.textContent = 'Passwords do not match'; msg.className = 'field-message error';
-            }
+        if (!conf.value) {
+            badge.classList.add('hidden');
+            return;
         }
 
-        // Form validation
-        document.getElementById('passwordForm').addEventListener('submit', function(e) {
-            const curr = document.getElementById('current_password');
-            const newP = document.getElementById('new_password');
-            const conf = document.getElementById('confirm_new_password');
-            let valid = true;
+        if (conf.value === pwd) {
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
 
-            if (!curr.value) { e.preventDefault(); curr.focus(); valid = false; }
-            if (newP.value.length < 6) {
-                e.preventDefault();
-                document.getElementById('newPwdMsg').textContent = 'Must be at least 6 characters';
-                document.getElementById('newPwdMsg').className = 'field-message error';
-                valid = false;
-            }
-            if (newP.value !== conf.value) {
-                e.preventDefault();
-                document.getElementById('confirmMsg').textContent = 'Passwords do not match';
-                document.getElementById('confirmMsg').className = 'field-message error';
-                valid = false;
-            }
-        });
-    </script>
-</body>
-</html>
+    // Form validation
+    document.getElementById('passwordForm').addEventListener('submit', function(e) {
+        const curr = document.getElementById('current_password');
+        const newP = document.getElementById('new_password');
+        const conf = document.getElementById('confirm_new_password');
+        const newMsg = document.getElementById('newPwdMsg');
+        const confMsg = document.getElementById('confirmMsg');
+        let valid = true;
+
+        newMsg.classList.add('hidden');
+        confMsg.classList.add('hidden');
+        curr.classList.remove('border-rose-500');
+        newP.classList.remove('border-rose-500');
+        conf.classList.remove('border-rose-500');
+
+        if (!curr.value) {
+            curr.classList.add('border-rose-500');
+            curr.focus();
+            valid = false;
+        }
+
+        if (newP.value.length < 6) {
+            newP.classList.add('border-rose-500');
+            newMsg.textContent = 'Password must be at least 6 characters';
+            newMsg.classList.remove('hidden');
+            if (valid) newP.focus();
+            valid = false;
+        }
+
+        if (newP.value !== conf.value) {
+            conf.classList.add('border-rose-500');
+            confMsg.textContent = 'Passwords do not match';
+            confMsg.classList.remove('hidden');
+            if (valid) conf.focus();
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+</script>
+{% endblock %}

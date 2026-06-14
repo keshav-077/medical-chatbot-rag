@@ -1,250 +1,288 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create your Medical Chatbot account — AI-powered medical consultation assistant">
-    <title>Sign Up — Medical Chatbot</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="auth-page">
-        <div class="auth-card">
-            <div class="auth-card-header">
-                <div class="auth-logo">
-                    <i class="fas fa-user-plus"></i>
+{% extends "base.html" %}
+
+{% block title %}Sign Up — Medical Chatbot{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-[1280px] mx-auto px-5 py-5 flex flex-col min-h-screen justify-between relative z-10">
+    <!-- Header -->
+    <header class="flex items-center justify-between h-[65px] px-4 mb-3">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-[#E3256B] flex items-center justify-center text-white shadow-lg shadow-[#E3256B]/20">
+                <i class="ti ti-heart-handshake text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="font-heading font-bold text-lg tracking-tight text-[#4A5D23] leading-none">bloom</h1>
+                <span class="text-xs text-[#4A5D23]/60 font-semibold tracking-wide uppercase">Organic Care</span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="clay-card rounded-full p-1.5 flex gap-1 z-30">
+            <a href="{{ url_for('index') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold text-[#4A5D23]/70 hover:text-[#4A5D23] transition-all duration-300">
+                <i class="ti ti-brand-telegram text-base mr-1.5 align-middle"></i>Empathic Chatbot
+            </a>
+            <a href="{{ url_for('login') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold text-[#4A5D23]/70 hover:text-[#4A5D23] transition-all duration-300">
+                <i class="ti ti-lock-open text-base mr-1.5 align-middle"></i>Warm Sign In
+            </a>
+            <a href="{{ url_for('signup') }}" class="px-5 py-2 rounded-full text-sm font-heading font-semibold clay-pill-active">
+                <i class="ti ti-user-plus text-base mr-1.5 align-middle"></i>Friendly Sign Up
+            </a>
+        </nav>
+
+        <!-- Dummy space to match chatbot page balance -->
+        <div class="w-[180px] hidden md:block"></div>
+    </header>
+
+    <!-- Main Content Portal (Signup Card) -->
+    <div class="flex-1 flex items-center justify-center py-6">
+        <div class="w-full max-w-md h-[610px] relative rounded-[32px] overflow-hidden clay-card flex flex-col justify-end animate-slide-up">
+            <!-- Warm Welcome Top Panel -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#FFE4E1] to-[#FFF5EE] p-8 flex flex-col justify-start">
+                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#E3256B] mb-4 shadow-sm">
+                    <i class="ti ti-user-plus text-2xl"></i>
                 </div>
-                <h1>Create Account</h1>
-                <p>Join Medical Chatbot for AI-powered health insights</p>
+                <h2 class="text-3xl font-heading font-bold text-[#4A5D23] leading-none">Create Account</h2>
+                <p class="text-sm text-[#4A5D23]/70 mt-2">Join Bloom chatbot for warm & caring health insights.</p>
             </div>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert-custom alert-{{ category }}">
-                            <i class="fas {% if category == 'danger' %}fa-exclamation-circle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
-                            {{ message }}
+            <!-- Form Container -->
+            <div class="relative bg-white/95 rounded-t-[36px] p-6 shadow-2xl border-t border-white flex flex-col gap-3.5 z-10 max-h-[80%] overflow-y-auto custom-scroll">
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flex items-center gap-3 {% if category == 'danger' %}bg-rose-50 border border-rose-200/50 text-rose-800{% else %}bg-emerald-50 border border-emerald-200/50 text-emerald-800{% endif %} p-3 rounded-2xl text-xs font-medium">
+                                <i class="{% if category == 'danger' %}ti ti-alert-circle text-rose-600{% else %}ti ti-circle-check-filled text-emerald-600{% endif %} text-lg shrink-0"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="" id="signupForm" novalidate class="flex flex-col gap-3">
+                    <div>
+                        <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1 ml-1" for="name">Full Name</label>
+                        <input type="text" id="name" name="name" value="KESAVARDHAN MAKIREDDI" required autocomplete="name" class="w-full clay-input rounded-[18px] py-2 px-4 text-sm font-medium text-[#4A5D23]">
+                        <div class="text-xs text-rose-500 font-bold mt-1 ml-1 hidden" id="nameMsg"></div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1 ml-1" for="email">Email Address</label>
+                        <input type="email" id="email" name="email" value="kesavardhan775@gmail.com" required autocomplete="email" class="w-full clay-input rounded-[18px] py-2 px-4 text-sm font-medium text-[#4A5D23]">
+                        <div class="text-xs text-rose-500 font-bold mt-1 ml-1 hidden" id="emailMsg"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1 ml-1" for="password">Password</label>
+                            <div class="relative">
+                                <input type="password" id="password" name="password" required autocomplete="new-password" class="w-full clay-input rounded-[18px] py-2 px-4 text-sm font-medium text-[#4A5D23]">
+                                <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A5D23]/60 hover:text-[#4A5D23] text-base">
+                                    <i class="ti ti-eye"></i>
+                                </button>
+                            </div>
                         </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            <form method="POST" action="" id="signupForm" novalidate>
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
-                    <div class="field-message" id="nameMsg"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
-                    <div class="field-message" id="emailMsg"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" name="password" placeholder="At least 6 characters" required autocomplete="new-password">
-                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <div>
+                            <label class="block text-xs font-heading font-bold text-[#4A5D23] mb-1 ml-1" for="confirm_password">Confirm</label>
+                            <div class="relative">
+                                <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" class="w-full clay-input rounded-[18px] py-2 px-4 text-sm font-medium text-[#4A5D23]">
+                                <button type="button" id="toggleConfirm" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#4A5D23]/60 hover:text-[#4A5D23] text-base">
+                                    <i class="ti ti-eye"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="password-strength" id="strengthMeter">
-                        <div class="bar" id="bar1"></div>
-                        <div class="bar" id="bar2"></div>
-                        <div class="bar" id="bar3"></div>
-                        <div class="bar" id="bar4"></div>
+
+                    <!-- Password strength visual indicators -->
+                    <div class="flex items-center gap-2 mt-1 ml-1">
+                        <div class="flex gap-1" id="strengthBars">
+                            <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar1"></span>
+                            <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar2"></span>
+                            <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar3"></span>
+                            <span class="w-4 h-1.5 rounded-full bg-gray-200 block transition-all" id="bar4"></span>
+                        </div>
+                        <span class="text-[11px] text-[#4A5D23]/70 font-bold hidden" id="passwordStrengthLabel">Weak</span>
+                        <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md hidden" id="matchBadge">
+                            <i class="ti ti-circle-check-filled mr-1"></i>Passwords match
+                        </span>
                     </div>
-                    <div class="field-message" id="passwordMsg"></div>
-                </div>
+                    <div class="text-xs text-rose-500 font-bold ml-1 hidden" id="passwordMsg"></div>
+                    <div class="text-xs text-rose-500 font-bold ml-1 hidden" id="confirmMsg"></div>
 
-                <div class="form-group">
-                    <label for="confirm_password">Confirm Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" required autocomplete="new-password">
-                        <button type="button" class="password-toggle" id="toggleConfirm" aria-label="Toggle confirm password visibility">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <div class="field-message" id="confirmMsg"></div>
-                </div>
+                    <button type="submit" class="w-full bg-[#E3256B] hover:bg-[#E3256B]/90 text-white font-heading font-bold py-3.5 rounded-[18px] transition-all razz-shadow cursor-pointer text-sm">
+                        Register Bloom Profile
+                    </button>
+                </form>
 
-                <button type="submit" class="btn-primary-custom" id="signupBtn">
-                    Create Account
-                </button>
-            </form>
-
-            <div class="auth-footer">
-                Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+                <p class="text-center text-xs text-[#4A5D23]/60 font-semibold mt-1">
+                    Already have an account? 
+                    <a href="{{ url_for('login') }}" class="text-[#E3256B] font-bold hover:underline">Warm Sign In</a>
+                </p>
             </div>
         </div>
     </div>
 
-    <script>
-        // Password visibility toggles
-        function setupToggle(toggleId, inputId) {
-            document.getElementById(toggleId).addEventListener('click', function() {
-                const inp = document.getElementById(inputId);
-                const icon = this.querySelector('i');
-                if (inp.type === 'password') {
-                    inp.type = 'text';
-                    icon.classList.replace('fa-eye', 'fa-eye-slash');
-                } else {
-                    inp.type = 'password';
-                    icon.classList.replace('fa-eye-slash', 'fa-eye');
-                }
-            });
+    <!-- Footer copyright note -->
+    <p class="text-center text-xs text-[#4A5D23]/50 font-bold mb-2">
+        &copy; 2026 bloom. Empowering healthcare with empathic companions.
+    </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Toggle password visibility
+    function setupToggle(buttonId, inputId) {
+        document.getElementById(buttonId).addEventListener('click', function() {
+            const pwd = document.getElementById(inputId);
+            const icon = this.querySelector('i');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.replace('ti-eye', 'ti-eye-off');
+            } else {
+                pwd.type = 'password';
+                icon.classList.replace('ti-eye-off', 'ti-eye');
+            }
+        });
+    }
+    setupToggle('togglePassword', 'password');
+    setupToggle('toggleConfirm', 'confirm_password');
+
+    // Email validation
+    document.getElementById('email').addEventListener('blur', function() {
+        const msg = document.getElementById('emailMsg');
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (this.value && !re.test(this.value)) {
+            this.classList.add('border-rose-500');
+            msg.textContent = 'Please enter a valid email address';
+            msg.classList.remove('hidden');
+        } else {
+            this.classList.remove('border-rose-500');
+            msg.classList.add('hidden');
         }
-        setupToggle('togglePassword', 'password');
-        setupToggle('toggleConfirm', 'confirm_password');
+    });
 
-        // Email validation
-        document.getElementById('email').addEventListener('blur', function() {
-            const msg = document.getElementById('emailMsg');
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (this.value && !re.test(this.value)) {
-                this.classList.add('error');
-                this.classList.remove('success');
-                msg.textContent = 'Please enter a valid email address';
-                msg.className = 'field-message error';
-            } else if (this.value) {
-                this.classList.remove('error');
-                this.classList.add('success');
-                msg.textContent = '';
-                msg.className = 'field-message';
-            } else {
-                this.classList.remove('error', 'success');
-                msg.textContent = '';
-            }
+    // Name validation
+    document.getElementById('name').addEventListener('blur', function() {
+        const msg = document.getElementById('nameMsg');
+        if (this.value && this.value.trim().length < 2) {
+            this.classList.add('border-rose-500');
+            msg.textContent = 'Name must be at least 2 characters';
+            msg.classList.remove('hidden');
+        } else {
+            this.classList.remove('border-rose-500');
+            msg.classList.add('hidden');
+        }
+    });
+
+    // Password strength logic
+    document.getElementById('password').addEventListener('input', function() {
+        const val = this.value;
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const bar3 = document.getElementById('bar3');
+        const bar4 = document.getElementById('bar4');
+        const label = document.getElementById('passwordStrengthLabel');
+
+        // Reset
+        const bars = [bar1, bar2, bar3, bar4];
+        bars.forEach(b => {
+            b.className = 'w-4 h-1.5 rounded-full bg-gray-200 block transition-all';
         });
+        label.classList.add('hidden');
 
-        // Name validation
-        document.getElementById('name').addEventListener('blur', function() {
-            const msg = document.getElementById('nameMsg');
-            if (this.value && this.value.trim().length < 2) {
-                this.classList.add('error');
-                msg.textContent = 'Name must be at least 2 characters';
-                msg.className = 'field-message error';
-            } else if (this.value) {
-                this.classList.remove('error');
-                this.classList.add('success');
-                msg.textContent = '';
-            } else {
-                this.classList.remove('error', 'success');
-                msg.textContent = '';
+        if (!val) return;
+
+        let strength = 0;
+        if (val.length >= 6) strength++;
+        if (val.length >= 10) strength++;
+        if (/[A-Z]/.test(val) && /[a-z]/.test(val)) strength++;
+        if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) strength++;
+
+        const colors = [
+            ['bg-rose-500', 'bg-gray-200', 'bg-gray-200', 'bg-gray-200'], // Weak
+            ['bg-amber-500', 'bg-amber-500', 'bg-gray-200', 'bg-gray-200'], // Fair
+            ['bg-teal-500', 'bg-teal-500', 'bg-teal-500', 'bg-gray-200'], // Good
+            ['bg-emerald-500', 'bg-emerald-500', 'bg-emerald-500', 'bg-emerald-500'] // Strong
+        ];
+
+        const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+        const labelColors = ['text-rose-500', 'text-amber-500', 'text-teal-500', 'text-emerald-500'];
+
+        if (strength > 0) {
+            const idx = strength - 1;
+            for (let i = 0; i < 4; i++) {
+                bars[i].className = `w-4 h-1.5 rounded-full ${colors[idx][i]} block transition-all`;
             }
-        });
-
-        // Password strength meter
-        document.getElementById('password').addEventListener('input', function() {
-            const val = this.value;
-            const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
-            const msg = document.getElementById('passwordMsg');
-
-            // Reset
-            bars.forEach(b => b.className = 'bar');
-            msg.textContent = '';
-            msg.className = 'field-message';
-
-            if (!val) return;
-
-            let strength = 0;
-            if (val.length >= 6) strength++;
-            if (val.length >= 10) strength++;
-            if (/[A-Z]/.test(val) && /[a-z]/.test(val)) strength++;
-            if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) strength++;
-
-            const levels = ['weak', 'weak', 'medium', 'strong', 'strong'];
-            const labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-            const colors = ['', 'error', '', 'success', 'success'];
-
-            for (let i = 0; i < strength; i++) {
-                bars[i].classList.add(levels[strength]);
-            }
-
-            if (strength > 0) {
-                msg.textContent = labels[strength];
-                msg.className = 'field-message ' + colors[strength];
-            }
-
-            // Also check confirm match if filled
-            checkConfirmMatch();
-        });
-
-        // Confirm password match
-        document.getElementById('confirm_password').addEventListener('input', checkConfirmMatch);
-
-        function checkConfirmMatch() {
-            const pwd = document.getElementById('password').value;
-            const conf = document.getElementById('confirm_password');
-            const msg = document.getElementById('confirmMsg');
-
-            if (!conf.value) {
-                conf.classList.remove('error', 'success');
-                msg.textContent = '';
-                return;
-            }
-
-            if (conf.value === pwd) {
-                conf.classList.remove('error');
-                conf.classList.add('success');
-                msg.textContent = 'Passwords match';
-                msg.className = 'field-message success';
-            } else {
-                conf.classList.remove('success');
-                conf.classList.add('error');
-                msg.textContent = 'Passwords do not match';
-                msg.className = 'field-message error';
-            }
+            label.textContent = labels[idx];
+            label.className = `text-[11px] font-bold ${labelColors[idx]}`;
+            label.classList.remove('hidden');
         }
 
-        // Form submit validation
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            const name = document.getElementById('name');
-            const email = document.getElementById('email');
-            const password = document.getElementById('password');
-            const confirm = document.getElementById('confirm_password');
+        checkConfirmMatch();
+    });
 
-            let valid = true;
+    // Match validation
+    document.getElementById('confirm_password').addEventListener('input', checkConfirmMatch);
 
-            if (name.value.trim().length < 2) {
-                e.preventDefault();
-                name.classList.add('error');
-                document.getElementById('nameMsg').textContent = 'Name is required';
-                document.getElementById('nameMsg').className = 'field-message error';
-                valid = false;
-            }
+    function checkConfirmMatch() {
+        const pwd = document.getElementById('password').value;
+        const conf = document.getElementById('confirm_password').value;
+        const badge = document.getElementById('matchBadge');
 
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!re.test(email.value)) {
-                e.preventDefault();
-                email.classList.add('error');
-                document.getElementById('emailMsg').textContent = 'Valid email is required';
-                document.getElementById('emailMsg').className = 'field-message error';
-                valid = false;
-            }
+        if (conf && pwd && conf === pwd) {
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
 
-            if (password.value.length < 6) {
-                e.preventDefault();
-                document.getElementById('passwordMsg').textContent = 'Password must be at least 6 characters';
-                document.getElementById('passwordMsg').className = 'field-message error';
-                valid = false;
-            }
+    // Form submit validation
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirm = document.getElementById('confirm_password');
 
-            if (password.value !== confirm.value) {
-                e.preventDefault();
-                confirm.classList.add('error');
-                document.getElementById('confirmMsg').textContent = 'Passwords do not match';
-                document.getElementById('confirmMsg').className = 'field-message error';
-                valid = false;
-            }
+        let valid = true;
 
-            if (!valid) {
-                e.preventDefault();
-            }
-        });
-    </script>
-</body>
-</html>
+        if (name.value.trim().length < 2) {
+            e.preventDefault();
+            name.classList.add('border-rose-500');
+            document.getElementById('nameMsg').textContent = 'Name is required';
+            document.getElementById('nameMsg').classList.remove('hidden');
+            valid = false;
+        }
+
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!re.test(email.value)) {
+            e.preventDefault();
+            email.classList.add('border-rose-500');
+            document.getElementById('emailMsg').textContent = 'Valid email is required';
+            document.getElementById('emailMsg').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (password.value.length < 6) {
+            e.preventDefault();
+            document.getElementById('passwordMsg').textContent = 'Password must be at least 6 characters';
+            document.getElementById('passwordMsg').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (password.value !== confirm.value) {
+            e.preventDefault();
+            confirm.classList.add('border-rose-500');
+            document.getElementById('confirmMsg').textContent = 'Passwords do not match';
+            document.getElementById('confirmMsg').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+</script>
+{% endblock %}

@@ -4,12 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Medical Chatbot{% endblock %}</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#E3256B',
+                            dark: '#4A5D23',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Nunito Sans"', 'sans-serif'],
+                        heading: ['Quicksand', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap');
+
+        .font-heading {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* Claymorphism */
+        .clay-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2.5px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 
+                0 16px 36px -8px rgba(74, 93, 35, 0.12),
+                inset 2px 2px 4px rgba(255, 255, 255, 1),
+                inset -4px -4px 10px rgba(74, 93, 35, 0.05);
+        }
+
+        .clay-pill-active {
+            background: #E3256B;
+            color: #FFFFFF !important;
+            box-shadow: 
+                0 8px 20px -6px rgba(227, 37, 107, 0.45),
+                inset 1px 1px 3px rgba(255, 255, 255, 0.4);
+        }
+
+        .clay-input {
+            background: rgba(255, 255, 255, 0.65);
+            border: 2px solid rgba(74, 93, 35, 0.1);
+            box-shadow: 
+                inset 2px 2px 5px rgba(74, 93, 35, 0.05),
+                0 4px 12px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .clay-input:focus {
+            outline: none;
+            border-color: #E3256B;
+            box-shadow: 
+                0 0 0 4px rgba(227, 37, 107, 0.15),
+                inset 1px 1px 3px rgba(227, 37, 107, 0.1);
+        }
+
+        /* Neomorphism Raised */
+        .neomorph-raised-card {
+            background: #FFE6E1;
+            box-shadow: 
+                8px 8px 20px rgba(74, 93, 35, 0.1),
+                -8px -8px 20px rgba(255, 255, 255, 0.95);
+            border: 1.5px solid rgba(255, 255, 255, 0.7);
+        }
+
+        /* Custom Razzmatazz colored-shadows */
+        .razz-shadow {
+            box-shadow: 0 10px 24px -6px rgba(227, 37, 107, 0.3);
+        }
+
+        /* Animations */
+        @keyframes drift1 {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(40px, -60px) scale(1.15); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes drift2 {
+            0% { transform: translate(0px, 0px) scale(1.1); }
+            50% { transform: translate(-50px, 50px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1.1); }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .animate-drift-1 {
+            animation: drift1 18s ease-in-out infinite alternate;
+        }
+        .animate-drift-2 {
+            animation: drift2 22s ease-in-out infinite alternate;
+        }
+        .animate-slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Custom Scrollbar for inner container */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(74, 93, 35, 0.03);
+            border-radius: 99px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(74, 93, 35, 0.15);
+            border-radius: 99px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(74, 93, 35, 0.25);
+        }
+    </style>
     {% block head %}{% endblock %}
 </head>
-<body>
-    {% block content %}{% endblock %}
+<body class="bg-gradient-to-br from-[#FFF5EE] via-[#FFF0EC] to-[#FFE4E1] font-sans text-[#4A5D23] select-none min-h-screen relative overflow-x-hidden">
+    <!-- Drift background orbs -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-20 -left-20 w-[450px] h-[450px] rounded-[55%_45%_50%_50%] bg-[#FFD1C7] opacity-40 blur-3xl animate-drift-1"></div>
+        <div class="absolute -bottom-20 -right-20 w-[500px] h-[500px] rounded-[48%_52%_45%_55%] bg-[#FFE5B4] opacity-35 blur-3xl animate-drift-2"></div>
+        <div class="absolute top-[40%] left-[30%] w-[350px] h-[350px] rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-[#FFDEE9] opacity-30 blur-3xl animate-drift-1"></div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex flex-col">
+        {% block content %}{% endblock %}
+    </div>
     {% block scripts %}{% endblock %}
 </body>
 </html>

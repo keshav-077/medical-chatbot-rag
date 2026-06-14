@@ -1,9 +1,8 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from markupsafe import escape as html_escape
-from src.helper import download_hugging_face_embeddings
 from langchain_pinecone import Pinecone as PineconeVectorStore
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
@@ -50,11 +49,31 @@ def load_user(user_id):
 PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
 GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY') or GROQ_API_KEY  # Fallback to Groq
 
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 
-# Initialize embeddings and vector store
-embeddings = download_hugging_face_embeddings()
+# Initialize embeddings for Vercel (lightweight, API-based)
+# For Vercel deployment, use OpenAI embeddings API (no large model downloads)
+# Note: You need OPENAI_API_KEY for this to work
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+if OPENAI_API_KEY:
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small",
+        dimensions=384,  # Match your HuggingFace embedding dimensions
+        openai_api_key=OPENAI_API_KEY
+    )
+else:
+    # Fallback: Create a dummy embeddings class that will fail gracefully
+    import warnings
+    warnings.warn("OPENAI_API_KEY not set! Embeddings will not work. Add OPENAI_API_KEY to environment variables.", stacklevel=2)
+    from langchain_core.embeddings import Embeddings
+    class DummyEmbeddings(Embeddings):
+        def embed_documents(self, texts):
+            return [[0.0] * 384 for _ in texts]
+        def embed_query(self, text):
+            return [0.0] * 384
+    embeddings = DummyEmbeddings()
 
 index_name = "medicalbot"
 

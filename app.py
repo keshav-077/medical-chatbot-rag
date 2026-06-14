@@ -25,7 +25,11 @@ if not secret_key:
     warnings.warn("SECRET_KEY not set in .env — using insecure dev default. Set SECRET_KEY for production!", stacklevel=2)
     secret_key = 'dev-secret-key-change-in-production'
 app.config['SECRET_KEY'] = secret_key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///medical_chatbot.db'
+database_url = os.getenv('DATABASE_URL', 'sqlite:///medical_chatbot.db')
+# Neon/Heroku Postgres URLs sometimes use 'postgres://' — SQLAlchemy needs 'postgresql://'
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -45,6 +49,7 @@ def load_user(user_id):
 # Environment variables
 PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
 OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
 
 os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
 
@@ -61,17 +66,29 @@ docsearch = PineconeVectorStore.from_existing_index(
 
 retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
-llm = ChatOpenAI(
-    model="openai/gpt-oss-120b:free",
-    openai_api_key=OPENROUTER_API_KEY,
-    base_url="https://openrouter.ai/api/v1",
-    temperature=0.4,
-    max_tokens=500,
-    default_headers={
-        "HTTP-Referer": "http://localhost:8080",
-        "X-Title": "Medical Chatbot RAG",
-    },
-)
+# Primary: Groq (fast, reliable free tier)
+# Fallback: OpenRouter
+if GROQ_API_KEY:
+    llm = ChatOpenAI(
+        model="llama3-8b-8192",
+        openai_api_base="https://api.groq.com/openai/v1",
+        openai_api_key=GROQ_API_KEY,
+        temperature=0.4,
+        max_tokens=500,
+    )
+else:
+    # Fallback to OpenRouter free model
+    llm = ChatOpenAI(
+        model="google/gemini-2.0-flash-exp:free",
+        openai_api_key=OPENROUTER_API_KEY,
+        base_url="https://openrouter.ai/api/v1",
+        temperature=0.4,
+        max_tokens=500,
+        default_headers={
+            "HTTP-Referer": "http://localhost:8080",
+            "X-Title": "Medical Chatbot RAG",
+        },
+    )
 
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -330,6 +347,46 @@ def get_conversations():
 # Initialize database
 with app.app_context():
     db.create_all()
+
+# ─────────────────────────────────────────────
+# TELEGRAM BOT ROUTES (added — existing routes unchanged)
+# ─────────────────────────────────────────────
+from telegram_handler import process_telegram_update, set_webhook
+
+@app.route("/api/telegram", methods=["POST"])
+def telegram_webhook():
+    """Receive updates from Telegram and process them."""
+    if not request.is_json:
+        return "Bad Request", 400
+
+    update = request.get_json()
+
+    # Process in the same thread (Vercel serverless-safe)
+    try:
+        process_telegram_update(update, rag_chain)
+    except Exception as e:
+        app.logger.error(f"Telegram webhook error: {e}")
+        # Always return 200 to Telegram — otherwise it retries endlessly
+
+    return "ok", 200
+
+
+@app.route("/api/telegram/setup", methods=["GET"])
+def telegram_setup():
+    """
+    One-time setup endpoint. Visit this URL after deploying to register webhook.
+    URL: https://yourapp.vercel.app/api/telegram/setup
+    """
+    your_domain = request.host_url.rstrip("/")
+    result = set_webhook(your_domain)
+    return {"status": "webhook set", "result": result}, 200
+
+
+@app.route("/api/health", methods=["GET"])
+def health_check():
+    """Health check endpoint for Vercel and monitoring."""
+    return {"status": "ok", "service": "Medical RAG Bot"}, 200
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)

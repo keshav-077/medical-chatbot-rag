@@ -31,34 +31,73 @@ An intelligent medical chatbot powered by Retrieval-Augmented Generation (RAG) u
 
 ## 🔧 Installation
 
-### Step 1: Clone the Repository
+> **⚠️ IMPORTANT:** This project now includes fixed dependency versions to prevent library mismatch issues. Use the automated setup scripts for best results.
+
+### Quick Setup (Recommended)
+
+**Windows PowerShell:**
+```powershell
+.\setup_windows.ps1
+```
+
+**Windows Command Prompt:**
+```cmd
+setup_windows.bat
+```
+
+### Manual Setup
+
+#### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/keshav-077/medical-chatbot-rag.git
 cd medical-chatbot-rag
 ```
 
-### Step 2: Create Conda Environment
+#### Step 2: Create Virtual Environment
 
+**Using venv (Recommended):**
+```bash
+python -m venv venv
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate # Linux/Mac
+```
+
+**Or using Conda:**
 ```bash
 conda create -n medibot python=3.10 -y
 conda activate medibot
 ```
 
-### Step 3: Install Dependencies
+#### Step 3: Install Dependencies
 
 ```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
+
+**Note:** The `requirements.txt` now includes pinned versions (`pinecone>=7.0.0,<8.0.0`) to prevent compatibility issues with `langchain-pinecone`.
 
 ### Step 4: Configure Environment Variables
 
 Create a `.env` file in the root directory:
 
+```bash
+copy .env.example .env  # Windows
+cp .env.example .env    # Linux/Mac
+```
+
+Edit the `.env` file and add your API keys:
+
 ```ini
 PINECONE_API_KEY=your_pinecone_api_key_here
-OPENAI_API_KEY=your_openai_api_key_here
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+SECRET_KEY=your_secret_key_here_random_string
 ```
+
+**Get your API keys:**
+- 🔑 Pinecone: https://app.pinecone.io → API Keys
+- 🔑 OpenRouter: https://openrouter.ai/keys
 
 ### Step 5: Initialize Vector Database
 
@@ -153,6 +192,29 @@ newgrp docker
 3. **Query Processing**: User questions are embedded and similar chunks are retrieved
 4. **Response Generation**: Retrieved context is passed to GPT for generating accurate answers
 5. **Web Interface**: Flask serves the chat interface for user interaction
+
+## 🐛 Troubleshooting
+
+### Common Issues After Cloning
+
+**Issue: Library version conflicts**
+```bash
+# Solution: Use the fixed requirements.txt
+pip uninstall pinecone pinecone-client langchain-pinecone -y
+pip install -r requirements.txt
+```
+
+**Issue: Missing gRPC dependencies**
+```bash
+pip install grpcio grpcio-tools protobuf googleapis-common-protos
+```
+
+**Issue: Pinecone authentication error**
+- Verify your API key in `.env` file
+- Ensure no extra spaces or quotes
+- Check if the API key is active in Pinecone dashboard
+
+**For more troubleshooting, see [SETUP_GUIDE.md](SETUP_GUIDE.md)**
 
 ## 🤝 Contributing
 

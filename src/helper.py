@@ -1,6 +1,6 @@
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
+from src.embeddings import get_embeddings
 
 
 #Extract Data From the PDF File
@@ -23,12 +23,8 @@ def text_split(extracted_data):
 
 
 
-#Download the Embeddings from HuggingFace 
+#Download the Embeddings (API-based, NO local downloads)
 def download_hugging_face_embeddings():
-    embeddings=HuggingFaceEmbeddings(
-        model_name='sentence-transformers/all-MiniLM-L6-v2',  #this model return 384 dimensions
-        model_kwargs={"device": "cpu"},
-        encode_kwargs={"normalize_embeddings": True},
-        cache_folder="/tmp/hf_cache"  # Vercel writable directory
-    )
-    return embeddings
+    """Backward-compatible wrapper. Now uses API-based embeddings."""
+    from src.embeddings import get_embedding_manager
+    return get_embedding_manager()

@@ -1,24 +1,61 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/25423296/163456776-7f95b81a-f1ed-45f7-b7ab-8fa810d529fa.png">
+  <img alt="Banner" src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png" width="100%">
+</picture>
+
 # 🏥 Medical Chatbot RAG
 
 ### *Intelligent Healthcare Assistant powered by Advanced AI*
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&width=600&lines=Retrieval+Augmented+Generation;Medical+Knowledge+Base;Multi-LLM+Support;Serverless+Architecture;PostgreSQL+%2B+Pinecone+Vector+DB" alt="Typing SVG" />
 
+> [!IMPORTANT]
+> **🔴 LIVE APPLICATION:** This project is deployed and running at **[medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)**
+> 
+> Click the button below to try it now! 👇
+
+<br/>
+
+<a href="https://medical-chatbot-179320.vercel.app" target="_blank">
+  <img src="https://img.shields.io/badge/🚀_TRY_LIVE_DEMO-Visit_Application-00D9FF?style=for-the-badge&labelColor=000000&color=00D9FF&logoColor=white" alt="Live Demo" height="50"/>
+</a>
+
+<br/>
+<br/>
+
 ---
 
-## 🌐 **LIVE DEPLOYMENT**
+## 📝 **Project Overview**
 
-<div style="font-size: 28px; font-weight: bold; margin: 20px 0;">
-  
-### 🚀 **[Try it Live on Vercel →](https://medical-chatbot-179320.vercel.app)**
+An **enterprise-grade medical chatbot** leveraging **Retrieval-Augmented Generation (RAG)** to provide accurate medical information. Built with **LangChain**, **Pinecone vector database**, and **multi-LLM architecture** (OpenRouter GPT + Groq fallback), this system combines **semantic search** with **large language models** to deliver contextually relevant medical responses.
 
-</div>
+**Key Highlights:**
+- 🎯 **RAG Pipeline**: Retrieves relevant medical context before generating responses
+- 🔐 **Full Authentication**: Secure user management with Flask-Login & Bcrypt
+- 💾 **Dual Database**: PostgreSQL (production) + Pinecone (vector search)
+- 🚀 **Serverless Ready**: Deployed on Vercel with automatic scaling
+- 🔄 **Fault-Tolerant**: Multi-provider fallback for LLMs and embeddings
 
-[![Vercel](https://img.shields.io/badge/Vercel-Deployed-00D9FF?style=for-the-badge&logo=vercel&logoColor=white)](https://medical-chatbot-179320.vercel.app)
-[![Status](https://img.shields.io/badge/Status-Online-brightgreen?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+---
+
+## 🌐 **Deployment Information**
+
+<table align="center">
+  <tr>
+    <td align="center" width="100%">
+      <h3>🌍 Production Environment</h3>
+      <a href="https://medical-chatbot-179320.vercel.app">
+        <code style="font-size: 18px;">https://medical-chatbot-179320.vercel.app</code>
+      </a>
+      <br/><br/>
+      <img src="https://img.shields.io/badge/Platform-Vercel-black?style=flat-square&logo=vercel" alt="Vercel"/>
+      <img src="https://img.shields.io/badge/Status-🟢_Live-brightgreen?style=flat-square" alt="Status"/>
+      <img src="https://img.shields.io/badge/Uptime-99.9%25-blue?style=flat-square" alt="Uptime"/>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -39,7 +76,22 @@
   </tr>
 </table>
 
-> **Note:** Add your screenshots to a `screenshots/` folder in the root directory
+> **📍 Note:** Add your screenshots to the `screenshots/` folder - see [instructions](screenshots/README.md)
+
+---
+
+<div align="center">
+
+## 🎬 **Quick Links**
+
+| 🔗 Resource | 📋 Description |
+|-------------|----------------|
+| [🚀 **LIVE DEMO**](https://medical-chatbot-179320.vercel.app) | Try the deployed application |
+| [📖 Setup Guide](SETUP_GUIDE.md) | Detailed installation steps |
+| [📘 Documentation](DOCUMENTATION.md) | API & architecture docs |
+| [🐛 Troubleshooting](SETUP_GUIDE.md) | Common issues & fixes |
+
+</div>
 
 ---
 

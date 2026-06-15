@@ -7,19 +7,14 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&width=600&lines=Retrieval+Augmented+Generation;Medical+Knowledge+Base;Multi-LLM+Support;Serverless+Architecture;PostgreSQL+%2B+Pinecone+Vector+DB" alt="Typing SVG" />
 
-> [!IMPORTANT]
-> **🔴 LIVE APPLICATION:** This project is deployed and running at **[medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)**
-> 
-> Click the button below to try it now! 👇
 
-<br/>
 
+<!-- GLOWING LAUNCH BUTTON -->
 <a href="https://medical-chatbot-179320.vercel.app" target="_blank">
-  <img src="https://img.shields.io/badge/🚀_TRY_LIVE_DEMO-Visit_Application-00D9FF?style=for-the-badge&labelColor=000000&color=00D9FF&logoColor=white" alt="Live Demo" height="50"/>
+  <img src="https://img.shields.io/badge/⚡%20LAUNCH%20LIVE%20APP%20⚡-medical--chatbot--179320.vercel.app-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="52"/>
 </a>
 
-<br/>
-<br/>
+<br/><br/>
 
 ---
 

@@ -7,13 +7,42 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&width=600&lines=Retrieval+Augmented+Generation;Medical+Knowledge+Base;Multi-LLM+Support;Serverless+Architecture;PostgreSQL+%2B+Pinecone+Vector+DB" alt="Typing SVG" />
 
+<br/>
 
 
-<!-- GLOWING LAUNCH BUTTON -->
-<a href="https://medical-chatbot-179320.vercel.app" target="_blank">
-  <img src="https://img.shields.io/badge/⚡%20LAUNCH%20LIVE%20APP%20⚡-medical--chatbot--179320.vercel.app-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="52"/>
+
+> [!NOTE]
+> 👉 **Looking for the deployed application?** Scroll down to the **"Live Deployment"** section or [**click here**](https://medical-chatbot-179320.vercel.app) 👈
+
+---
+
+<div align="center">
+
+## 🌐 Live Deployment
+
+
+### � **Click Below Link to Experience the App** 👇
+
+<a href="https://medical-chatbot-179320.vercel.app">
+  <img src="https://img.shields.io/badge/⚡_LAUNCH_LIVE_APP_⚡-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="60"/>
 </a>
 
+<br/>
+<br/>
+
+### 🔗 **Direct Link:** [medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)
+
+<br/>
+
+| 🌍 Platform | 🗄️ Database | 🔎 Vector DB | 📡 Status |
+|:-----------:|:-----------:|:------------:|:---------:|
+| Vercel Serverless | Neon PostgreSQL | Pinecone | 🟢 **LIVE** |
+
+<br/>
+
+### 👆 **The app is running right now!** 👆
+
+---
 
 <!-- TECH BADGES -->
 [![Python](https://img.shields.io/badge/Python_3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
@@ -26,26 +55,6 @@
 </div>
 
 ---
-
-<div align="center">
-
-## 🌐 Deployment
-
-<br/>
-
-> ### 🔗 [https://medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)
-
-<br/>
-
-| 🌍 Platform | 🗄️ Database | 🔎 Vector DB | 📡 Status |
-|:-----------:|:-----------:|:------------:|:---------:|
-| Vercel Serverless | Neon PostgreSQL | Pinecone | 🟢 Online |
-
-<br/>
-
-<a href="https://medical-chatbot-179320.vercel.app">
-  <img src="https://img.shields.io/badge/🚀_OPEN_THE_APP_NOW-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="48"/>
-</a>
 
 </div>
 
@@ -154,6 +163,7 @@ Configured dual deployment strategies: **(1)** Vercel serverless with automatic 
   </tr>
 </table>
 
+> **📍 Note:** Add your screenshots to the `screenshots/` folder - see [instructions](screenshots/README.md)
 
 ---
 

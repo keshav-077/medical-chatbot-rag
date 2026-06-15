@@ -39,7 +39,7 @@
   </tr>
 </table>
 
-> **Note:** Add your screenshots to a `screenshots/` folder in the root directory
+
 
 ---
 

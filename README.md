@@ -11,53 +11,172 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&width=600&lines=Retrieval+Augmented+Generation;Medical+Knowledge+Base;Multi-LLM+Support;Serverless+Architecture;PostgreSQL+%2B+Pinecone+Vector+DB" alt="Typing SVG" />
 
-> [!IMPORTANT]
-> **🔴 LIVE APPLICATION:** This project is deployed and running at **[medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)**
-> 
-> Click the button below to try it now! 👇
+<br/>
+
+---
+
+### 🎯 **IMPORTANT: This is a LIVE, DEPLOYED Application!** 🎯
+
+```
+              👇👇👇 CLICK THE BUTTON BELOW 👇👇👇
+```
+
+<!-- GLOWING LAUNCH BUTTON -->
+<a href="https://medical-chatbot-179320.vercel.app" target="_blank">
+  <img src="https://img.shields.io/badge/⚡_LAUNCH_LIVE_APP_⚡-medical--chatbot--179320.vercel.app-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="52"/>
+</a>
+
+```
+              👆👆👆 TRY IT RIGHT NOW! 👆👆👆
+```
 
 <br/>
 
-<a href="https://medical-chatbot-179320.vercel.app" target="_blank">
-  <img src="https://img.shields.io/badge/🚀_TRY_LIVE_DEMO-Visit_Application-00D9FF?style=for-the-badge&labelColor=000000&color=00D9FF&logoColor=white" alt="Live Demo" height="50"/>
+---
+
+<!-- TECH BADGES -->
+[![Python](https://img.shields.io/badge/Python_3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![LangChain](https://img.shields.io/badge/LangChain-121212?style=flat-square&logo=chainlink&logoColor=white)](https://langchain.com)
+[![Pinecone](https://img.shields.io/badge/Pinecone-000000?style=flat-square&logoColor=white)](https://pinecone.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/keshav-077/medical-chatbot-rag?style=flat-square&color=yellow)](https://github.com/keshav-077/medical-chatbot-rag/stargazers)
+
+</div>
+
+---
+
+> [!NOTE]
+> 👉 **Looking for the deployed application?** Scroll down to the **"Live Deployment"** section or [**click here**](https://medical-chatbot-179320.vercel.app) 👈
+
+---
+
+<div align="center">
+
+## 🌐 Live Deployment
+
+<br/>
+
+```
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                 ┃
+┃       👉 TRY THE LIVE APPLICATION NOW! 👈                       ┃
+┃                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+```
+
+<br/>
+
+### � **Click Below to Experience the App** 👇
+
+<a href="https://medical-chatbot-179320.vercel.app">
+  <img src="https://img.shields.io/badge/⚡_LAUNCH_LIVE_APP_⚡-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="60"/>
 </a>
 
 <br/>
 <br/>
 
----
+### 🔗 **Direct Link:** [medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)
+
+<br/>
+
+| 🌍 Platform | 🗄️ Database | 🔎 Vector DB | 📡 Status |
+|:-----------:|:-----------:|:------------:|:---------:|
+| Vercel Serverless | Neon PostgreSQL | Pinecone | 🟢 **LIVE** |
+
+<br/>
+
+### 👆 **The app is running right now!** 👆
+
+</div>
 
 ## 📝 **Project Overview**
 
 An **enterprise-grade medical chatbot** leveraging **Retrieval-Augmented Generation (RAG)** to provide accurate medical information. Built with **LangChain**, **Pinecone vector database**, and **multi-LLM architecture** (OpenRouter GPT + Groq fallback), this system combines **semantic search** with **large language models** to deliver contextually relevant medical responses.
 
-**Key Highlights:**
-- 🎯 **RAG Pipeline**: Retrieves relevant medical context before generating responses
-- 🔐 **Full Authentication**: Secure user management with Flask-Login & Bcrypt
-- 💾 **Dual Database**: PostgreSQL (production) + Pinecone (vector search)
-- 🚀 **Serverless Ready**: Deployed on Vercel with automatic scaling
-- 🔄 **Fault-Tolerant**: Multi-provider fallback for LLMs and embeddings
-
 ---
 
-## 🌐 **Deployment Information**
+## 💎 **Technical Excellence: 5 Features That Stand Out**
 
-<table align="center">
-  <tr>
-    <td align="center" width="100%">
-      <h3>🌍 Production Environment</h3>
-      <a href="https://medical-chatbot-179320.vercel.app">
-        <code style="font-size: 18px;">https://medical-chatbot-179320.vercel.app</code>
-      </a>
-      <br/><br/>
-      <img src="https://img.shields.io/badge/Platform-Vercel-black?style=flat-square&logo=vercel" alt="Vercel"/>
-      <img src="https://img.shields.io/badge/Status-🟢_Live-brightgreen?style=flat-square" alt="Status"/>
-      <img src="https://img.shields.io/badge/Uptime-99.9%25-blue?style=flat-square" alt="Uptime"/>
-    </td>
-  </tr>
+<table>
+<tr>
+<td width="100%">
+
+### 1️⃣ **🧠 Advanced RAG Architecture with Multi-Stage Retrieval**
+
+**Tech Stack:** `LangChain` · `Pinecone Vector DB` · `LCEL` · `Jina AI Embeddings`
+
+**Implementation:**  
+Built a production-grade Retrieval-Augmented Generation pipeline that processes medical PDFs, generates **768-dimensional embeddings** via Jina AI, stores them in Pinecone's serverless vector database, and performs **semantic similarity search (top-k=3)** before LLM generation.
+
+**Impact:** Reduces hallucinations and provides contextually accurate medical responses by grounding LLM outputs in actual medical literature.
+
+</td>
+</tr>
+
+<tr>
+<td width="100%">
+
+### 2️⃣ **🔄 Fault-Tolerant Multi-Provider LLM & Embedding Architecture**
+
+**Tech Stack:** `OpenRouter (GPT)` → `Groq` · `Jina AI` → `HuggingFace`
+
+**Implementation:**  
+Designed resilient provider chains using custom **LLMManager** and **EmbeddingManager** classes that automatically switch providers on API failures, rate limits, or timeouts.
+
+**Impact:** Ensures **99.9% uptime** with zero single point of failure - if OpenRouter fails, Groq takes over instantly; enterprise-level reliability without manual intervention.
+
+</td>
+</tr>
+
+<tr>
+<td width="100%">
+
+### 3️⃣ **☁️ Serverless-First Architecture with Dual Database Design**
+
+**Tech Stack:** `Vercel Serverless Functions` · `Neon PostgreSQL` · `SQLAlchemy NullPool` · `Pinecone`
+
+**Implementation:**  
+Architected the application using **NullPool** for SQLAlchemy (avoiding connection pool conflicts with Neon's PgBouncer), serverless entry point (`api/index.py`), and environment-based configuration that seamlessly switches between SQLite (dev) and PostgreSQL (production).
+
+**Impact:** Demonstrates understanding of serverless constraints (stateless functions, read-only filesystems, connection pooling) and cloud-native design patterns - runs on Vercel's edge network with auto-scaling.
+
+</td>
+</tr>
+
+<tr>
+<td width="100%">
+
+### 4️⃣ **🔐 Enterprise-Grade Security & Authentication System**
+
+**Tech Stack:** `Flask-Login` · `Bcrypt` · `Flask-Limiter` · `SQLAlchemy ORM` · `MarkupSafe`
+
+**Implementation:**  
+Built comprehensive authentication with password hashing (Bcrypt), session management (Flask-Login), **rate limiting (200/day, 50/hour per IP)**, SQL injection prevention (ORM + parameterized queries), XSS protection (MarkupSafe HTML escaping), and HTTPS-only cookies in production.
+
+**Impact:** Shows security-first development mindset with defense-in-depth approach - production-ready security layers that protect against **OWASP Top 10 vulnerabilities**.
+
+</td>
+</tr>
+
+<tr>
+<td width="100%">
+
+### 5️⃣ **🚀 Multi-Platform Deployment with CI/CD Pipeline**
+
+**Tech Stack:** `Vercel` · `AWS EC2/ECR` · `Docker` · `GitHub Actions` · `Self-Hosted Runners`
+
+**Implementation:**  
+Configured dual deployment strategies: **(1)** Vercel serverless with automatic GitHub integration and environment variable management, **(2)** AWS containerized deployment using ECR for image registry, self-hosted GitHub runners on EC2, and automated Docker builds/pushes via GitHub Actions workflow.
+
+**Impact:** Proves DevOps proficiency and understanding of different deployment paradigms (serverless vs. containerized), infrastructure-as-code principles, and modern CI/CD practices - ready for any cloud environment.
+
+</td>
+</tr>
 </table>
 
 ---
+
 
 ## 📸 **Application Screenshots**
 
@@ -77,42 +196,6 @@ An **enterprise-grade medical chatbot** leveraging **Retrieval-Augmented Generat
 </table>
 
 > **📍 Note:** Add your screenshots to the `screenshots/` folder - see [instructions](screenshots/README.md)
-
----
-
-<div align="center">
-
-## 🎬 **Quick Links**
-
-| 🔗 Resource | 📋 Description |
-|-------------|----------------|
-| [🚀 **LIVE DEMO**](https://medical-chatbot-179320.vercel.app) | Try the deployed application |
-| [📖 Setup Guide](SETUP_GUIDE.md) | Detailed installation steps |
-| [📘 Documentation](DOCUMENTATION.md) | API & architecture docs |
-| [🐛 Troubleshooting](SETUP_GUIDE.md) | Common issues & fixes |
-
-</div>
-
----
-
-## ✨ **Key Features**
-
-<div align="left">
-
-```diff
-+ 🧠 RAG Architecture - Retrieval-Augmented Generation for accurate medical responses
-+ 🔐 User Authentication - Secure login/signup with Flask-Login & Bcrypt
-+ 💾 PostgreSQL Database - Serverless-ready with Neon integration
-+ 🎯 Multi-LLM Support - OpenRouter (GPT) → Groq fallback
-+ 🌐 Pinecone Vector DB - Lightning-fast similarity search
-+ 📊 Conversation History - Save & load chat sessions
-+ 🚀 Serverless Deploy - Vercel + AWS EC2 compatible
-+ 🔄 API-Based Embeddings - Jina AI → HuggingFace fallback
-+ ⚡ Rate Limiting - Built-in protection with Flask-Limiter
-+ 🎨 Responsive UI - Modern chat interface with dark mode support
-```
-
-</div>
 
 ---
 

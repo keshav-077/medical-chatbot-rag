@@ -1,9 +1,5 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/25423296/163456776-7f95b81a-f1ed-45f7-b7ab-8fa810d529fa.png">
-  <img alt="Banner" src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png" width="100%">
-</picture>
 
 # 🏥 Medical Chatbot RAG
 
@@ -13,38 +9,7 @@
 
 <br/>
 
----
 
-### 🎯 **IMPORTANT: This is a LIVE, DEPLOYED Application!** 🎯
-
-```
-              👇👇👇 CLICK THE BUTTON BELOW 👇👇👇
-```
-
-<!-- GLOWING LAUNCH BUTTON -->
-<a href="https://medical-chatbot-179320.vercel.app" target="_blank">
-  <img src="https://img.shields.io/badge/⚡_LAUNCH_LIVE_APP_⚡-medical--chatbot--179320.vercel.app-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="52"/>
-</a>
-
-```
-              👆👆👆 TRY IT RIGHT NOW! 👆👆👆
-```
-
-<br/>
-
----
-
-<!-- TECH BADGES -->
-[![Python](https://img.shields.io/badge/Python_3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![LangChain](https://img.shields.io/badge/LangChain-121212?style=flat-square&logo=chainlink&logoColor=white)](https://langchain.com)
-[![Pinecone](https://img.shields.io/badge/Pinecone-000000?style=flat-square&logoColor=white)](https://pinecone.io)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/keshav-077/medical-chatbot-rag?style=flat-square&color=yellow)](https://github.com/keshav-077/medical-chatbot-rag/stargazers)
-
-</div>
-
----
 
 > [!NOTE]
 > 👉 **Looking for the deployed application?** Scroll down to the **"Live Deployment"** section or [**click here**](https://medical-chatbot-179320.vercel.app) 👈
@@ -55,19 +20,8 @@
 
 ## 🌐 Live Deployment
 
-<br/>
 
-```
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃                                                                 ┃
-┃       👉 TRY THE LIVE APPLICATION NOW! 👈                       ┃
-┃                                                                 ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-```
-
-<br/>
-
-### � **Click Below to Experience the App** 👇
+### � **Click Below Link to Experience the App** 👇
 
 <a href="https://medical-chatbot-179320.vercel.app">
   <img src="https://img.shields.io/badge/⚡_LAUNCH_LIVE_APP_⚡-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="60"/>
@@ -87,6 +41,20 @@
 <br/>
 
 ### 👆 **The app is running right now!** 👆
+
+---
+
+<!-- TECH BADGES -->
+[![Python](https://img.shields.io/badge/Python_3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![LangChain](https://img.shields.io/badge/LangChain-121212?style=flat-square&logo=chainlink&logoColor=white)](https://langchain.com)
+[![Pinecone](https://img.shields.io/badge/Pinecone-000000?style=flat-square&logoColor=white)](https://pinecone.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/keshav-077/medical-chatbot-rag?style=flat-square&color=yellow)](https://github.com/keshav-077/medical-chatbot-rag/stargazers)
+
+</div>
+
+---
 
 </div>
 

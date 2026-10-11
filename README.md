@@ -1,8 +1,6 @@
 <div align="center">
 
-<!-- Use raw.githubusercontent.com so GitHub README always loads images -->
-
-![bloom logo](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/brand/bloom-logo.svg)
+<img src="docs/brand/bloom-icon.png" width="72" alt="bloom">
 
 # bloom
 
@@ -30,7 +28,7 @@
 
 <br/>
 
-![bloom mark](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/brand/bloom-mark.svg) **Browser tab identity** — same five-petal mark as [`static/favicon.svg`](static/favicon.svg)
+The browser tab uses the same five-petal mark as [`static/favicon.svg`](static/favicon.svg).
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3-000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
@@ -52,15 +50,15 @@
 
 ## Demo preview
 
-![Demo preview](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/demo-preview.svg)
-
 <p align="center">
-  <a href="https://dwa21x631l5fr.cloudfront.net"><strong>▶ Open live app</strong></a>
-  &nbsp;·&nbsp;
-  <a href="https://t.me/bloom531134_bot"><strong>▶ Message on Telegram</strong></a>
+  <img src="docs/demo.gif" width="880" alt="bloom live site: sign in and sign up">
 </p>
 
-If the animated SVG does not animate in the README viewer, open the file on GitHub: [`docs/demo-preview.svg`](docs/demo-preview.svg).
+<p align="center">
+  <a href="https://dwa21x631l5fr.cloudfront.net"><strong>Open live app</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://t.me/bloom531134_bot"><strong>Message on Telegram</strong></a>
+</p>
 
 ---
 
@@ -79,78 +77,12 @@ If the animated SVG does not animate in the README viewer, open the file on GitH
 
 ---
 
-## Architecture (production)
+## How a request moves
 
-GitHub renders **Mermaid** natively (use this if SVG images below do not show in your viewer):
-
-```mermaid
-flowchart TB
-  subgraph clients["Clients"]
-    WEB["Web browser"]
-    TG["Telegram @bloom531134_bot"]
-  end
-
-  CF["Amazon CloudFront<br/>HTTPS"]
-  ALB["Application Load Balancer<br/>/health"]
-  ECS["Amazon ECS Fargate<br/>Gunicorn → Flask → LangGraph"]
-  ECR["Amazon ECR<br/>image bloom:latest"]
-
-  WEB --> CF
-  TG --> CF
-  CF --> ALB
-  ALB --> ECS
-  ECR -.-> ECS
-
-  NEON[("Neon PostgreSQL")]
-  PC["Pinecone<br/>medicalbot index"]
-  JINA["Jina embeddings API<br/>1024-d"]
-  OR["OpenRouter LLM"]
-  GQ["Groq LLM + Whisper"]
-  GM["Google Maps / Places / Calendar OAuth"]
-  LF["Langfuse traces"]
-  OTEL["OpenTelemetry OTLP optional"]
-
-  ECS --> NEON
-  ECS --> PC
-  ECS --> JINA
-  ECS --> OR
-  ECS --> GQ
-  ECS --> GM
-  ECS --> LF
-  ECS --> OTEL
-  JINA --> PC
-```
-
-**SVG diagram** (click to open full file if preview is blank):
-
-[![Architecture diagram](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/architecture.svg)](https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/architecture.svg)
-
----
-
-## System design (one chat turn)
-
-```mermaid
-flowchart TD
-  A["POST /get or Telegram /api/telegram"] --> B["run_turn()"]
-  B --> C["1. safety_node<br/>emergency regex · disclaimers · IN helplines"]
-  C --> D["2. classify_intent"]
-  D --> E1["general → RAG retrieve + LLM"]
-  D --> E2["medication → monograph tools"]
-  D --> E3["symptom → guided triage copy"]
-  D --> E4["lab → parse_lab_rows"]
-  D --> E5["care → Places nearby search"]
-  D --> E6["appointment → draft script"]
-  E1 --> F["verify_node · citations · dose guard · freshness"]
-  E2 --> F
-  E3 --> F
-  E4 --> F
-  E5 --> F
-  E6 --> F
-  F --> G["Save Message + JSON response"]
-  G --> H["Langfuse trace bloom.turn optional"]
-```
-
-[![System design diagram](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/system-design.svg)](https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/system-design.svg)
+1. Browser or Telegram hits CloudFront, then the load balancer, then ECS Fargate (Gunicorn and Flask).
+2. `run_turn` runs safety, then intent, then one path: general RAG, medication, symptom, lab, care map, or appointment.
+3. The verify step checks citations, dose wording, and freshness, then saves the message.
+4. Data lives in Neon. Search uses Pinecone and Jina (1024-d). Answers use OpenRouter, with Groq as backup.
 
 ---
 

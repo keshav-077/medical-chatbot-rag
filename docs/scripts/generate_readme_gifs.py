@@ -16,6 +16,8 @@ DIAGRAMS = ROOT / "docs" / "diagrams"
 FPS = 12
 LOGO_FRAMES = 36
 DIAGRAM_FRAMES = 30
+HERO_FPS = 15
+HERO_FRAMES = 45
 
 
 def find_chrome() -> str:
@@ -82,12 +84,12 @@ def frames_to_gif(frame_paths: list[Path], out_gif: Path, duration_ms: int) -> N
         im.close()
 
 
-def logo_svg(t: float) -> str:
-    scale = 1 + 0.03 * math.sin(2 * math.pi * t / 4)
+def logo_svg(t: float, *, petal_opacity: float = 0.22) -> str:
+    scale = 1 + 0.04 * math.sin(2 * math.pi * t / 4)
     rot = (t / 18) * 360
     pulse_phase = (math.sin(2 * math.pi * t / 2.4) + 1) / 2
     dashoffset = 42 * (1 - pulse_phase)
-    opacity = 0.75 + 0.25 * pulse_phase
+    opacity = 0.65 + 0.35 * pulse_phase
     petals = ""
     for angle in (0, 72, 144, 216, 288):
         petals += (
@@ -108,7 +110,7 @@ def logo_svg(t: float) -> str:
   <g transform="translate(60 60) scale({scale}) translate(-60 -60)">
     <path fill="url(#bloom-bg)" d="M60 8c14 0 24 8 30 18 10-2 22 2 28 14 6 12 2 26-6 36 4 12 0 26-10 34-10 8-24 8-36 2-10 8-24 10-36 2-12-8-16-22-12-34-8-10-12-24-6-36 6-12 18-16 28-14C36 16 46 8 60 8z"/>
   </g>
-  <g opacity="0.22" transform="rotate({rot} 60 58)">{petals}</g>
+  <g opacity="{petal_opacity}" transform="rotate({rot} 60 58)">{petals}</g>
   <g filter="url(#bloom-glow)">
     <path fill="#fff" d="M60 38c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z"/>
     <path fill="none" stroke="#E3256B" stroke-width="2.2" stroke-linecap="round"
@@ -289,52 +291,70 @@ def generate_hero_pngs() -> None:
     print("Wrote README hero PNGs under docs/brand/")
 
 
-def _hero_text_block() -> Image.Image:
-    """Right column of the PaperLoom-style hero card."""
-    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 52)
-    tag_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 11)
+def _compose_readme_hero_frame(logo: Image.Image, t: float) -> Image.Image:
+    """Dark banner + cream card; logo left, Bloom wordmark right (layout inspired by premium README heroes)."""
+    w, h = 780, 196
+    dark = (18, 16, 24)
+    cream = (255, 245, 238)
+    canvas = Image.new("RGB", (w, h), dark)
+    draw = ImageDraw.Draw(canvas)
+
+    cx1, cy1, cx2, cy2 = 36, 32, w - 36, h - 32
+    draw.rounded_rectangle((cx1, cy1, cx2, cy2), radius=20, fill=cream, outline=(74, 68, 88), width=1)
+
+    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 56)
+    organic_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 10)
+    tag_font = _font(("segoeuisl.ttf", "Segoe UI Italic.ttf", "DejaVuSans-Oblique.ttf"), 15)
     sub_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 14)
-    block = Image.new("RGBA", (520, 98), (0, 0, 0, 0))
-    d = ImageDraw.Draw(block)
-    d.text((0, 0), "Bloom", font=title_font, fill="#1A1F12")
-    tag = "LISTEN FIRST · CITE ALWAYS · CARE NEARBY"
-    d.text((0, 54), tag, font=tag_font, fill="#6B7355")
-    d.rectangle((0, 74, 44, 77), fill="#E3256B")
-    d.text((0, 84), "Every answer traced to sources and nearby care.", font=sub_font, fill="#4A5D23")
-    return block
+
+    lx, ly, tile = 56, 48, 108
+    draw.rounded_rectangle(
+        (lx, ly, lx + tile, ly + tile),
+        radius=18,
+        fill=(255, 236, 243),
+        outline=(227, 37, 107),
+        width=2,
+    )
+    draw.ellipse((lx + tile - 18, ly + 10, lx + tile - 6, ly + 22), fill=(255, 77, 141))
+
+    canvas.paste(logo, (lx + 10, ly + 10), logo)
+
+    tx = lx + tile + 28
+    ty = 52
+    draw.text((tx, ty), "Bloom", font=title_font, fill=(26, 31, 18))
+    draw.text((tx, ty + 58), "ORGANIC CARE", font=organic_font, fill=(107, 115, 85))
+
+    pulse = (math.sin(2 * math.pi * t / 2.4) + 1) / 2
+    bar_w = int(28 + 36 * pulse)
+    draw.rectangle((tx, ty + 78, tx + bar_w, ty + 82), fill=(227, 37, 107))
+
+    draw.text((tx, ty + 92), "Listen first. Cite always. Care nearby.", font=tag_font, fill=(74, 93, 35))
+    draw.text(
+        (tx, ty + 114),
+        "India-first health companion — web, Telegram, cited RAG.",
+        font=sub_font,
+        fill=(90, 98, 72),
+    )
+    return canvas
 
 
 def generate_readme_hero_gif(chrome: str) -> None:
-    """One GIF: cream card, logo animates inside left tile (PaperLoom layout)."""
-    text = _hero_text_block()
-    card_w, card_h = 660, 128
-    cream = (255, 248, 244)
-    duration_ms = int(1000 / FPS)
+    """README header GIF: full dark band, animated Bloom mark + name + taglines."""
+    duration_ms = int(1000 / HERO_FPS)
+    logo_px = 176
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         palette_frames: list[Image.Image] = []
-        for i in range(LOGO_FRAMES):
-            t = i / FPS
+        for i in range(HERO_FRAMES):
+            t = i / HERO_FPS
             logo_png = tmp_path / f"logo_{i:03d}.png"
-            screenshot_svg(chrome, logo_svg(t), logo_png, 128, 128)
-            logo = Image.open(logo_png).convert("RGBA").resize((80, 80), Image.Resampling.LANCZOS)
+            screenshot_svg(chrome, logo_svg(t, petal_opacity=0.34), logo_png, logo_px, logo_px)
+            logo = Image.open(logo_png).convert("RGBA").resize((88, 88), Image.Resampling.LANCZOS)
 
-            card = Image.new("RGB", (card_w, card_h), cream)
-            draw = ImageDraw.Draw(card)
-            lx, ly, box = 20, 18, 92
-            draw.rounded_rectangle(
-                (lx, ly, lx + box, ly + box),
-                radius=14,
-                fill=(255, 255, 255),
-                outline=(225, 218, 210),
-                width=1,
-            )
-            card.paste(logo, (lx + 6, ly + 6), logo)
-            card.paste(text, (124, 14), text)
+            frame = _compose_readme_hero_frame(logo, t)
             logo.close()
-
             frame_path = tmp_path / f"hero_{i:03d}.png"
-            card.save(frame_path)
+            frame.save(frame_path)
             palette_frames.append(
                 Image.open(frame_path).convert("P", palette=Image.ADAPTIVE, colors=256)
             )
@@ -350,7 +370,7 @@ def generate_readme_hero_gif(chrome: str) -> None:
         )
         for im in palette_frames:
             im.close()
-    print(f"Wrote {out} ({LOGO_FRAMES} frames)")
+    print(f"Wrote {out} ({HERO_FRAMES} frames @ {HERO_FPS} fps)")
 
 
 def render_gif(

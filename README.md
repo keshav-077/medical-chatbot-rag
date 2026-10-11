@@ -1,20 +1,11 @@
 <div align="center">
 
-<table width="100%">
-<tr>
-<td align="center" bgcolor="#121018">
-
-<br/>
-
 <a href="https://dwa21x631l5fr.cloudfront.net">
-<img src="docs/brand/readme-hero.gif" width="660" alt="Bloom — animated logo, serif title, and tagline">
+<img src="docs/brand/readme-hero.gif" width="720" alt="Bloom — Organic Care. Animated logo with name and tagline.">
 </a>
 
-<br/><br/>
-
-<img src="docs/brand/readme-hero-lead.png" alt="Ask anything health-related. Get cited guidance with India meds, maps, and labs.">
-
-<br/><br/>
+<p><strong>Ask anything health-related.</strong> Cited guidance with India meds, maps, labs, and voice.<br/>
+<em>Bloom</em> on the web and Telegram — LangGraph safety, RAG, and empathic care nearby.</p>
 
 <a href="https://dwa21x631l5fr.cloudfront.net">
   <img src="https://img.shields.io/badge/🌸_OPEN_LIVE_APP-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="44" alt="Open Bloom live app">
@@ -25,10 +16,6 @@
 </a>
 
 <br/><br/>
-
-</td>
-</tr>
-</table>
 
 | | |
 |---|---|

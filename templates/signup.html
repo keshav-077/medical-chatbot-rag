@@ -1,21 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Sign Up — Medical Chatbot{% endblock %}
+{% block title %}Sign up — bloom{% endblock %}
 
 {% block content %}
 <div class="w-full max-w-[1280px] mx-auto px-5 py-5 flex flex-col min-h-screen justify-between relative z-10">
     <!-- Header -->
     <header class="flex items-center justify-between h-[65px] px-4 mb-3">
         <!-- Logo -->
-        <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-[#E3256B] flex items-center justify-center text-white shadow-lg shadow-[#E3256B]/20">
-                <i class="ti ti-heart-handshake text-2xl"></i>
-            </div>
-            <div>
-                <h1 class="font-heading font-bold text-lg tracking-tight text-[#4A5D23] leading-none">bloom</h1>
-                <span class="text-xs text-[#4A5D23]/60 font-semibold tracking-wide uppercase">Organic Care</span>
-            </div>
-        </div>
+        {% include 'partials/bloom_wordmark.html' %}
 
         <!-- Navigation Tabs -->
         <nav class="clay-card rounded-full p-1.5 flex gap-1 z-30">
@@ -39,8 +31,8 @@
         <div class="w-full max-w-md h-[610px] relative rounded-[32px] overflow-hidden clay-card flex flex-col justify-end animate-slide-up">
             <!-- Warm Welcome Top Panel -->
             <div class="absolute inset-0 bg-gradient-to-br from-[#FFE4E1] to-[#FFF5EE] p-8 flex flex-col justify-start">
-                <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#E3256B] mb-4 shadow-sm">
-                    <i class="ti ti-user-plus text-2xl"></i>
+                <div class="mb-4">
+                    {% with size='lg' %}{% include 'partials/bloom_logo.html' %}{% endwith %}
                 </div>
                 <h2 class="text-3xl font-heading font-bold text-[#4A5D23] leading-none">Create Account</h2>
                 <p class="text-sm text-[#4A5D23]/70 mt-2">Join Bloom chatbot for warm & caring health insights.</p>

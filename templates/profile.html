@@ -9,13 +9,7 @@
         <!-- Logo -->
         <div class="flex items-center gap-3">
             <a href="{{ url_for('index') }}" class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] bg-[#E3256B] flex items-center justify-center text-white shadow-lg shadow-[#E3256B]/20 shrink-0">
-                    <i class="ti ti-heart-handshake text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="font-heading font-bold text-lg tracking-tight text-[#4A5D23] leading-none">bloom</h1>
-                    <span class="text-xs text-[#4A5D23]/60 font-semibold tracking-wide uppercase">Organic Care</span>
-                </div>
+                {% with logo_size='md' %}{% include 'partials/bloom_wordmark.html' %}{% endwith %}
             </a>
         </div>
 

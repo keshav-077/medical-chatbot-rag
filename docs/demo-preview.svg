@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFF5EE"/><stop offset="1" stop-color="#FFE4E1"/></linearGradient>
+  </defs>
+  <style>
+    .bubble-user { animation: slide-in 6s ease infinite; opacity: 0; }
+    .bubble-bot { animation: slide-in 6s ease 1.2s infinite; opacity: 0; }
+    .cite { animation: fade 6s ease 2.4s infinite; opacity: 0; }
+    @keyframes slide-in { 0%, 8% { opacity: 0; transform: translateY(8px); } 15%, 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; } }
+    @keyframes fade { 0%, 35% { opacity: 0; } 45%, 85% { opacity: 1; } 100% { opacity: 0; } }
+  </style>
+  <rect width="720" height="400" rx="28" fill="url(#bg)" stroke="#fff" stroke-width="3"/>
+  <text x="360" y="36" text-anchor="middle" fill="#4A5D23" font-size="18" font-weight="700">bloom demo preview</text>
+  <text x="360" y="58" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="12">Animated SVG  open the live site for the full experience</text>
+  <rect x="24" y="78" width="672" height="298" rx="24" fill="rgba(255,255,255,.92)" stroke="#4A5D23" stroke-opacity=".12"/>
+  <circle cx="52" cy="108" r="18" fill="#E3256B"/>
+  <text x="80" y="113" fill="#4A5D23" font-weight="700">bloom</text>
+  <text x="80" y="128" fill="#4A5D23" fill-opacity=".6" font-size="11">Organic Care · Chat</text>
+  <g class="bubble-user">
+    <rect x="380" y="150" width="280" height="52" rx="18" fill="#E3256B"/>
+    <text x="400" y="172" fill="#fff" font-size="13">What is in metformin?</text>
+    <text x="400" y="190" fill="#fff" fill-opacity=".85" font-size="11">India medicine question</text>
+  </g>
+  <g class="bubble-bot">
+    <rect x="40" y="220" width="420" height="96" rx="18" fill="#F0FFF4" stroke="#4A5D23" stroke-opacity=".15"/>
+    <text x="58" y="248" fill="#4A5D23" font-size="13">Metformin is the active ingredient in many</text>
+    <text x="58" y="268" fill="#4A5D23" font-size="13">diabetes tablets. Educational summary only.</text>
+    <text x="58" y="296" fill="#E3256B" font-size="11" font-weight="600">Freshness: Bloom India monograph · 2026-02-01</text>
+  </g>
+  <g class="cite">
+    <rect x="40" y="330" width="200" height="28" rx="14" fill="#fff" stroke="#4A5D23" stroke-opacity=".2"/>
+    <text x="140" y="349" text-anchor="middle" fill="#4A5D23" font-size="11">1 citation · intent: medication</text>
+  </g>
+  <text x="360" y="388" text-anchor="middle" fill="#E3256B" font-weight="700" font-size="13">’ https://dwa21x631l5fr.cloudfront.net</text>
+</svg>

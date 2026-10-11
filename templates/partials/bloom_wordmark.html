@@ -1,0 +1,10 @@
+{# Header wordmark: animated logo + bloom / Organic Care #}
+<div class="flex items-center gap-3">
+  {% with size=logo_size|default('md') %}{% include 'partials/bloom_logo.html' %}{% endwith %}
+  <div>
+    <h1 class="font-heading font-bold text-lg tracking-tight text-[#4A5D23] leading-none">bloom</h1>
+    {% if show_tagline|default(true) %}
+    <span class="text-xs text-[#4A5D23]/60 font-semibold tracking-wide uppercase">Organic Care</span>
+    {% endif %}
+  </div>
+</div>

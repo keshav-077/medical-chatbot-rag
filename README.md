@@ -1,6 +1,8 @@
 <div align="center">
 
-<img src="docs/brand/bloom-logo.svg" width="120" alt="bloom animated logo"/>
+<!-- Use raw.githubusercontent.com so GitHub README always loads images -->
+
+![bloom logo](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/brand/bloom-logo.svg)
 
 # bloom
 
@@ -8,79 +10,57 @@
 
 <br/>
 
-<table>
-<tr>
-<td align="center" width="50%">
-
-### 🌐 Live website
-
-<a href="https://dwa21x631l5fr.cloudfront.net">
-<img src="https://img.shields.io/badge/OPEN_LIVE_APP-FF4D8D?style=for-the-badge&labelColor=E3256B&color=FF4D8D&logo=amazonaws&logoColor=white" height="56" alt="Open live app"/>
-</a>
+| | |
+|:---:|:---:|
+| **🌐 LIVE WEBSITE** | **💬 TELEGRAM BOT** |
+| [**https://dwa21x631l5fr.cloudfront.net**](https://dwa21x631l5fr.cloudfront.net) | [**@bloom531134_bot**](https://t.me/bloom531134_bot) |
+| [Open app →](https://dwa21x631l5fr.cloudfront.net) | [Chat now →](https://t.me/bloom531134_bot) |
 
 <br/>
 
-**https://dwa21x631l5fr.cloudfront.net**
-
-</td>
-<td align="center" width="50%">
-
-### 💬 Telegram bot
-
-<a href="https://t.me/bloom531134_bot">
-<img src="https://img.shields.io/badge/CHAT_ON_TELEGRAM-2AABEE?style=for-the-badge&logo=telegram&logoColor=white" height="56" alt="Telegram bot"/>
-</a>
-
-<br/>
-
-**[@bloom531134_bot](https://t.me/bloom531134_bot)**
-
-</td>
-</tr>
-</table>
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  PRODUCTION  →  https://dwa21x631l5fr.cloudfront.net           ║
+║  TELEGRAM    →  https://t.me/bloom531134_bot                   ║
+║  WEBHOOK     →  https://dwa21x631l5fr.cloudfront.net/api/telegram
+║  OAUTH       →  https://dwa21x631l5fr.cloudfront.net/calendar/callback
+║  HEALTH      →  https://dwa21x631l5fr.cloudfront.net/health    ║
+╚══════════════════════════════════════════════════════════════════╝
+```
 
 <br/>
 
-| | Link |
-|---|---|
-| **Production URL** | [dwa21x631l5fr.cloudfront.net](https://dwa21x631l5fr.cloudfront.net) |
-| **Telegram webhook** | `https://dwa21x631l5fr.cloudfront.net/api/telegram` |
-| **Google OAuth redirect** | `https://dwa21x631l5fr.cloudfront.net/calendar/callback` |
-| **Health check** | […/health](https://dwa21x631l5fr.cloudfront.net/health) |
-| **AWS region** | `ap-southeast-2` (Sydney) |
-| **GitHub** | [keshav-077/medical-chatbot-rag](https://github.com/keshav-077/medical-chatbot-rag) |
+![bloom mark](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/brand/bloom-mark.svg) **Browser tab identity** — same five-petal mark as [`static/favicon.svg`](static/favicon.svg)
 
-<br/>
-
-<img src="docs/brand/bloom-mark.svg" width="28" alt="bloom mark"/> **Tab icon** — five-petal bloom mark (same identity as the animated logo)
-
-[![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask_3-000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![LangGraph](https://img.shields.io/badge/LangGraph-supervisor-121212?style=flat-square)](https://langchain-ai.github.io/langgraph/)
-[![AWS](https://img.shields.io/badge/AWS-ECS_%2B_CloudFront-232F3E?style=flat-square&logo=amazonaws&logoColor=white)](https://aws.amazon.com)
-[![Neon](https://img.shields.io/badge/Neon-Postgres-00E599?style=flat-square)](https://neon.tech)
-[![Pinecone](https://img.shields.io/badge/Pinecone-1024--d-000?style=flat-square)](https://pinecone.io)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3-000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-supervisor-121212)](https://langchain-ai.github.io/langgraph/)
+[![AWS ECS](https://img.shields.io/badge/AWS-ECS_Fargate-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/ecs/)
+[![CloudFront](https://img.shields.io/badge/HTTPS-CloudFront-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/cloudfront/)
+[![Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599)](https://neon.tech)
+[![Pinecone](https://img.shields.io/badge/Pinecone-vector-000)](https://pinecone.io)
+[![Langfuse](https://img.shields.io/badge/Langfuse-traces-000)](https://langfuse.com)
+[![MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 </div>
 
 ---
 
-> **Disclaimer:** bloom is for **education and navigation**, not diagnosis or prescribing. In an emergency, call **112**, **108**, or Tele-MANAS **14416**.
+> **Disclaimer:** Educational only — not diagnosis or prescribing. Emergency: **112**, **108**, Tele-MANAS **14416**.
 
 ---
 
 ## Demo preview
 
-<p align="center">
-  <img src="docs/demo-preview.svg" width="720" alt="Animated demo preview of bloom chat"/>
-</p>
+![Demo preview](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/demo-preview.svg)
 
 <p align="center">
-  <a href="https://dwa21x631l5fr.cloudfront.net"><strong>Open the live app →</strong></a>
+  <a href="https://dwa21x631l5fr.cloudfront.net"><strong>▶ Open live app</strong></a>
   &nbsp;·&nbsp;
-  <a href="https://t.me/bloom531134_bot"><strong>Message on Telegram →</strong></a>
+  <a href="https://t.me/bloom531134_bot"><strong>▶ Message on Telegram</strong></a>
 </p>
+
+If the animated SVG does not animate in the README viewer, open the file on GitHub: [`docs/demo-preview.svg`](docs/demo-preview.svg).
 
 ---
 
@@ -88,105 +68,261 @@
 
 | Module | What users get |
 |--------|----------------|
-| **Chat** | Safety triage first, then LangGraph-routed answers with citations when RAG is used |
-| **Meds** | India monograph catalog — composition, warnings, interactions, freshness dates |
-| **Care map** | Nearby hospitals, doctors, pharmacies (Google Places) |
-| **Labs** | Upload PDF → plain-language explanation (not a diagnosis) |
-| **Appointments** | Call script + reminder drafts (no clinic API booking) |
-| **Voice** | Browser speech + Groq Whisper for uploads |
-| **Telegram** | Same brain via [@bloom531134_bot](https://t.me/bloom531134_bot) |
-| **Share / PDF** | Read-only share links and visit PDF export |
+| **Chat** | Safety triage → LangGraph route → cited RAG answers |
+| **Meds** | India monographs — composition, warnings, interactions, freshness |
+| **Care map** | Hospitals, doctors, pharmacies (Google Maps / Places) |
+| **Labs** | PDF upload → plain-language explanation |
+| **Appointments** | Call script + reminders (assisted, not clinic API booking) |
+| **Voice** | Browser Web Speech + Groq Whisper on uploads |
+| **Telegram** | Same orchestration via webhook |
+| **Share / PDF** | 7-day share links + visit PDF (ReportLab) |
 
 ---
 
 ## Architecture (production)
 
-<p align="center">
-  <img src="docs/diagrams/architecture.svg" width="960" alt="AWS architecture diagram"/>
-</p>
+GitHub renders **Mermaid** natively (use this if SVG images below do not show in your viewer):
 
-```text
-Users / Telegram
-       │
-       ▼
- CloudFront (HTTPS)
-       │
-       ▼
- Application Load Balancer  ──►  /health
-       │
-       ▼
- ECS Fargate (Gunicorn → Flask → LangGraph)
-       │
-       ├── Neon Postgres (accounts, chats, meds, appointments)
-       ├── Pinecone + Jina embeddings (1024-d RAG index)
-       ├── OpenRouter (primary LLM) · Groq (fallback + Whisper)
-       ├── Google Maps / Places · Calendar OAuth
-       └── Langfuse traces (optional)
+```mermaid
+flowchart TB
+  subgraph clients["Clients"]
+    WEB["Web browser"]
+    TG["Telegram @bloom531134_bot"]
+  end
+
+  CF["Amazon CloudFront<br/>HTTPS"]
+  ALB["Application Load Balancer<br/>/health"]
+  ECS["Amazon ECS Fargate<br/>Gunicorn → Flask → LangGraph"]
+  ECR["Amazon ECR<br/>image bloom:latest"]
+
+  WEB --> CF
+  TG --> CF
+  CF --> ALB
+  ALB --> ECS
+  ECR -.-> ECS
+
+  NEON[("Neon PostgreSQL")]
+  PC["Pinecone<br/>medicalbot index"]
+  JINA["Jina embeddings API<br/>1024-d"]
+  OR["OpenRouter LLM"]
+  GQ["Groq LLM + Whisper"]
+  GM["Google Maps / Places / Calendar OAuth"]
+  LF["Langfuse traces"]
+  OTEL["OpenTelemetry OTLP optional"]
+
+  ECS --> NEON
+  ECS --> PC
+  ECS --> JINA
+  ECS --> OR
+  ECS --> GQ
+  ECS --> GM
+  ECS --> LF
+  ECS --> OTEL
+  JINA --> PC
 ```
+
+**SVG diagram** (click to open full file if preview is blank):
+
+[![Architecture diagram](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/architecture.svg)](https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/architecture.svg)
 
 ---
 
 ## System design (one chat turn)
 
-<p align="center">
-  <img src="docs/diagrams/system-design.svg" width="960" alt="LangGraph system design"/>
-</p>
+```mermaid
+flowchart TD
+  A["POST /get or Telegram /api/telegram"] --> B["run_turn()"]
+  B --> C["1. safety_node<br/>emergency regex · disclaimers · IN helplines"]
+  C --> D["2. classify_intent"]
+  D --> E1["general → RAG retrieve + LLM"]
+  D --> E2["medication → monograph tools"]
+  D --> E3["symptom → guided triage copy"]
+  D --> E4["lab → parse_lab_rows"]
+  D --> E5["care → Places nearby search"]
+  D --> E6["appointment → draft script"]
+  E1 --> F["verify_node · citations · dose guard · freshness"]
+  E2 --> F
+  E3 --> F
+  E4 --> F
+  E5 --> F
+  E6 --> F
+  F --> G["Save Message + JSON response"]
+  G --> H["Langfuse trace bloom.turn optional"]
+```
 
-1. **Safety** — emergency patterns, India helplines, disclaimer  
-2. **Intent** — general, medication, symptom, lab, care map, appointment  
-3. **Specialist path** — tools (RAG, drugs JSON, Places, lab parser, …)  
-4. **Verify** — citation check, dose guardrails, freshness badge  
-5. **Persist** — message + `citations_json`, `risk_level`, `trace_id`  
+[![System design diagram](https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/system-design.svg)](https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/system-design.svg)
 
 ---
 
-## Tech stack
+## Complete technology stack
 
-### Application
+Everything used in this repository, grouped by layer.
 
-| Layer | Technology |
-|-------|------------|
-| Web | Flask 3, Jinja2, Tailwind (CDN), Tabler icons |
-| Auth | Flask-Login, Bcrypt, Flask-Limiter |
-| Orchestration | **LangGraph** supervisor graph |
-| RAG | LangChain retriever → Pinecone `medicalbot` |
-| Embeddings | **Jina** `jina-embeddings-v3` (**1024-d only**) |
-| LLM | **OpenRouter** (primary), **Groq** (fallback) |
-| Voice | Web Speech API + **Groq Whisper** (uploads) |
-| PDF | ReportLab (visit export) |
-| Observability | Langfuse, optional OpenTelemetry |
+### Language & runtime
 
-### Data & content
+| Tech | Where |
+|------|--------|
+| **Python 3.11** | `Dockerfile`, `runtime.txt`, local dev |
+| **pip** | `requirements.txt` |
 
-| Store | Role |
-|-------|------|
-| **Neon PostgreSQL** | Users, conversations, health profile, meds, favorites, labs |
-| **Pinecone** | Medical book / document vectors |
-| **Local JSON** | India drug monographs + safety notices (ingest pipeline) |
+### Web application
 
-### Infrastructure (live)
+| Tech | Where |
+|------|--------|
+| **Flask 3** | `app.py`, routes |
+| **Jinja2** | `templates/` |
+| **Werkzeug** | `ProxyFix` in production (`app.py`) |
+| **Gunicorn** | `gunicorn.conf.py`, `Dockerfile` (gthread workers) |
+| **WSGI** | `wsgi.py` |
+| **Tailwind CSS** (CDN) | `templates/base.html` |
+| **Custom CSS** (clay UI) | `static/style.css` |
+| **Google Fonts** — Quicksand, Nunito Sans | `base.html` |
+| **Tabler Icons** | templates |
+| **Font Awesome 6** | `base.html` |
+| **Web Speech API** | `templates/chat.html` — `speechSynthesis`, `webkitSpeechRecognition` (en-IN) |
 
-| Service | Use |
-|---------|-----|
-| **Amazon ECR** | Container image `bloom:latest` |
-| **Amazon ECS Fargate** | Service `bloom-web`, port **8080** |
-| **Application Load Balancer** | HTTP → targets |
-| **Amazon CloudFront** | Public HTTPS URL |
-| **CloudWatch Logs** | `/ecs/bloom` |
+### Auth, sessions, limits
 
-App Runner is blocked by org SCP on this account; ECS + ALB + CloudFront is the production path.
+| Tech | Where |
+|------|--------|
+| **Flask-Login** | `app.py` |
+| **Flask-Bcrypt** / **bcrypt** | `models.py` |
+| **Flask-Limiter** | `app.py`, `config.py` |
+| **email-validator** | signup validation |
+| **Secure session cookies** | `ProductionConfig` |
+
+### Database & ORM
+
+| Tech | Where |
+|------|--------|
+| **Flask-SQLAlchemy** | `models.py` |
+| **SQLAlchemy** | engine options, migrations in `db_setup.py` |
+| **psycopg2-binary** | Neon / Postgres (`config.py` → `postgresql+psycopg2://`) |
+| **SQLite** | local dev when `DATABASE_URL` unset |
+| **Neon PostgreSQL** | production (`DATABASE_URL`, pooled endpoint) |
+| **SQLAlchemy NullPool** | production Postgres (`config.py`) |
+
+### AI orchestration
+
+| Tech | Where |
+|------|--------|
+| **LangGraph** | `orchestration/graphs/main.py` supervisor |
+| **LangChain** | `langchain`, `langchain-core`, `langchain-community` |
+| **LangChain OpenAI** | OpenRouter via `ChatOpenAI` (`src/llm_providers.py`) |
+| **LangChain Groq** | `ChatGroq` fallback |
+| **LangChain Pinecone** | `tools/rag.py`, `store_index.py` |
+| **LangChain text splitters** | `store_index.py` indexing |
+| **LangChain HuggingFace** | listed in requirements; **not used for live embeddings** (Jina-only 1024-d) |
+| **LCEL-style chains** | retriever + prompt patterns in graphs |
+| **TypedDict graph state** | `orchestration/state.py` |
+
+### Embeddings & vector search
+
+| Tech | Where |
+|------|--------|
+| **Jina AI API** | `jina-embeddings-v3`, **1024 dimensions** (`src/embeddings.py`) |
+| **Pinecone** | index `medicalbot`, serverless (`tools/rag.py`, `store_index.py`) |
+| **Semantic top-k retrieval** | `tools/rag.py` |
+
+### Large language models & speech
+
+| Tech | Model / endpoint | Where |
+|------|------------------|--------|
+| **OpenRouter** | `openai/gpt-oss-120b:free` | primary LLM |
+| **Groq** | `openai/gpt-oss-120b` | LLM fallback |
+| **Groq Whisper** | `whisper-large-v3-turbo` (env override) | `services/voice.py` uploads |
+| **OpenAI Whisper** | `whisper-1` | optional fallback in `voice.py` |
+
+### External APIs & integrations
+
+| Service | Purpose |
+|---------|---------|
+| **Google Maps JavaScript API** | `templates/map.html` |
+| **Google Places API** (Nearby Search + Details) | `tools/places.py` |
+| **Google OAuth 2.0** | Calendar readonly — `services/calendar.py` |
+| **Telegram Bot API** | webhook `POST /api/telegram`, `telegram_handler.py`, `setup_webhook.py` |
+| **Langfuse** | traces `bloom.turn` — `services/observability.py` |
+| **OpenTelemetry** | Flask instrumentation + OTLP HTTP — `services/telemetry.py` |
+| **Upstash Redis** (optional) | `RATELIMIT_STORAGE_URI` / `UPSTASH_REDIS_URL` |
+| **Amazon S3 / S3-compatible (R2)** (optional) | `services/storage.py` via **boto3** |
+
+### Documents & ingestion
+
+| Tech | Where |
+|------|--------|
+| **pypdf** | lab PDF read (`routes/platform.py`) |
+| **ReportLab** | visit PDF export (`services/pdf_export.py`) |
+| **PyYAML** | `ingestion/sources.yaml` |
+| **Local JSON catalog** | `Data/medicines/india_seed.json`, `safety_notices.json` |
+| **Ingest pipeline** | `ingestion/pipeline.py`, `worker/jobs.py` |
+| **PDF book indexing** | `store_index.py` + `Data/` PDFs |
+
+### Data models (Postgres / SQLite)
+
+`User`, `Conversation`, `Message` (citations, risk, trace, intent), `UserHealthProfile`, `UserMedication`, `DrugMonograph`, `UserFavoritePlace`, `UploadedDocument`, `LabResult`, `AppointmentRequest`, `IngestJob`, `Feedback`, `ShareToken`, `Notification` — `models.py`
+
+### Observability & ops
+
+| Tech | Where |
+|------|--------|
+| **Langfuse Python SDK** | `langfuse>=2.0` |
+| **OpenTelemetry API / SDK** | `services/telemetry.py` |
+| **opentelemetry-instrumentation-flask** | auto-instrument when OTLP endpoint set |
+| **opentelemetry-exporter-otlp-proto-http** | optional export |
+| **Python logging** | app + modules |
+| **CloudWatch Logs** | ECS task `/ecs/bloom` |
+
+### AWS production (live)
+
+| Service | Role |
+|---------|------|
+| **Amazon ECR** | `bloom:latest` container |
+| **Amazon ECS Fargate** | cluster `bloom`, service `bloom-web` |
+| **Application Load Balancer** | public HTTP → targets :8080 |
+| **Amazon CloudFront** | `dwa21x631l5fr.cloudfront.net` |
+| **AWS IAM** | `bloom-ecs-execution`, `bloom-apprunner-ecr` roles |
+| **VPC / public subnets / security groups** | ECS tasks |
+| **PowerShell deploy script** | `deploy/aws.ps1` |
+
+### Container & config
+
+| Tech | Where |
+|------|--------|
+| **Docker** | `Dockerfile` (python:3.11-slim-bookworm, non-root user) |
+| **python-dotenv** | `.env` loading |
+| **requests** | HTTP clients (voice, places, telegram setup) |
+
+### Alternate / legacy deploy path
+
+| Tech | Where |
+|------|--------|
+| **Vercel Serverless** | `vercel.json`, `api/index.py` (not used for current AWS live URL) |
+
+### Testing & quality
+
+| Tech | Where |
+|------|--------|
+| **unittest** | `tests/evals/test_platform.py` |
+| **Eval cases JSON** | `tests/evals/cases.json` |
+
+### Explicitly not used (by design)
+
+| Removed / avoided | Reason |
+|-------------------|--------|
+| CrewAI, AutoGen, Semantic Kernel, A2A | single LangGraph supervisor |
+| Local **torch** / **sentence-transformers** | API-only embeddings |
+| Mixed 384-d / 1024-d vectors | Jina 1024-only Pinecone index |
+| Separate MCP server processes | in-process tools in `tools/` |
 
 ---
 
 ## Brand assets
 
-| File | Use |
-|------|-----|
-| [`static/brand/bloom-logo.svg`](static/brand/bloom-logo.svg) | Animated logo (README + site) |
-| [`static/favicon.svg`](static/favicon.svg) | Browser tab identity mark |
-| [`docs/brand/bloom-mark.svg`](docs/brand/bloom-mark.svg) | Same mark for docs |
-
-The web app uses the **same animated SVG** in headers and on the sign-in card ([`templates/partials/bloom_logo.html`](templates/partials/bloom_logo.html)).
+| File | Purpose |
+|------|---------|
+| [`static/brand/bloom-logo.svg`](static/brand/bloom-logo.svg) | Animated logo (site + docs) |
+| [`static/favicon.svg`](static/favicon.svg) | Tab icon |
+| [`templates/partials/bloom_logo.html`](templates/partials/bloom_logo.html) | Inline animated logo in UI |
 
 ---
 
@@ -200,57 +336,28 @@ copy .env.example .env
 python app.py
 ```
 
-Open [http://localhost:8080](http://localhost:8080). Required: `PINECONE_API_KEY`, `JINA_API_KEY`, and `OPENROUTER_API_KEY` or `GROQ_API_KEY`.
-
 ```powershell
 pytest tests/evals/test_platform.py
 ```
 
 ---
 
-## Deploy to AWS
+## Deploy (AWS Sydney)
 
 ```powershell
 .\deploy\aws.ps1
-```
-
-Then update the ECS service (or use your CI) so `bloom-web` pulls the new image. Set production env vars on the task — never bake `.env` into the image.
-
-| Variable | Required in prod |
-|----------|------------------|
-| `FLASK_ENV=production` | Yes |
-| `SECRET_KEY` | Yes |
-| `DATABASE_URL` | Yes (Neon pooled URL) |
-| `PINECONE_API_KEY`, `JINA_API_KEY` | Yes |
-| `OPENROUTER_API_KEY` or `GROQ_API_KEY` | Yes |
-| `APP_URL` | Set to your CloudFront URL |
-| Maps, OAuth, Telegram, Langfuse | Optional but enabled on live |
-
----
-
-## Project layout
-
-```text
-app.py                 Flask routes + health
-orchestration/         LangGraph graphs (main supervisor)
-tools/                 RAG, drugs, places
-routes/platform.py     Map, meds, labs, calendar, telegram, worker
-services/              voice, calendar, langfuse, storage, pdf
-ingestion/             India medicine seed pipeline
-deploy/aws.ps1         Build + push ECR (Sydney)
-templates/             UI (clay / organic care theme)
-tests/evals/           Platform eval cases
+aws ecs update-service --cluster bloom --service bloom-web --force-new-deployment --region ap-southeast-2
 ```
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — [LICENSE](LICENSE)
 
 <div align="center">
 
-**[Live app](https://dwa21x631l5fr.cloudfront.net)** · **[Telegram](https://t.me/bloom531134_bot)** · **[Health](https://dwa21x631l5fr.cloudfront.net/health)**
+**[Live](https://dwa21x631l5fr.cloudfront.net)** · **[Telegram](https://t.me/bloom531134_bot)** · **[GitHub](https://github.com/keshav-077/medical-chatbot-rag)**
 
 © 2026 bloom — Empowering healthcare with empathic companions
 

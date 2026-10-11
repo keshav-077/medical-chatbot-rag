@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="Segoe UI, system-ui, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" font-family="Segoe UI, system-ui, sans-serif">
   <defs>
     <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFE4E1"/><stop offset="1" stop-color="#FFF5EE"/></linearGradient>
     <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity=".12"/></filter>

@@ -1,9 +1,9 @@
 <div align="center">
 
-<!-- PNG export of the live login header — GitHub dark mode breaks SVG + HTML wordmark styling -->
+<!-- Vector wordmark: same logo paths as static/brand/bloom-logo.svg + login header type -->
 <p align="center">
   <a href="https://dwa21x631l5fr.cloudfront.net">
-    <img src="docs/brand/bloom-wordmark-readme.png" width="260" alt="bloom Organic Care">
+    <img src="docs/brand/bloom-wordmark.svg" width="280" height="76" alt="bloom Organic Care">
   </a>
 </p>
 
@@ -79,12 +79,23 @@
 
 ---
 
-## How a request moves
+## Production architecture
 
-1. Browser or Telegram hits CloudFront, then the load balancer, then ECS Fargate (Gunicorn and Flask).
-2. `run_turn` runs safety, then intent, then one path: general RAG, medication, symptom, lab, care map, or appointment.
-3. The verify step checks citations, dose wording, and freshness, then saves the message.
-4. Data lives in Neon. Search uses Pinecone and Jina (1024-d). Answers use OpenRouter, with Groq as backup.
+<p align="center">
+  <img src="docs/diagrams/architecture.svg" width="720" height="315" alt="AWS production architecture for bloom">
+</p>
+
+[Open full SVG](docs/diagrams/architecture.svg)
+
+---
+
+## System design (one chat turn)
+
+<p align="center">
+  <img src="docs/diagrams/system-design.svg" width="720" height="360" alt="LangGraph system design for one bloom turn">
+</p>
+
+[Open full SVG](docs/diagrams/system-design.svg)
 
 ---
 

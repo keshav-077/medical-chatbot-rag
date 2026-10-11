@@ -1,12 +1,13 @@
 <div align="center">
 
-<!-- Same logo as static/brand/bloom-logo.svg (animated). GitHub may show a still frame in README; open the SVG file for full motion. -->
 <p align="center">
   <a href="https://dwa21x631l5fr.cloudfront.net">
-    <img src="https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/brand/bloom-wordmark.svg" width="280" height="76" alt="bloom Organic Care">
+    <img src="docs/brand/bloom-logo.gif" width="64" height="64" alt="bloom logo" style="vertical-align:middle;">
+    <span style="display:inline-block;vertical-align:middle;text-align:left;margin-left:12px;">
+      <strong style="font-size:1.75rem;line-height:1.1;color:#4A5D23;">bloom</strong><br>
+      <span style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.75;">Organic Care</span>
+    </span>
   </a>
-  <br/>
-  <sub><a href="https://github.com/keshav-077/medical-chatbot-rag/blob/main/static/brand/bloom-logo.svg">View animated logo (same as the live app)</a></sub>
 </p>
 
 <h3><em>Listen first. Cite always. Care nearby.</em></h3>
@@ -84,20 +85,20 @@
 ## Production architecture
 
 <p align="center">
-  <a href="https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/architecture.svg">
-    <img src="https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/architecture.svg" width="720" alt="AWS production architecture for bloom">
-  </a>
+  <img src="docs/diagrams/architecture.png" width="720" alt="AWS production architecture for bloom">
 </p>
+
+<p align="center"><sub>Vector source: <a href="docs/diagrams/architecture.svg">architecture.svg</a> (GitHub blocks SVG embeds in README)</sub></p>
 
 ---
 
 ## System design (one chat turn)
 
 <p align="center">
-  <a href="https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/system-design.svg">
-    <img src="https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/system-design.svg" width="720" alt="LangGraph system design for one bloom turn">
-  </a>
+  <img src="docs/diagrams/system-design.png" width="720" alt="LangGraph system design for one bloom turn">
 </p>
+
+<p align="center"><sub>Vector source: <a href="docs/diagrams/system-design.svg">system-design.svg</a></sub></p>
 
 ---
 

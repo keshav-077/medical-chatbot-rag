@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[2]
 BRAND = ROOT / "docs" / "brand"
@@ -150,8 +150,8 @@ def wordmark_svg(t: float) -> str:
     </linearGradient>
   </defs>
   {inner}
-  <text x="78" y="40" font-family="Quicksand,Segoe UI,sans-serif" font-size="22" font-weight="700" fill="#4A5D23">bloom</text>
-  <text x="78" y="58" font-family="Quicksand,Segoe UI,sans-serif" font-size="10" font-weight="600" fill="#4A5D23" fill-opacity="0.62" letter-spacing="2.5">ORGANIC CARE</text>
+  <text x="78" y="40" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="700" fill="#1A1F12">Bloom</text>
+  <text x="78" y="58" font-family="Segoe UI, system-ui, sans-serif" font-size="9" font-weight="600" fill="#6B7355" letter-spacing="2.2">ORGANIC CARE</text>
 </svg>"""
 
 
@@ -228,6 +228,67 @@ def system_design_svg(frame: int) -> str:
     return base
 
 
+def _font(candidates: tuple[str, ...], size: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    search_roots = (
+        Path(r"C:\Windows\Fonts"),
+        Path("/usr/share/fonts/truetype/msttcorefonts"),
+        Path("/usr/share/fonts/truetype/dejavu"),
+        Path("/System/Library/Fonts/Supplemental"),
+    )
+    for root in search_roots:
+        for fname in candidates:
+            path = root / fname
+            if path.is_file():
+                return ImageFont.truetype(str(path), size)
+    return ImageFont.load_default()
+
+
+def generate_hero_pngs() -> None:
+    """Static PNGs for PaperLoom-style README hero (GitHub-safe typography)."""
+    BRAND.mkdir(parents=True, exist_ok=True)
+    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 58)
+    tag_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 11)
+    sub_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 15)
+    lead_bold = _font(("seguisb.ttf", "Segoe UI Semibold.ttf", "DejaVuSans-Bold.ttf"), 17)
+    body_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 14)
+
+    # Serif wordmark title (cream card)
+    t_img = Image.new("RGBA", (260, 72), (0, 0, 0, 0))
+    t_draw = ImageDraw.Draw(t_img)
+    t_draw.text((0, 2), "Bloom", font=title_font, fill="#1A1F12")
+    t_img.save(BRAND / "bloom-serif-title.png")
+
+    # Coral accent dash
+    bar = Image.new("RGBA", (44, 4), (0, 0, 0, 0))
+    ImageDraw.Draw(bar).rectangle((0, 0, 44, 3), fill="#E3256B")
+    bar.save(BRAND / "accent-bar.png")
+
+    # Caps tagline (gray-green)
+    tag_text = "LISTEN FIRST · CITE ALWAYS · CARE NEARBY"
+    tag_w = int(tag_font.getlength(tag_text)) + 4
+    tag_img = Image.new("RGBA", (tag_w, 22), (0, 0, 0, 0))
+    ImageDraw.Draw(tag_img).text((0, 0), tag_text, font=tag_font, fill="#6B7355")
+    tag_img.save(BRAND / "bloom-hero-tagline.png")
+
+    # Card subtitle
+    sub = "Every answer traced to sources and nearby care."
+    sub_w = int(sub_font.getlength(sub)) + 4
+    sub_img = Image.new("RGBA", (sub_w, 26), (0, 0, 0, 0))
+    ImageDraw.Draw(sub_img).text((0, 0), sub, font=sub_font, fill="#4A5D23")
+    sub_img.save(BRAND / "bloom-hero-subtitle.png")
+
+    # Dark-band lead (white text, transparent bg)
+    lead1 = "Ask anything health-related. Get cited guidance with India meds, maps, and labs."
+    lead2 = "Bloom is an India-first companion on web and Telegram — LangGraph safety, RAG, and voice."
+    w = max(int(lead_font.getlength(lead1)), int(body_font.getlength(lead2))) + 8
+    lead_img = Image.new("RGBA", (w, 72), (0, 0, 0, 0))
+    d = ImageDraw.Draw(lead_img)
+    d.text((0, 0), lead1, font=lead_bold, fill="#F4F4F5")
+    d.text((0, 36), lead2, font=body_font, fill="#D4D4D8")
+    lead_img.save(BRAND / "readme-hero-lead.png")
+    print("Wrote README hero PNGs under docs/brand/")
+
+
 def render_gif(
     chrome: str,
     name: str,
@@ -252,6 +313,7 @@ def render_gif(
 
 
 def main() -> None:
+    generate_hero_pngs()
     chrome = find_chrome()
     render_gif(chrome, "logo", logo_svg, BRAND / "bloom-logo.gif", 120, 120, LOGO_FRAMES)
     render_gif(chrome, "wordmark", wordmark_svg, BRAND / "bloom-wordmark.gif", 280, 76, LOGO_FRAMES)
@@ -276,4 +338,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+
+    if len(sys.argv) > 1 and sys.argv[1] == "--hero-only":
+        generate_hero_pngs()
+    else:
+        main()

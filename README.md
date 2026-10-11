@@ -1,18 +1,48 @@
 <div align="center">
 
-<p align="center">
-  <a href="https://dwa21x631l5fr.cloudfront.net">
-    <img src="docs/brand/bloom-wordmark.gif" width="280" alt="bloom Organic Care — animated logo (same as live app)">
-  </a>
-</p>
-
-<h3><em>Listen first. Cite always. Care nearby.</em></h3>
-<p>India-first health companion on the web and Telegram — empathic chat, medicine context, maps, labs, and voice.</p>
+<table width="100%">
+<tr>
+<td align="center" bgcolor="#121018">
 
 <br/>
 
+<table cellpadding="0" cellspacing="0">
+<tr>
+<td bgcolor="#FFF8F4" align="center">
+
+<table cellpadding="0" cellspacing="0">
+<tr>
+<td width="108" align="center" valign="middle">
 <a href="https://dwa21x631l5fr.cloudfront.net">
-  <img src="https://img.shields.io/badge/🌸_OPEN_LIVE_APP-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="44" alt="Open bloom live app">
+<img src="docs/brand/bloom-logo.gif" width="84" height="84" alt="Bloom animated logo">
+</a>
+</td>
+<td align="left" valign="middle" style="padding: 20px 28px 20px 8px;">
+
+<img src="docs/brand/bloom-serif-title.png" height="52" alt="Bloom"><br/>
+
+<img src="docs/brand/bloom-hero-tagline.png" alt="Listen first · Cite always · Care nearby"><br/>
+
+<img src="docs/brand/accent-bar.png" width="44" height="3" alt=""><br/>
+
+<img src="docs/brand/bloom-hero-subtitle.png" alt="Every answer traced to sources and nearby care.">
+
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+
+<br/>
+
+<img src="docs/brand/readme-hero-lead.png" alt="Ask anything health-related. Get cited guidance with India meds, maps, and labs.">
+
+<br/><br/>
+
+<a href="https://dwa21x631l5fr.cloudfront.net">
+  <img src="https://img.shields.io/badge/🌸_OPEN_LIVE_APP-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="44" alt="Open Bloom live app">
 </a>
 &nbsp;&nbsp;
 <a href="https://t.me/bloom531134_bot">
@@ -20,6 +50,10 @@
 </a>
 
 <br/><br/>
+
+</td>
+</tr>
+</table>
 
 | | |
 |---|---|
@@ -52,7 +86,7 @@
 ## Demo preview
 
 <p align="center">
-  <img src="docs/demo.gif" width="880" alt="bloom live site: sign in and sign up">
+  <img src="docs/demo.gif" width="880" alt="Bloom live site: sign in and sign up">
 </p>
 
 <p align="center">
@@ -63,7 +97,7 @@
 
 ---
 
-## What bloom does
+## What Bloom does
 
 | Module | What users get |
 |--------|----------------|
@@ -81,7 +115,7 @@
 ## Production architecture
 
 <p align="center">
-  <img src="docs/diagrams/architecture.gif" width="720" alt="AWS production architecture for bloom (animated)">
+  <img src="docs/diagrams/architecture.gif" width="720" alt="AWS production architecture for Bloom (animated)">
 </p>
 
 <p align="center"><sub>Vector source: <a href="docs/diagrams/architecture.svg">architecture.svg</a> · regenerate GIFs: <code>python docs/scripts/generate_readme_gifs.py</code></sub></p>
@@ -91,7 +125,7 @@
 ## System design (one chat turn)
 
 <p align="center">
-  <img src="docs/diagrams/system-design.gif" width="720" alt="LangGraph system design for one bloom turn (animated)">
+  <img src="docs/diagrams/system-design.gif" width="720" alt="LangGraph system design for one Bloom turn (animated)">
 </p>
 
 <p align="center"><sub>Vector source: <a href="docs/diagrams/system-design.svg">system-design.svg</a></sub></p>
@@ -302,7 +336,7 @@ MIT — [LICENSE](LICENSE)
 
 <br/><br/>
 
-<strong>bloom</strong> · Organic Care<br/>
-© 2026 bloom — Empowering healthcare with empathic companions
+<strong>Bloom</strong> · Organic Care<br/>
+© 2026 Bloom — Empowering healthcare with empathic companions
 
 </div>

@@ -3,7 +3,7 @@
 <p align="center">
   <a href="https://dwa21x631l5fr.cloudfront.net">
     <img src="docs/brand/bloom-logo.gif" width="56" height="56" alt="bloom" style="vertical-align:middle;">
-    <img src="docs/brand/bloom-wordmark.png" width="220" alt="bloom Organic Care" style="vertical-align:middle;margin-left:8px;">
+    <img src="docs/brand/bloom-wordmark-text.png" width="160" alt="bloom Organic Care" style="vertical-align:middle;margin-left:8px;">
   </a>
 </p>
 

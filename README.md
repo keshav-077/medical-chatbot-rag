@@ -89,21 +89,144 @@
 
 ## Production architecture
 
-<p align="center">
-  <img src="docs/diagrams/architecture.gif" width="720" alt="AWS production architecture for Bloom (animated)">
-</p>
+Live region: **ap-southeast-2 (Sydney)** · URL: **https://dwa21x631l5fr.cloudfront.net**
 
-<p align="center"><sub>Vector source: <a href="docs/diagrams/architecture.svg">architecture.svg</a> · regenerate GIFs: <code>python docs/scripts/generate_readme_gifs.py</code></sub></p>
+### Traffic path
+
+```mermaid
+flowchart LR
+  subgraph Clients
+    WEB[Web browser]
+    TG[Telegram users]
+  end
+
+  subgraph AWS["AWS (ap-southeast-2)"]
+    CF[CloudFront<br/>HTTPS edge]
+    ALB[Application Load Balancer<br/>target group :8080]
+    ECS[ECS Fargate service bloom-web<br/>Gunicorn + Flask app]
+    ECR[(Amazon ECR<br/>image bloom:latest)]
+  end
+
+  WEB --> CF
+  TG --> CF
+  CF --> ALB
+  ALB --> ECS
+  ECR -.->|pull on deploy| ECS
+```
+
+| Hop | Component | Role |
+|-----|-----------|------|
+| 1 | **CloudFront** | TLS termination, CDN in front of the ALB |
+| 2 | **ALB** | Routes HTTP to healthy Fargate tasks; **`GET /health`** for checks |
+| 3 | **ECS Fargate** | Runs the Docker image: Flask routes, LangGraph, webhooks |
+| 4 | **ECR** | Stores **`bloom:latest`**; `deploy/aws.ps1` builds and pushes |
+
+### App ↔ external services
+
+All third-party credentials are injected as **ECS task environment variables** (from your secrets / `.env` in deploy).
+
+```mermaid
+flowchart TB
+  APP[Flask app on ECS Fargate]
+
+  APP --> DB[(Neon PostgreSQL<br/>users, chats, meds, labs)]
+  APP --> PC[(Pinecone<br/>Jina 1024-d vectors)]
+  APP --> LLM[OpenRouter / Groq<br/>chat + fallback]
+  APP --> WHISPER[Groq Whisper<br/>voice uploads]
+  APP --> GMAPS[Google Maps / Places<br/>care map]
+  APP --> GCAL[Google OAuth<br/>calendar readonly]
+  APP --> LF[Langfuse<br/>trace bloom.turn]
+  APP --> REDIS[(Upstash Redis<br/>optional rate limits)]
+  APP --> S3[(S3 / R2<br/>optional file storage)]
+
+  TGAPI[Telegram Bot API] -->|POST /api/telegram| APP
+  APP -->|outbound messages| TGAPI
+```
+
+| Service | Used for |
+|---------|----------|
+| **Neon Postgres** | Accounts, conversations, medications, uploads, appointments, share tokens |
+| **Pinecone** | Semantic retrieval over indexed medical PDFs (`store_index.py`, Jina embeddings) |
+| **OpenRouter / Groq** | LLM turns in LangGraph nodes; Groq also for Whisper transcription |
+| **Google Places** | Nearby hospitals, doctors, pharmacies on the care map |
+| **Google Calendar OAuth** | Callback **`/calendar/callback`** for reminder scheduling |
+| **Langfuse** | End-to-end **`bloom.turn`** traces (optional OTLP via OpenTelemetry) |
+| **Telegram** | Same orchestration as web via webhook **`/api/telegram`** |
+
+### Deploy shape (summary)
+
+| Piece | Name / note |
+|-------|-------------|
+| Cluster | `bloom` |
+| Service | `bloom-web` |
+| Container port | **8080** |
+| Logs | CloudWatch **`/ecs/bloom`** |
+| Deploy script | `deploy/aws.ps1` + `aws ecs update-service --force-new-deployment` |
 
 ---
 
 ## System design (one chat turn)
 
-<p align="center">
-  <img src="docs/diagrams/system-design.gif" width="720" alt="LangGraph system design for one Bloom turn (animated)">
-</p>
+Web chat uses **`POST /get`**; Telegram uses **`POST /api/telegram`**. Both call **`run_turn()`** in `orchestration/graphs/main.py` and share the same LangGraph.
 
-<p align="center"><sub>Vector source: <a href="docs/diagrams/system-design.svg">system-design.svg</a></sub></p>
+### LangGraph supervisor
+
+```mermaid
+flowchart TD
+  IN([User message]) --> SAFETY[safety_node<br/>emergency patterns, disclaimers]
+  SAFETY -->|skip_rag| OUT([Fixed safety reply])
+  SAFETY -->|continue| ROUTE[route_node<br/>classify_intent + catalog]
+  ROUTE --> PICK{intent}
+
+  PICK -->|general| G[general_node<br/>RAG + citations]
+  PICK -->|medication| M[medication_node<br/>India monographs]
+  PICK -->|symptom| S[symptom_node<br/>triage-style RAG]
+  PICK -->|lab| L[lab_node<br/>uploaded PDF context]
+  PICK -->|care| C[care_node<br/>Places / map payload]
+  PICK -->|appointment| A[appointment_node<br/>assisted booking script]
+
+  G --> VER[verify_node]
+  M --> VER
+  S --> VER
+  L --> VER
+  C --> VER
+  A --> VER
+
+  VER --> END([JSON response])
+```
+
+| Stage | Node | What it does |
+|-------|------|----------------|
+| **1. Safety** | `safety_node` | Regex / rules for emergencies; may set **`skip_rag`** and return early with helpline text |
+| **2. Route** | `route_node` | **`classify_intent()`** or forced intent from client; uses drug catalog names when relevant |
+| **3. Specialist** | One of six nodes | Retrieves context (Pinecone, DB, Places, PDF text), calls LLM with node-specific prompts |
+| **4. Verify** | `verify_node` | Citation checks, dose guardrails, freshness badges; normalizes payload |
+
+### Specialist intents
+
+| Intent | Typical triggers | Main data sources |
+|--------|------------------|-------------------|
+| **general** | Open health questions | Pinecone RAG, conversation history |
+| **medication** | Drug names, doses, interactions | `DrugMonograph`, seed catalog, RAG |
+| **symptom** | “I feel…”, symptom lists | RAG + safety-aware prompting |
+| **lab** | “Explain my report” | User’s uploaded PDF text (`UploadedDocument` / lab flow) |
+| **care** | “Hospital near me” | Google Places, favorites, **`map_payload`** for UI |
+| **appointment** | Booking help | Templates + calendar context (assisted, not clinic API) |
+
+### Response contract
+
+After **`verify`**, the API returns JSON consumed by the web UI and Telegram formatter:
+
+| Field | Meaning |
+|-------|---------|
+| **`answer`** | Markdown-safe reply text |
+| **`citations`** | Source snippets / metadata shown in the UI |
+| **`risk_level`** | Triage hint from safety + verify |
+| **`map_payload`** | Optional care-map markers and place details |
+| **`trace_id`** | Langfuse / debug correlation id |
+| **`intent`** | Routed specialist (for analytics and UI chips) |
+
+Observability: **`start_trace("bloom.turn", …)`** wraps each invocation when Langfuse is configured.
 
 ---
 

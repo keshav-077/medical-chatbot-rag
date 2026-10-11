@@ -1,10 +1,12 @@
 <div align="center">
 
-<!-- Vector wordmark: same logo paths as static/brand/bloom-logo.svg + login header type -->
+<!-- Same logo as static/brand/bloom-logo.svg (animated). GitHub may show a still frame in README; open the SVG file for full motion. -->
 <p align="center">
   <a href="https://dwa21x631l5fr.cloudfront.net">
-    <img src="docs/brand/bloom-wordmark.svg" width="280" height="76" alt="bloom Organic Care">
+    <img src="https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/brand/bloom-wordmark.svg" width="280" height="76" alt="bloom Organic Care">
   </a>
+  <br/>
+  <sub><a href="https://github.com/keshav-077/medical-chatbot-rag/blob/main/static/brand/bloom-logo.svg">View animated logo (same as the live app)</a></sub>
 </p>
 
 <h3><em>Listen first. Cite always. Care nearby.</em></h3>
@@ -82,20 +84,20 @@
 ## Production architecture
 
 <p align="center">
-  <img src="docs/diagrams/architecture.svg" width="720" height="315" alt="AWS production architecture for bloom">
+  <a href="https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/architecture.svg">
+    <img src="https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/architecture.svg" width="720" alt="AWS production architecture for bloom">
+  </a>
 </p>
-
-[Open full SVG](docs/diagrams/architecture.svg)
 
 ---
 
 ## System design (one chat turn)
 
 <p align="center">
-  <img src="docs/diagrams/system-design.svg" width="720" height="360" alt="LangGraph system design for one bloom turn">
+  <a href="https://github.com/keshav-077/medical-chatbot-rag/blob/main/docs/diagrams/system-design.svg">
+    <img src="https://raw.githubusercontent.com/keshav-077/medical-chatbot-rag/main/docs/diagrams/system-design.svg" width="720" alt="LangGraph system design for one bloom turn">
+  </a>
 </p>
-
-[Open full SVG](docs/diagrams/system-design.svg)
 
 ---
 
@@ -279,10 +281,31 @@ aws ecs update-service --cluster bloom --service bloom-web --force-new-deploymen
 
 MIT — [LICENSE](LICENSE)
 
+---
+
 <div align="center">
 
-**[Live](https://dwa21x631l5fr.cloudfront.net)** · **[Telegram](https://t.me/bloom531134_bot)** · **[GitHub](https://github.com/keshav-077/medical-chatbot-rag)**
+<h3><em>Listen first. Cite always. Care nearby.</em></h3>
 
+<a href="https://dwa21x631l5fr.cloudfront.net">
+  <img src="https://img.shields.io/badge/Live-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="40" alt="Live app">
+</a>
+&nbsp;
+<a href="https://t.me/bloom531134_bot">
+  <img src="https://img.shields.io/badge/Telegram-@bloom531134_bot-2AABEE?style=for-the-badge" height="40" alt="Telegram bot">
+</a>
+
+<br/><br/>
+
+<a href="https://dwa21x631l5fr.cloudfront.net/health">Health check</a>
+&nbsp;·&nbsp;
+<a href="https://github.com/keshav-077/medical-chatbot-rag">Source code</a>
+&nbsp;·&nbsp;
+<a href="https://dwa21x631l5fr.cloudfront.net/login">Sign in</a>
+
+<br/><br/>
+
+<strong>bloom</strong> · Organic Care<br/>
 © 2026 bloom — Empowering healthcare with empathic companions
 
 </div>

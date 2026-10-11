@@ -2,8 +2,7 @@
 
 <p align="center">
   <a href="https://dwa21x631l5fr.cloudfront.net">
-    <img src="docs/brand/bloom-logo.gif" width="56" height="56" alt="bloom" style="vertical-align:middle;">
-    <img src="docs/brand/bloom-wordmark-text.png" width="160" alt="bloom Organic Care" style="vertical-align:middle;margin-left:8px;">
+    <img src="docs/brand/bloom-wordmark.gif" width="280" alt="bloom Organic Care — animated logo (same as live app)">
   </a>
 </p>
 
@@ -82,17 +81,17 @@
 ## Production architecture
 
 <p align="center">
-  <img src="docs/diagrams/architecture.png" width="720" alt="AWS production architecture for bloom">
+  <img src="docs/diagrams/architecture.gif" width="720" alt="AWS production architecture for bloom (animated)">
 </p>
 
-<p align="center"><sub>Vector source: <a href="docs/diagrams/architecture.svg">architecture.svg</a> (GitHub blocks SVG embeds in README)</sub></p>
+<p align="center"><sub>Vector source: <a href="docs/diagrams/architecture.svg">architecture.svg</a> · regenerate GIFs: <code>python docs/scripts/generate_readme_gifs.py</code></sub></p>
 
 ---
 
 ## System design (one chat turn)
 
 <p align="center">
-  <img src="docs/diagrams/system-design.png" width="720" alt="LangGraph system design for one bloom turn">
+  <img src="docs/diagrams/system-design.gif" width="720" alt="LangGraph system design for one bloom turn (animated)">
 </p>
 
 <p align="center"><sub>Vector source: <a href="docs/diagrams/system-design.svg">system-design.svg</a></sub></p>

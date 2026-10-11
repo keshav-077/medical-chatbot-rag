@@ -46,5 +46,5 @@
  <path d="M660 212v18" stroke="#FF9900" stroke-width="2"/>
  <path d="M135 230v-40M315 230v-40M495 230v-40M675 230v-40M840 230v-40" stroke="#4A5D23" stroke-opacity=".35" stroke-width="1.5"/>
  <text x="480" y="360" text-anchor="middle" fill="#E3256B" font-size="13" font-weight="700">Live: dwa21x631l5fr.cloudfront.net</text>
- <text x="480" y="382" text-anchor="middle" fill="#4A5D23" fill-opacity=".75" font-size="12">Telegram webhook  /api/telegram · OAuth  /calendar/callback</text>
+ <text x="480" y="382" text-anchor="middle" fill="#4A5D23" fill-opacity=".75" font-size="12">Telegram webhook &#8594; /api/telegram &#183; OAuth &#8594; /calendar/callback</text>
 </svg>

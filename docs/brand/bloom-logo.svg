@@ -1,46 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="bloom">
-  <defs>
-    <linearGradient id="bloom-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF4D8D"/>
-      <stop offset="100%" stop-color="#E3256B"/>
-    </linearGradient>
-    <filter id="bloom-glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="2.5" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <style>
-    .blob { transform-origin: 60px 60px; animation: bloom-breathe 4s ease-in-out infinite; }
-    .petals { transform-origin: 60px 58px; animation: bloom-spin 18s linear infinite; }
-    .pulse-line { stroke-dasharray: 42; animation: bloom-pulse 2.4s ease-in-out infinite; }
-    @keyframes bloom-breathe {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-    @keyframes bloom-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes bloom-pulse {
-      0%, 100% { stroke-dashoffset: 42; opacity: 0.75; }
-      50% { stroke-dashoffset: 0; opacity: 1; }
-    }
-  </style>
-  <g class="blob">
-    <path fill="url(#bloom-bg)" d="M60 8c14 0 24 8 30 18 10-2 22 2 28 14 6 12 2 26-6 36 4 12 0 26-10 34-10 8-24 8-36 2-10 8-24 10-36 2-12-8-16-22-12-34-8-10-12-24-6-36 6-12 18-16 28-14C36 16 46 8 60 8z"/>
-  </g>
-  <g class="petals" opacity="0.22">
-    <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff"/>
-    <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(72 60 58)"/>
-    <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(144 60 58)"/>
-    <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(216 60 58)"/>
-    <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(288 60 58)"/>
-  </g>
-  <g filter="url(#bloom-glow)">
-    <path fill="#fff" d="M60 38c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z"/>
-    <path class="pulse-line" fill="none" stroke="#E3256B" stroke-width="2.2" stroke-linecap="round" d="M44 58h6l3-8 4 16 4-10 3 6h12"/>
-  </g>
+ <defs>
+ <linearGradient id="bloom-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+ <stop offset="0%" stop-color="#FF4D8D"/>
+ <stop offset="100%" stop-color="#E3256B"/>
+ </linearGradient>
+ <filter id="bloom-glow" x="-30%" y="-30%" width="160%" height="160%">
+ <feGaussianBlur stdDeviation="2.5" result="blur"/>
+ <feMerge>
+ <feMergeNode in="blur"/>
+ <feMergeNode in="SourceGraphic"/>
+ </feMerge>
+ </filter>
+ </defs>
+ <style>
+ .blob { transform-origin: 60px 60px; animation: bloom-breathe 4s ease-in-out infinite; }
+ .petals { transform-origin: 60px 58px; animation: bloom-spin 18s linear infinite; }
+ .pulse-line { stroke-dasharray: 42; animation: bloom-pulse 2.4s ease-in-out infinite; }
+ @keyframes bloom-breathe {
+ 0%, 100% { transform: scale(1); }
+ 50% { transform: scale(1.03); }
+ }
+ @keyframes bloom-spin {
+ from { transform: rotate(0deg); }
+ to { transform: rotate(360deg); }
+ }
+ @keyframes bloom-pulse {
+ 0%, 100% { stroke-dashoffset: 42; opacity: 0.75; }
+ 50% { stroke-dashoffset: 0; opacity: 1; }
+ }
+ </style>
+ <g class="blob">
+ <path fill="url(#bloom-bg)" d="M60 8c14 0 24 8 30 18 10-2 22 2 28 14 6 12 2 26-6 36 4 12 0 26-10 34-10 8-24 8-36 2-10 8-24 10-36 2-12-8-16-22-12-34-8-10-12-24-6-36 6-12 18-16 28-14C36 16 46 8 60 8z"/>
+ </g>
+ <g class="petals" opacity="0.22">
+ <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff"/>
+ <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(72 60 58)"/>
+ <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(144 60 58)"/>
+ <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(216 60 58)"/>
+ <ellipse cx="60" cy="34" rx="10" ry="18" fill="#fff" transform="rotate(288 60 58)"/>
+ </g>
+ <g filter="url(#bloom-glow)">
+ <path fill="#fff" d="M60 38c-8 0-14 6-14 14 0 10 14 22 14 22s14-12 14-22c0-8-6-14-14-14z"/>
+ <path class="pulse-line" fill="none" stroke="#E3256B" stroke-width="2.2" stroke-linecap="round" d="M44 58h6l3-8 4 16 4-10 3 6h12"/>
+ </g>
 </svg>

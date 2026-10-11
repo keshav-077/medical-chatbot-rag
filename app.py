@@ -1,5 +1,5 @@
 """
-Medical Chatbot RAG — Flask Application (v2.0.0)
+Medical Chatbot RAG — Flask Application (v2.1.0)
 
 Serverless-ready, API-based embeddings, multi-LLM fallback.
 Deployable on Vercel, Railway, Render, or any WSGI-compatible platform.
@@ -9,24 +9,19 @@ import os
 import logging
 from datetime import datetime, timezone
 
-from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
+from flask import Flask, render_template, jsonify, request, redirect, url_for, flash, g
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from markupsafe import escape as html_escape
 from sqlalchemy import text
 from dotenv import load_dotenv
 
-from langchain_pinecone import Pinecone as PineconeVectorStore
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
-
-from src.embeddings import get_embeddings
+from src.embeddings import get_embedding_manager
 from src.llm_providers import get_llm_manager
-from src.prompt import *
 from config import get_config
 from models import db, bcrypt, User, Conversation, Message
+from services.telemetry import init_telemetry, new_request_id
+import json
 import re
 
 # ============================================================
@@ -47,6 +42,12 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(get_config())
+
+if os.environ.get("FLASK_ENV", "development").lower() == "production":
+    from werkzeug.middleware.proxy_fix import ProxyFix
+
+    # App Runner and load balancers terminate TLS and forward the original host.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 
 # ============================================================
 # Initialize extensions
@@ -74,54 +75,13 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-# ============================================================
-# Initialize AI components (embeddings, LLM, RAG chain)
-# ============================================================
-
-logger.info("Initializing AI components...")
-
-# Embeddings (API-based: Jina AI → HuggingFace fallback)
-embeddings = get_embeddings()
-
-# Pinecone vector store
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
-if PINECONE_API_KEY:
-    os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
-
-index_name = "medicalbot"
-
-docsearch = PineconeVectorStore.from_existing_index(
-    index_name=index_name,
-    embedding=embeddings,
-)
-
-retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k": 3})
-
-# LLM (OpenRouter → Groq fallback)
-llm_manager = get_llm_manager()
-llm = llm_manager.get_llm()
-
-# RAG chain using LCEL
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ]
-)
+# Retrieval and generation run inside the LangGraph supervisor (lazy).
+init_telemetry(app)
 
 
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
-
-
-rag_chain = (
-    {"context": retriever | format_docs, "input": RunnablePassthrough()}
-    | prompt
-    | llm
-    | StrOutputParser()
-)
-
-logger.info("AI components initialized successfully")
+@app.before_request
+def attach_request_id():
+    g.request_id = new_request_id()
 
 
 # ============================================================
@@ -161,14 +121,28 @@ def health_check():
     except Exception as e:
         db_status = f"unhealthy: {str(e)}"
 
+    try:
+        manager = get_embedding_manager()
+        embedding_provider = manager.active_provider.name
+        embedding_dimensions = manager.active_provider.dimensions
+    except Exception as exc:
+        embedding_provider = f"unavailable: {exc}"
+        embedding_dimensions = None
+
+    try:
+        llm_provider = get_llm_manager().active_provider.name
+    except Exception as exc:
+        llm_provider = f"unavailable: {exc}"
+
     return jsonify(
         {
             "status": "ok",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "database": db_status,
-            "embedding_provider": embeddings.active_provider.name,
-            "embedding_dimensions": embeddings.dimensions,
-            "llm_provider": llm_manager.active_provider.name,
+            "embedding_provider": embedding_provider,
+            "embedding_dimensions": embedding_dimensions,
+            "llm_provider": llm_provider,
+            "request_id": getattr(g, "request_id", None),
         }
     )
 
@@ -269,7 +243,10 @@ def logout():
 @app.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html")
+    from models import UserHealthProfile
+
+    health = UserHealthProfile.query.filter_by(user_id=current_user.id).first()
+    return render_template("profile.html", health=health)
 
 
 @app.route("/change-password", methods=["POST"])
@@ -326,26 +303,32 @@ def chat():
         db.session.commit()
         conversation_id = conversation.id
 
-    # Save user message (escape HTML to prevent stored XSS)
-    safe_msg = str(html_escape(msg))
     user_message = Message(
         conversation_id=conversation_id,
-        content=safe_msg,
+        content=msg,
         is_user=True,
     )
     db.session.add(user_message)
 
     try:
-        # Use original msg for RAG (unescaped for better LLM comprehension)
-        response = rag_chain.invoke(msg)
-        logger.info(f"RAG response generated ({len(response)} chars)")
+        from orchestration.graphs.main import run_turn
 
-        # Save assistant message (escape HTML)
-        safe_response = str(html_escape(response))
+        result = run_turn(
+            msg,
+            user_id=current_user.id,
+            request_id=getattr(g, "request_id", ""),
+        )
+        response = result.get("answer") or ""
+        logger.info("Graph response intent=%s (%s chars)", result.get("intent"), len(response))
+
         assistant_message = Message(
             conversation_id=conversation_id,
-            content=safe_response,
+            content=response,
             is_user=False,
+            citations_json=json.dumps(result.get("citations") or []),
+            risk_level=result.get("risk_level"),
+            trace_id=result.get("trace_id"),
+            intent=result.get("intent"),
         )
         db.session.add(assistant_message)
 
@@ -359,7 +342,21 @@ def chat():
 
         db.session.commit()
 
-        return jsonify({"answer": response, "conversation_id": conversation_id})
+        return jsonify(
+            {
+                "answer": response,
+                "conversation_id": conversation_id,
+                "citations": result.get("citations") or [],
+                "risk_level": result.get("risk_level"),
+                "disclaimer": result.get("disclaimer"),
+                "intent": result.get("intent"),
+                "map_payload": result.get("map_payload") or {},
+                "freshness": result.get("freshness") or "",
+                "trace_id": result.get("trace_id"),
+                "message_id": assistant_message.id,
+                "appointment": result.get("appointment") or {},
+            }
+        )
     except Exception as e:
         logger.error(f"Chat error for user {current_user.id}: {e}")
         db.session.rollback()
@@ -392,11 +389,21 @@ def load_chat(conversation_id):
 
     chat_history = []
     for msg in messages:
+        citations = []
+        if msg.citations_json:
+            try:
+                citations = json.loads(msg.citations_json)
+            except json.JSONDecodeError:
+                citations = []
         chat_history.append(
             {
                 "content": msg.content,
                 "is_user": msg.is_user,
                 "timestamp": msg.timestamp.strftime("%H:%M"),
+                "citations": citations,
+                "risk_level": msg.risk_level,
+                "trace_id": msg.trace_id,
+                "message_id": msg.id,
             }
         )
 
@@ -457,7 +464,12 @@ def get_conversations():
 # ============================================================
 
 with app.app_context():
-    db.create_all()
+    from db_setup import ensure_schema, seed_if_empty
+    from routes.platform import bp as platform_bp
+
+    ensure_schema()
+    seed_if_empty()
+    app.register_blueprint(platform_bp)
     logger.info("Database tables verified/created")
 
 # ============================================================

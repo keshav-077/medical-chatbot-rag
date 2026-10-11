@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — bloom{% endblock %}
+{% block content %}
+<div class="w-full max-w-5xl mx-auto px-4 py-4">
+    {% include "partials/nav.html" %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mb-3 text-sm px-4 py-3 rounded-2xl {% if category == 'danger' %}bg-rose-50 text-rose-800{% else %}bg-emerald-50 text-emerald-800{% endif %}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% block page %}{% endblock %}
+</div>
+{% endblock %}

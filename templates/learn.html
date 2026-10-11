@@ -1,0 +1,31 @@
+{% extends "partials/shell.html" %}
+{% block title %}Learn — bloom{% endblock %}
+{% block page %}
+<section class="clay-card rounded-[28px] p-6">
+    <h1 class="font-heading font-extrabold text-2xl text-[#4A5D23]">Medicine library</h1>
+    <p class="text-sm mt-1 text-[#4A5D23]/70">India educational monographs. Each card shows the source and document date. Ask about one of these in chat for composition, warnings, and interactions with your saved medicines.</p>
+    {% if notices %}
+    <h2 class="font-heading font-bold mt-4">Notices for you</h2>
+    <ul class="mt-2 space-y-2">
+        {% for note in notices %}
+        <li class="bg-amber-50 rounded-2xl px-4 py-2 text-sm">{{ note.message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="mt-5 space-y-4">
+        {% for drug in drugs %}
+        <article class="bg-white/80 rounded-2xl p-4">
+            <div class="flex justify-between gap-3">
+                <h2 class="font-heading font-bold capitalize">{{ drug.generic_name }}</h2>
+                <span class="text-[10px] font-bold uppercase text-[#E3256B]">{{ drug.document_date }}</span>
+            </div>
+            <p class="text-xs text-[#4A5D23]/60">{{ drug.brand_names }} · {{ drug.source }}</p>
+            <p class="text-sm mt-2"><span class="font-bold">Composition.</span> {{ drug.composition }}</p>
+            <p class="text-sm mt-1"><span class="font-bold">Warnings.</span> {{ drug.warnings }}</p>
+        </article>
+        {% else %}
+        <p class="text-sm">The library has not been ingested yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

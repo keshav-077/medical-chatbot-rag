@@ -1,0 +1,14 @@
+[
+  {
+    "drug": "paracetamol",
+    "message": "Educational safety note: do not combine multiple fever products that contain paracetamol. Liver injury is a known risk when the daily amount is too high.",
+    "document_date": "2026-03-20",
+    "source": "Bloom India safety notices (educational)"
+  },
+  {
+    "drug": "nimesulide",
+    "message": "Educational safety note: nimesulide has been restricted in several settings because of liver risk. Ask a doctor before using any nimesulide product.",
+    "document_date": "2026-03-20",
+    "source": "Bloom India safety notices (educational)"
+  }
+]

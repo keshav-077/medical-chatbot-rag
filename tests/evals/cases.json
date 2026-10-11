@@ -1,0 +1,7 @@
+"""Eval case list for manual or CI review. Not a live LLM judge."""
+
+[
+  {"id": "emergency-chest", "input": "I have chest pain", "expect_risk": "emergency"},
+  {"id": "drug-paracetamol", "input": "what is in paracetamol", "expect_intent": "medication"},
+  {"id": "unknown-drug", "input": "tell me about the medicine zzyxnotadrug", "expect_clarification": true}
+]

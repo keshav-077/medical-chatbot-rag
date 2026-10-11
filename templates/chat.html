@@ -49,6 +49,7 @@
             </div>
         </a>
     </header>
+    {% include "partials/nav.html" %}
 
     <!-- Main Workspace Portal -->
     <div id="content-portal" class="flex-1 relative overflow-hidden flex gap-4 min-h-0">
@@ -95,7 +96,7 @@
                     <p class="text-[10px] text-[#4A5D23]/70 font-medium mt-0.5">Check persistent dry cough</p>
                 </div>
 
-                <div onclick="selectTopic('medication')" class="clay-card p-4 rounded-[20px] cursor-pointer hover:border-[#E3256B]/40 hover:scale-[1.02] transition-all duration-300 text-left">
+                <div onclick="window.location='/meds'" class="clay-card p-4 rounded-[20px] cursor-pointer hover:border-[#E3256B]/40 hover:scale-[1.02] transition-all duration-300 text-left">
                     <div class="w-9 h-9 rounded-[70%_30%_30%_70%] bg-emerald-100 flex items-center justify-center mb-2 border border-emerald-500/20">
                         <i class="ti ti-pill text-lg text-emerald-700"></i>
                     </div>
@@ -142,10 +143,18 @@
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <span class="text-xs bg-[#FFF5EE] px-3 py-1 rounded-full text-[#4A5D23]/80 border border-white/85 font-semibold hidden sm:inline-block">Voice Mode</span>
-                    <button class="w-8 h-8 rounded-full bg-white hover:bg-[#FFE4E1] flex items-center justify-center text-[#4A5D23]/70 transition-colors cursor-pointer">
-                        <i class="ti ti-settings text-base"></i>
+                    <button type="button" id="shareBtn" class="text-xs bg-white px-3 py-1 rounded-full font-semibold">Share</button>
+                    <button type="button" id="pdfBtn" class="text-xs bg-white px-3 py-1 rounded-full font-semibold">Visit PDF</button>
+                    <label class="text-xs bg-[#FFF5EE] px-3 py-1 rounded-full font-semibold hidden sm:inline-flex items-center gap-1">
+                        <input type="checkbox" id="speakReply"> Speak
+                    </label>
+                    <button type="button" id="voiceBtn" class="w-8 h-8 rounded-full bg-white hover:bg-[#FFE4E1] flex items-center justify-center text-[#4A5D23]/70" aria-label="Voice input">
+                        <i class="ti ti-microphone text-base"></i>
                     </button>
+                    <button type="button" id="audioUploadBtn" class="w-8 h-8 rounded-full bg-white hover:bg-[#FFE4E1] flex items-center justify-center text-[#4A5D23]/70" aria-label="Upload audio">
+                        <i class="ti ti-file-music text-base"></i>
+                    </button>
+                    <input type="file" id="audioFile" accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg" class="hidden">
                 </div>
             </div>
 
@@ -169,7 +178,7 @@
                                 <button onclick="selectTopic('symptom')" class="text-xs bg-[#FFF5EE] hover:bg-[#FFEBE7] text-[#425021] border border-[#4A5D23]/30 px-3.5 py-2 rounded-full font-heading font-extrabold transition-all cursor-pointer shadow-xs">
                                     <i class="ti ti-heart-rate-monitor text-sm mr-1.5 align-middle"></i>Symptom Scan
                                 </button>
-                                <button onclick="selectTopic('medication')" class="text-xs bg-[#FFF5EE] hover:bg-[#FFEBE7] text-[#425021] border border-[#4A5D23]/30 px-3.5 py-2 rounded-full font-heading font-extrabold transition-all cursor-pointer shadow-xs">
+                                <button onclick="window.location='/meds'" class="text-xs bg-[#FFF5EE] hover:bg-[#FFEBE7] text-[#425021] border border-[#4A5D23]/30 px-3.5 py-2 rounded-full font-heading font-extrabold transition-all cursor-pointer shadow-xs">
                                     <i class="ti ti-hourglass-low text-sm mr-1.5 align-middle"></i>Log My Meds
                                 </button>
                             </div>
@@ -258,9 +267,13 @@
                 if (data.error) {
                     appendMessage('Error: ' + escapeHtml(data.error), false, timeStr);
                 } else {
-                    appendMessage(data.answer, false, timeStr);
+                    appendMessage(data.answer, false, timeStr, data);
                     currentConversationId = data.conversation_id;
                     loadConversations();
+                    if ($('#speakReply').is(':checked') && window.speechSynthesis) {
+                        window.speechSynthesis.cancel();
+                        window.speechSynthesis.speak(new SpeechSynthesisUtterance((data.answer || '').slice(0, 500)));
+                    }
                 }
             }).fail(function() {
                 $('#' + loadingId).remove();
@@ -280,6 +293,74 @@
         $('#text').on('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        $('#voiceBtn').on('click', function() {
+            const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!Rec) {
+                alert('This browser has no speech recognition. You can still type, or upload an audio file.');
+                return;
+            }
+            const rec = new Rec();
+            rec.lang = 'en-IN';
+            rec.onresult = function(event) {
+                $('#text').val(event.results[0][0].transcript);
+                $('#messageArea').submit();
+            };
+            rec.start();
+        });
+
+        $('#audioUploadBtn').on('click', function() {
+            $('#audioFile').trigger('click');
+        });
+
+        $('#audioFile').on('change', function() {
+            const file = this.files && this.files[0];
+            this.value = '';
+            if (!file) return;
+            const body = new FormData();
+            body.append('audio', file, file.name);
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            const loadingId = appendLoading();
+            $.ajax({
+                url: '/api/voice/transcribe',
+                type: 'POST',
+                data: body,
+                processData: false,
+                contentType: false
+            }).done(function(data) {
+                $('#' + loadingId).remove();
+                const text = (data.text || '').trim();
+                if (!text) {
+                    appendMessage('No speech was detected in that file.', false, timeStr);
+                    return;
+                }
+                $('#text').val(text);
+                $('#messageArea').submit();
+            }).fail(function(xhr) {
+                $('#' + loadingId).remove();
+                const message = (xhr.responseJSON && xhr.responseJSON.error) || 'Could not transcribe that audio.';
+                appendMessage(message, false, timeStr);
+            });
+        });
+
+        $('#shareBtn').on('click', function() {
+            if (!currentConversationId) {
+                alert('Send a message first so there is a conversation to share.');
+                return;
+            }
+            $.post('/api/share/' + currentConversationId).done(function(data) {
+                window.prompt('Read-only link (expires in 7 days)', data.url);
+            });
+        });
+
+        $('#pdfBtn').on('click', function() {
+            if (!currentConversationId) {
+                alert('Send a message first.');
+                return;
+            }
+            window.location = '/visits/' + currentConversationId + '/pdf';
         });
     });
 
@@ -310,9 +391,10 @@
     }
 
     // Append Message with Bloom Style
-    function appendMessage(content, isUser, time) {
+    function appendMessage(content, isUser, time, meta) {
         const container = $('#messagesContainer');
         $('#emptyState').remove();
+        meta = meta || {};
 
         const safeContent = escapeHtml(content);
         let messageHtml = "";
@@ -329,7 +411,6 @@
                 </div>
             `;
         } else {
-            // Render beautiful custom image illustrations in chat if lung health is discussed
             let extraHtml = "";
             if (content.toLowerCase().includes("lung") || content.toLowerCase().includes("pulmonary") || content.toLowerCase().includes("bronchial")) {
                 extraHtml = `
@@ -341,6 +422,34 @@
                     </div>
                 `;
             }
+            if (meta.risk_level === 'emergency') {
+                extraHtml = `<p class="mt-2 text-xs font-bold text-rose-700">Urgent: use emergency services. Do not wait on this chat.</p>` + extraHtml;
+            }
+            const citations = meta.citations || [];
+            let citeHtml = "";
+            if (citations.length) {
+                citeHtml = `<details class="mt-3 text-xs"><summary class="font-bold cursor-pointer">Sources (${citations.length})</summary><ul class="mt-2 space-y-2">`;
+                citations.forEach(function(item) {
+                    citeHtml += `<li><span class="font-bold">${escapeHtml(item.source || 'source')}</span>`;
+                    if (item.document_date) citeHtml += ` · ${escapeHtml(item.document_date)}`;
+                    citeHtml += `<p class="text-[#4A5D23]/70">${escapeHtml(item.excerpt || '')}</p></li>`;
+                });
+                citeHtml += `</ul></details>`;
+            }
+            if (meta.freshness) {
+                citeHtml += `<p class="mt-2 text-[10px] font-bold uppercase text-[#E3256B]">Updated ${escapeHtml(meta.freshness)}</p>`;
+            }
+            const center = (meta.map_payload || {}).center;
+            if (center && center.lat) {
+                citeHtml += `<p class="mt-2"><a class="text-[#E3256B] font-bold" href="/map">Open care map</a></p>`;
+            }
+            let feedback = "";
+            if (meta.message_id) {
+                feedback = `<div class="mt-2 flex gap-2 text-xs">
+                    <button type="button" class="font-bold" onclick="sendFeedback(${meta.message_id}, 'up', '${escapeHtml(meta.trace_id || '')}')">Helpful</button>
+                    <button type="button" class="font-bold" onclick="sendFeedback(${meta.message_id}, 'down', '${escapeHtml(meta.trace_id || '')}')">Not helpful</button>
+                </div>`;
+            }
 
             messageHtml = `
                 <div class="flex items-start gap-3 animate-slide-up">
@@ -348,8 +457,10 @@
                         <i class="ti ti-seedling text-lg"></i>
                     </div>
                     <div class="max-w-[80%] rounded-[2px_24px_24px_24px] bg-white p-5 shadow-sm border border-white/80">
-                        <p class="text-sm leading-relaxed text-[#4A5D23] font-medium">${safeContent}</p>
+                        <p class="text-sm leading-relaxed text-[#4A5D23] font-medium whitespace-pre-wrap">${safeContent}</p>
                         ${extraHtml}
+                        ${citeHtml}
+                        ${feedback}
                     </div>
                 </div>
             `;
@@ -410,7 +521,7 @@
                         <button onclick="selectTopic('symptom')" class="text-xs bg-[#FFF5EE] hover:bg-[#FFEBE7] text-[#425021] border border-[#4A5D23]/30 px-3.5 py-2 rounded-full font-heading font-extrabold transition-all cursor-pointer shadow-xs">
                             <i class="ti ti-heart-rate-monitor text-sm mr-1.5 align-middle"></i>Symptom Scan
                         </button>
-                        <button onclick="selectTopic('medication')" class="text-xs bg-[#FFF5EE] hover:bg-[#FFEBE7] text-[#425021] border border-[#4A5D23]/30 px-3.5 py-2 rounded-full font-heading font-extrabold transition-all cursor-pointer shadow-xs">
+                        <button onclick="window.location='/meds'" class="text-xs bg-[#FFF5EE] hover:bg-[#FFEBE7] text-[#425021] border border-[#4A5D23]/30 px-3.5 py-2 rounded-full font-heading font-extrabold transition-all cursor-pointer shadow-xs">
                             <i class="ti ti-hourglass-low text-sm mr-1.5 align-middle"></i>Log My Meds
                         </button>
                     </div>
@@ -493,7 +604,7 @@
         }).done(function(data) {
             $('#messagesContainer').empty();
             data.messages.forEach(function(msg) {
-                appendMessage(msg.content, msg.is_user, msg.timestamp);
+                appendMessage(msg.content, msg.is_user, msg.timestamp, msg);
             });
             $('.conversation-item').removeClass('bg-[#E3256B]/10 border border-[#E3256B]/25 font-semibold text-[#E3256B]').addClass('hover:bg-white/40 text-[#4A5D23]/80');
             $('.conversation-item[data-id="' + conversationId + '"]').addClass('bg-[#E3256B]/10 border border-[#E3256B]/25 font-semibold text-[#E3256B]').removeClass('hover:bg-white/40 text-[#4A5D23]/80');
@@ -517,6 +628,15 @@
                 startNewChat();
             }
             loadConversations();
+        });
+    }
+
+    function sendFeedback(messageId, rating, traceId) {
+        $.ajax({
+            url: '/api/feedback',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({message_id: messageId, rating: rating, trace_id: traceId})
         });
     }
 </script>

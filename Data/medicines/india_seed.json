@@ -1,0 +1,122 @@
+[
+  {
+    "generic_name": "paracetamol",
+    "brand_names": "Crocin, Dolo, Calpol",
+    "composition": "Each tablet typically contains paracetamol 500 mg or 650 mg as the active ingredient. Brands differ; read the pack.",
+    "uses": "Used for fever and mild to moderate pain. This is education, not a recommendation to take it.",
+    "warnings": "Do not exceed the amount on the pack. Liver injury can occur with too much paracetamol or when combined with alcohol. Avoid other products that also contain paracetamol.",
+    "interactions": "Other paracetamol products add to the total dose. Alcohol increases liver risk. Tell a pharmacist about all medicines you take.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-01-15",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "metformin",
+    "brand_names": "Glycomet, Glucophage",
+    "composition": "Metformin hydrochloride, commonly 500 mg or 850 mg immediate-release tablets, or extended-release forms. Confirm the strength on your strip.",
+    "uses": "Often prescribed for type 2 diabetes to help lower blood glucose. Only a prescriber decides if it is appropriate.",
+    "warnings": "Risk of lactic acidosis is higher with kidney problems, heavy alcohol use, or severe dehydration. Stop and seek care for unusual muscle pain, breathing trouble, or severe tiredness, and tell the treating doctor.",
+    "interactions": "Alcohol and iodinated contrast procedures need a clinician's plan. Other glucose-lowering medicines can increase low-sugar episodes.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-02-01",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "amoxicillin",
+    "brand_names": "Mox, Novamox",
+    "composition": "Amoxicillin as the active antibiotic. Strengths such as 250 mg or 500 mg capsules are common. Some products combine it with clavulanic acid; that is a different medicine.",
+    "uses": "A penicillin antibiotic used for certain bacterial infections when a doctor prescribes it. It does not treat viral colds.",
+    "warnings": "Do not use if you have had a penicillin allergy. Seek urgent care for rash, swelling, or breathing difficulty after a dose.",
+    "interactions": "Tell your doctor about blood thinners and other antibiotics. Finish only the course that was prescribed.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-02-10",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "azithromycin",
+    "brand_names": "Azee, Azithral",
+    "composition": "Azithromycin, often 250 mg or 500 mg tablets. The pack states the exact strength.",
+    "uses": "A macrolide antibiotic prescribed for selected bacterial infections.",
+    "warnings": "Can affect heart rhythm in some people. Seek care for fainting, severe diarrhoea, or allergic rash.",
+    "interactions": "Antacids can reduce absorption if taken at the same time. Share a full medicine list with a pharmacist.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-02-10",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "ibuprofen",
+    "brand_names": "Brufen, Ibugesic",
+    "composition": "Ibuprofen, commonly 200 mg or 400 mg tablets.",
+    "uses": "Used for pain, fever, and inflammation when appropriate for that person.",
+    "warnings": "Can irritate the stomach and affect kidneys. Avoid if you have been told to stay off NSAIDs, have ulcers, or are late in pregnancy, unless a doctor says otherwise.",
+    "interactions": "Adds stomach and kidney risk with other NSAIDs. Ask before combining with blood pressure medicines or blood thinners.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-01-20",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "cetirizine",
+    "brand_names": "Alerid, Cetzine",
+    "composition": "Cetirizine hydrochloride, commonly 10 mg tablets.",
+    "uses": "An antihistamine used for allergic symptoms such as sneezing and itching.",
+    "warnings": "May cause sleepiness. Do not drive until you know how it affects you.",
+    "interactions": "Alcohol and other sedating medicines can add to drowsiness.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-01-20",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "pantoprazole",
+    "brand_names": "Pan, Pantocid",
+    "composition": "Pantoprazole, commonly 40 mg gastro-resistant tablets.",
+    "uses": "Reduces stomach acid. Used for reflux and ulcer-related problems when prescribed.",
+    "warnings": "Long courses should be reviewed by a doctor. Seek care for black stools, vomiting blood, or trouble swallowing.",
+    "interactions": "Can change absorption of some medicines. Ask a pharmacist if you take antifungals or iron.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-03-01",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "amlodipine",
+    "brand_names": "Amlong, Stamlo",
+    "composition": "Amlodipine, commonly 5 mg or 2.5 mg tablets.",
+    "uses": "A calcium channel blocker used for high blood pressure and angina when prescribed.",
+    "warnings": "Do not stop a blood pressure medicine on your own. Ankle swelling and dizziness can occur.",
+    "interactions": "Other blood pressure medicines can lower pressure further. Share the full list with your doctor.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-03-01",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "atorvastatin",
+    "brand_names": "Atorva, Lipitor",
+    "composition": "Atorvastatin calcium, commonly 10 mg or 20 mg tablets.",
+    "uses": "Used to lower cholesterol when a clinician prescribes it.",
+    "warnings": "Report unexplained muscle pain, weakness, or dark urine. Avoid in pregnancy unless a specialist directs care.",
+    "interactions": "Grapefruit and some antibiotics can raise levels. Confirm combinations with a pharmacist.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-03-05",
+    "country": "IN",
+    "section": "monograph"
+  },
+  {
+    "generic_name": "salbutamol",
+    "brand_names": "Asthalin, Ventolin",
+    "composition": "Salbutamol inhaler solution, commonly 100 micrograms per puff. Confirm the device you were given.",
+    "uses": "A reliever inhaler for wheeze and asthma symptoms as directed by a clinician.",
+    "warnings": "If reliever use is increasing or breathing is hard at rest, seek urgent care. Call 108 or 112 for severe breathlessness.",
+    "interactions": "Other stimulants can add to tremor or fast heartbeat. Tell your doctor about heart medicines.",
+    "source": "Bloom India educational monograph",
+    "document_date": "2026-03-12",
+    "country": "IN",
+    "section": "monograph"
+  }
+]

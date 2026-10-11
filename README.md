@@ -1,848 +1,129 @@
 <div align="center">
 
+# Bloom
 
-# 🏥 Medical Chatbot RAG
+### India-first health companion. Cited answers, medicine context, and nearby care.
 
-### *Intelligent Healthcare Assistant powered by Advanced AI*
-
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=1000&color=00D9FF&center=true&vCenter=true&width=600&lines=Retrieval+Augmented+Generation;Medical+Knowledge+Base;Multi-LLM+Support;Serverless+Architecture;PostgreSQL+%2B+Pinecone+Vector+DB" alt="Typing SVG" />
+[![Live](https://img.shields.io/badge/Live-AWS_Sydney-0F6E56?style=for-the-badge)](https://dwa21x631l5fr.cloudfront.net)
+[![Telegram](https://img.shields.io/badge/Telegram-bloom531134__bot-2AABEE?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/bloom531134_bot)
+[![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
 <br/>
 
-
-
-> [!NOTE]
-> 👉 **Looking for the deployed application?** Scroll down to the **"Live Deployment"** section or [**click here**](https://medical-chatbot-179320.vercel.app) 👈
-
----
-
-<div align="center">
-
-## 🌐 Live Deployment
-
-
-### � **Click Below Link to Experience the App** 👇
-
-<a href="https://medical-chatbot-179320.vercel.app">
-  <img src="https://img.shields.io/badge/⚡_LAUNCH_LIVE_APP_⚡-00D9FF?style=for-the-badge&logo=vercel&logoColor=black&labelColor=000000" height="60"/>
+<a href="https://dwa21x631l5fr.cloudfront.net">
+  <img src="https://img.shields.io/badge/Open_Bloom-0F6E56?style=for-the-badge&logo=amazonaws&logoColor=white" alt="Open Bloom" height="48"/>
+</a>
+&nbsp;
+<a href="https://t.me/bloom531134_bot">
+  <img src="https://img.shields.io/badge/Chat_on_Telegram-2AABEE?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram bot" height="48"/>
 </a>
 
 <br/>
-<br/>
 
-### 🔗 **Direct Link:** [medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)
+**Site:** [https://dwa21x631l5fr.cloudfront.net](https://dwa21x631l5fr.cloudfront.net)
 
-<br/>
-
-| 🌍 Platform | 🗄️ Database | 🔎 Vector DB | 📡 Status |
-|:-----------:|:-----------:|:------------:|:---------:|
-| Vercel Serverless | Neon PostgreSQL | Pinecone | 🟢 **LIVE** |
-
-<br/>
-
-### 👆 **The app is running right now!** 👆
-
----
-
-<!-- TECH BADGES -->
-[![Python](https://img.shields.io/badge/Python_3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
-[![LangChain](https://img.shields.io/badge/LangChain-121212?style=flat-square&logo=chainlink&logoColor=white)](https://langchain.com)
-[![Pinecone](https://img.shields.io/badge/Pinecone-000000?style=flat-square&logoColor=white)](https://pinecone.io)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
-[![Stars](https://img.shields.io/github/stars/keshav-077/medical-chatbot-rag?style=flat-square&color=yellow)](https://github.com/keshav-077/medical-chatbot-rag/stargazers)
+**Bot:** [https://t.me/bloom531134_bot](https://t.me/bloom531134_bot)
 
 </div>
 
 ---
 
-</div>
+Bloom helps people in India understand health questions without pretending to be a doctor. Answers are educational, cited when they come from the library, and flagged when they sound urgent.
 
-## 📝 **Project Overview**
+| | |
+|---|---|
+| Website | [dwa21x631l5fr.cloudfront.net](https://dwa21x631l5fr.cloudfront.net) |
+| Telegram | [@bloom531134_bot](https://t.me/bloom531134_bot) |
+| Webhook | `https://dwa21x631l5fr.cloudfront.net/api/telegram` |
+| Region | Asia Pacific (Sydney) |
+| Database | Neon Postgres |
+| Search | Pinecone, 1024-d Jina embeddings |
 
-An **enterprise-grade medical chatbot** leveraging **Retrieval-Augmented Generation (RAG)** to provide accurate medical information. Built with **LangChain**, **Pinecone vector database**, and **multi-LLM architecture** (OpenRouter GPT + Groq fallback), this system combines **semantic search** with **large language models** to deliver contextually relevant medical responses.
-
----
-
-## 💎 **Technical Excellence: 5 Features That Stand Out**
-
-<table>
-<tr>
-<td width="100%">
-
-### 1️⃣ **🧠 Advanced RAG Architecture with Multi-Stage Retrieval**
-
-**Tech Stack:** `LangChain` · `Pinecone Vector DB` · `LCEL` · `Jina AI Embeddings`
-
-**Implementation:**  
-Built a production-grade Retrieval-Augmented Generation pipeline that processes medical PDFs, generates **768-dimensional embeddings** via Jina AI, stores them in Pinecone's serverless vector database, and performs **semantic similarity search (top-k=3)** before LLM generation.
-
-**Impact:** Reduces hallucinations and provides contextually accurate medical responses by grounding LLM outputs in actual medical literature.
-
-</td>
-</tr>
-
-<tr>
-<td width="100%">
-
-### 2️⃣ **🔄 Fault-Tolerant Multi-Provider LLM & Embedding Architecture**
-
-**Tech Stack:** `OpenRouter (GPT)` → `Groq` · `Jina AI` → `HuggingFace`
-
-**Implementation:**  
-Designed resilient provider chains using custom **LLMManager** and **EmbeddingManager** classes that automatically switch providers on API failures, rate limits, or timeouts.
-
-**Impact:** Ensures **99.9% uptime** with zero single point of failure - if OpenRouter fails, Groq takes over instantly; enterprise-level reliability without manual intervention.
-
-</td>
-</tr>
-
-<tr>
-<td width="100%">
-
-### 3️⃣ **☁️ Serverless-First Architecture with Dual Database Design**
-
-**Tech Stack:** `Vercel Serverless Functions` · `Neon PostgreSQL` · `SQLAlchemy NullPool` · `Pinecone`
-
-**Implementation:**  
-Architected the application using **NullPool** for SQLAlchemy (avoiding connection pool conflicts with Neon's PgBouncer), serverless entry point (`api/index.py`), and environment-based configuration that seamlessly switches between SQLite (dev) and PostgreSQL (production).
-
-**Impact:** Demonstrates understanding of serverless constraints (stateless functions, read-only filesystems, connection pooling) and cloud-native design patterns - runs on Vercel's edge network with auto-scaling.
-
-</td>
-</tr>
-
-<tr>
-<td width="100%">
-
-### 4️⃣ **🔐 Enterprise-Grade Security & Authentication System**
-
-**Tech Stack:** `Flask-Login` · `Bcrypt` · `Flask-Limiter` · `SQLAlchemy ORM` · `MarkupSafe`
-
-**Implementation:**  
-Built comprehensive authentication with password hashing (Bcrypt), session management (Flask-Login), **rate limiting (200/day, 50/hour per IP)**, SQL injection prevention (ORM + parameterized queries), XSS protection (MarkupSafe HTML escaping), and HTTPS-only cookies in production.
-
-**Impact:** Shows security-first development mindset with defense-in-depth approach - production-ready security layers that protect against **OWASP Top 10 vulnerabilities**.
-
-</td>
-</tr>
-
-<tr>
-<td width="100%">
-
-### 5️⃣ **🚀 Multi-Platform Deployment with CI/CD Pipeline**
-
-**Tech Stack:** `Vercel` · `AWS EC2/ECR` · `Docker` · `GitHub Actions` · `Self-Hosted Runners`
-
-**Implementation:**  
-Configured dual deployment strategies: **(1)** Vercel serverless with automatic GitHub integration and environment variable management, **(2)** AWS containerized deployment using ECR for image registry, self-hosted GitHub runners on EC2, and automated Docker builds/pushes via GitHub Actions workflow.
-
-**Impact:** Proves DevOps proficiency and understanding of different deployment paradigms (serverless vs. containerized), infrastructure-as-code principles, and modern CI/CD practices - ready for any cloud environment.
-
-</td>
-</tr>
-</table>
+> Bloom is not a diagnosis, a prescription, or a clinic booking system. Emergency symptoms should go to **112**, **108**, or Tele-MANAS **14416**.
 
 ---
 
+## What you can do
 
-## 📸 **Application Screenshots**
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="screenshots/screenshot1.png" alt="Chat Interface" width="400px" />
-      <br />
-      <sub><b>💬 Interactive Chat Interface</b></sub>
-    </td>
-    <td align="center">
-      <img src="screenshots/screenshot2.png" alt="Medical Response" width="400px" />
-      <br />
-      <sub><b>🩺 Medical Q&A in Action</b></sub>
-    </td>
-  </tr>
-</table>
-
-> **📍 Note:** Add your screenshots to the `screenshots/` folder - see [instructions](screenshots/README.md)
+| | |
+|---|---|
+| **Chat** | Ask a health question. Answers cite the library when retrieval is used, and a safety check runs first. |
+| **Meds** | Look up composition, warnings, and interactions from the India monograph catalog, with a freshness date. |
+| **Map** | Find nearby hospitals, doctors, and pharmacies. |
+| **Labs** | Upload a lab PDF and get a plain-language explanation. |
+| **Appointments** | Draft a call script and reminder. Bloom does not book the clinic for you. |
+| **Voice** | Speak in the browser, or upload audio. Uploads are transcribed with Groq Whisper. |
+| **Telegram** | Message [@bloom531134_bot](https://t.me/bloom531134_bot). The bot posts to the live site. |
 
 ---
 
-## 🛠️ **Tech Stack**
+## How it is built
 
-<div align="center">
+```text
+Browser / Telegram
+        |
+        v
+Flask  -->  LangGraph supervisor
+              |-- safety
+              |-- intent
+              |-- general / medication / symptom / lab / care / appointment
+              |-- verify
+        |
+        +--> Pinecone (Jina 1024-d)
+        +--> Neon Postgres
+        +--> Google Places and Calendar
+```
 
-### **Backend & AI**
-![Python](https://img.shields.io/badge/Python_3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![LangChain](https://img.shields.io/badge/LangChain-121212?style=for-the-badge&logo=chainlink&logoColor=white)
-![OpenAI](https://img.shields.io/badge/OpenAI_GPT-412991?style=for-the-badge&logo=openai&logoColor=white)
-
-### **Databases**
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Pinecone](https://img.shields.io/badge/Pinecone-000000?style=for-the-badge&logo=pinecone&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)
-
-### **Deployment**
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-
-</div>
+The container runs Gunicorn on ECS Fargate. CloudFront serves HTTPS. Secrets stay in the task environment, not in the image.
 
 ---
 
-</div>
+## Run it locally
 
-<div align="center">
-
-## 📋 **Prerequisites**
-
-</div>
-
-| Requirement | Version | Get It |
-|------------|---------|--------|
-| 🐍 **Python** | 3.10+ | [Download](https://www.python.org/downloads/) |
-| 🔑 **Pinecone API** | Latest | [Sign Up](https://app.pinecone.io) |
-| 🤖 **OpenRouter API** | Latest | [Get Key](https://openrouter.ai/keys) |
-| 🎯 **Jina AI API** | Latest | [Dashboard](https://jina.ai/) |
-| 🗃️ **Neon PostgreSQL** | Latest | [Create DB](https://console.neon.tech) |
-
----
-
-<div align="center">
-
-## 🚀 **Quick Start**
-
-</div>
-
-### **Option 1: Automated Setup (Recommended)**
-
-<details open>
-<summary><b>🪟 Windows</b></summary>
-
-**PowerShell:**
 ```powershell
-.\setup_windows.ps1
-```
-
-**Command Prompt:**
-```cmd
-setup_windows.bat
-```
-
-</details>
-
-<details>
-<summary><b>🐧 Linux / macOS</b></summary>
-
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-
-</details>
-
----
-
-### **Option 2: Manual Setup**
-
-<details>
-<summary><b>📦 Step-by-Step Installation</b></summary>
-
-#### **1️⃣ Clone the Repository**
-
-```bash
-git clone https://github.com/keshav-077/medical-chatbot-rag.git
-cd medical-chatbot-rag
-```
-
-#### **2️⃣ Create Virtual Environment**
-
-**Using venv:**
-```bash
-python -m venv venv
-
-# Activate (Windows)
-.\venv\Scripts\activate
-
-# Activate (Linux/Mac)
-source venv/bin/activate
-```
-
-**Or using Conda:**
-```bash
-conda create -n medibot python=3.10 -y
-conda activate medibot
-```
-
-#### **3️⃣ Install Dependencies**
-
-```bash
-pip install --upgrade pip
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-```
-
-#### **4️⃣ Configure Environment Variables**
-
-```bash
-# Copy example file
-copy .env.example .env  # Windows
-cp .env.example .env    # Linux/Mac
-```
-
-**Edit `.env` and add your credentials:**
-
-```ini
-# === REQUIRED ===
-PINECONE_API_KEY=your-pinecone-api-key
-OPENROUTER_API_KEY=your-openrouter-api-key
-SECRET_KEY=your-random-secret-key
-
-# === EMBEDDINGS (at least one) ===
-JINA_API_KEY=your-jina-api-key
-HUGGINGFACE_API_KEY=your-huggingface-token
-
-# === DATABASE (for production) ===
-DATABASE_URL=postgresql://user:pass@ep-xxx-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
-
-# === OPTIONAL ===
-GROQ_API_KEY=your-groq-api-key
-FLASK_ENV=development
-APP_URL=http://localhost:8080
-```
-
-#### **5️⃣ Initialize Vector Database**
-
-```bash
-python store_index.py
-```
-
-This processes medical documents and creates embeddings in Pinecone.
-
-#### **6️⃣ Run the Application**
-
-```bash
+copy .env.example .env
 python app.py
 ```
 
-🎉 **Access at:** `http://localhost:8080`
+Open [http://localhost:8080](http://localhost:8080).
 
-</details>
+Required keys in `.env`: `PINECONE_API_KEY`, `JINA_API_KEY`, and `OPENROUTER_API_KEY` or `GROQ_API_KEY`. See `.env.example` for maps, calendar, Langfuse, and Telegram. Do not commit `.env`.
 
----
-
-<div align="center">
-
-## 🐳 **Docker Deployment**
-
-</div>
-
-<details>
-<summary><b>🔧 Build & Run with Docker</b></summary>
-
-### **Build Image**
-
-```bash
-docker build -t medical-chatbot-rag .
-```
-
-### **Run Container**
-
-```bash
-docker run -p 8080:8080 --env-file .env medical-chatbot-rag
-```
-
-### **Docker Compose (Recommended)**
-
-```yaml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    restart: unless-stopped
-```
-
-```bash
-docker-compose up -d
-```
-
-</details>
+Leave `DATABASE_URL` empty to use SQLite. Set it to the Neon pooled URL when you want the shared database.
 
 ---
 
-<div align="center">
+## Deploy
 
-## ☁️ **Deployment Options**
+The live service is account `061845526810` in `ap-southeast-2`.
 
-</div>
+```powershell
+.\deploy\aws.ps1
+```
 
-### **🟢 Option 1: Vercel (Recommended - Serverless)**
+That builds the image and pushes it to ECR. The running service is ECS service `bloom-web` on cluster `bloom`, behind the load balancer and CloudFront.
 
-<details open>
-<summary><b>📦 Deploy to Vercel</b></summary>
+Production will not boot without `SECRET_KEY`, `DATABASE_URL`, `PINECONE_API_KEY`, `JINA_API_KEY`, and one model key.
 
-#### **Prerequisites**
-- GitHub account connected to Vercel
-- Neon PostgreSQL database (free tier)
-- All API keys ready
+After a new hostname exists, set:
 
-#### **Steps**
+- `APP_URL` to that HTTPS origin
+- Google OAuth redirect to `https://<host>/calendar/callback`
+- Telegram webhook to `https://<host>/api/telegram`
 
-1. **Fork/Push this repo to GitHub**
+Current values:
 
-2. **Go to [Vercel Dashboard](https://vercel.com/new)**
-
-3. **Import your repository**
-
-4. **Add Environment Variables:**
-
-   | Variable | Value |
-   |----------|-------|
-   | `DATABASE_URL` | Your Neon PostgreSQL connection string |
-   | `PINECONE_API_KEY` | Your Pinecone API key |
-   | `OPENROUTER_API_KEY` | Your OpenRouter API key |
-   | `JINA_API_KEY` | Your Jina API key |
-   | `HUGGINGFACE_API_KEY` | Your HuggingFace token |
-   | `GROQ_API_KEY` | Your Groq API key |
-   | `SECRET_KEY` | Random secret key |
-   | `FLASK_ENV` | `production` |
-
-5. **Deploy!** 🚀
-
-> **✅ Live Demo:** [https://medical-chatbot-179320.vercel.app](https://medical-chatbot-179320.vercel.app)
-
-#### **Important Files for Vercel:**
-- `vercel.json` - Routing configuration
-- `api/index.py` - Serverless entry point
-- `requirements.txt` - Python dependencies
-
-</details>
+- App: `https://dwa21x631l5fr.cloudfront.net`
+- Calendar redirect: `https://dwa21x631l5fr.cloudfront.net/calendar/callback`
+- Telegram webhook: `https://dwa21x631l5fr.cloudfront.net/api/telegram`
 
 ---
 
-### **🟠 Option 2: AWS EC2 + ECR (Traditional Hosting)**
+## License
 
-<details>
-<summary><b>☁️ AWS Deployment Guide</b></summary>
-
-#### **Prerequisites**
-
-- AWS Account with IAM user
-- EC2 instance access
-- ECR (Elastic Container Registry) access
-- GitHub repository with self-hosted runner
-
----
-
-#### **Deployment Steps**
-
-**1️⃣ Create ECR Repository**
-
-```bash
-aws ecr create-repository --repository-name medical-chatbot-rag
-```
-
-Save the repository URI (e.g., `123456789.dkr.ecr.us-east-1.amazonaws.com/medical-chatbot-rag`)
-
-**2️⃣ Launch EC2 Instance**
-
-- **AMI:** Ubuntu 22.04 LTS
-- **Instance Type:** t2.medium (or larger)
-- **Security Group:** Allow ports 22 (SSH), 80 (HTTP), 8080 (App)
-
-**3️⃣ Install Docker on EC2**
-
-```bash
-# SSH into EC2
-ssh -i your-key.pem ubuntu@your-ec2-ip
-
-# Install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker ubuntu
-newgrp docker
-```
-
-**4️⃣ Configure GitHub Secrets**
-
-Go to **Settings → Secrets and variables → Actions** and add:
-
-| Secret Name | Value |
-|-------------|-------|
-| `AWS_ACCESS_KEY_ID` | Your AWS access key |
-| `AWS_SECRET_ACCESS_KEY` | Your AWS secret key |
-| `AWS_DEFAULT_REGION` | `us-east-1` (or your region) |
-| `ECR_REPO` | Your ECR repository URI |
-| `PINECONE_API_KEY` | Your Pinecone API key |
-| `OPENROUTER_API_KEY` | Your OpenRouter API key |
-| `JINA_API_KEY` | Your Jina API key |
-
-**5️⃣ Setup Self-Hosted Runner**
-
-On your EC2 instance:
-- Go to **GitHub Repo → Settings → Actions → Runners → New self-hosted runner**
-- Follow the setup instructions for Linux
-
-**6️⃣ Push to GitHub**
-
-The GitHub Actions workflow will automatically:
-- Build the Docker image
-- Push to ECR
-- Deploy to EC2
-
-**7️⃣ Access Your App**
-
-```
-http://your-ec2-public-ip:8080
-```
-
-</details>
-
----
-
-<div align="center">
-
-## � **Project Architecture**
-
-</div>
-
-```
-medical-chatbot-rag/
-│
-├── 📄 app.py                      # Main Flask application
-├── 📄 config.py                   # Environment-based configuration
-├── 📄 models.py                   # Database models (User, Conversation, Message)
-├── 📄 store_index.py              # Vector DB initialization script
-├── 📄 requirements.txt            # Python dependencies
-├── 📄 vercel.json                 # Vercel deployment config
-├── 📄 Dockerfile                  # Docker image configuration
-│
-├── 📁 api/
-│   └── 📄 index.py               # Vercel serverless entry point
-│
-├── 📁 src/
-│   ├── 📄 embeddings.py          # API-based embeddings (Jina/HF)
-│   ├── 📄 llm_providers.py       # Multi-LLM manager (OpenRouter/Groq)
-│   ├── 📄 helper.py              # PDF processing utilities
-│   └── 📄 prompt.py              # System prompts for RAG
-│
-├── 📁 templates/
-│   ├── 📄 base.html              # Base template
-│   ├── 📄 chat.html              # Chat interface
-│   ├── 📄 login.html             # Login page
-│   ├── 📄 signup.html            # Signup page
-│   └── 📄 profile.html           # User profile
-│
-├── 📁 static/
-│   └── 📄 style.css              # Styles & animations
-│
-├── 📁 Data/
-│   └── 📄 Medical_book.pdf       # Medical knowledge base
-│
-└── 📁 instance/
-    └── 📄 medical_chatbot.db     # SQLite (dev only)
-```
-
----
-
-<div align="center">
-
-## 🔍 **How It Works**
-
-</div>
-
-```mermaid
-graph LR
-    A[User Query] --> B[Embedding API]
-    B --> C[Pinecone Vector Search]
-    C --> D[Top-K Similar Docs]
-    D --> E[LLM Context]
-    E --> F[Generated Response]
-    F --> G[User]
-    
-    style A fill:#4CAF50
-    style F fill:#2196F3
-    style C fill:#FF9800
-```
-
-### **RAG Pipeline**
-
-1. **📚 Document Ingestion**
-   - Medical PDFs are split into chunks (500 chars, 50 overlap)
-   - Text is cleaned and preprocessed
-
-2. **🧮 Embedding Generation**
-   - Chunks → Jina AI embeddings (768 dims)
-   - Fallback to HuggingFace if Jina fails
-
-3. **💾 Vector Storage**
-   - Embeddings stored in Pinecone
-   - Index: `medicalbot` with cosine similarity
-
-4. **🔎 Query Processing**
-   - User question → embedding
-   - Similarity search retrieves top-3 relevant chunks
-
-5. **🤖 Response Generation**
-   - Context + Query → OpenRouter GPT
-   - Fallback to Groq if primary fails
-
-6. **💬 User Interface**
-   - Flask serves responsive chat UI
-   - Conversation history saved in PostgreSQL
-
----
-
-<div align="center">
-
-## 🐛 **Troubleshooting**
-
-</div>
-
-<details>
-<summary><b>❌ Common Issues & Solutions</b></summary>
-
-### **Issue 1: Pinecone Version Conflicts**
-
-```bash
-# Error: incompatible pinecone version
-pip uninstall pinecone pinecone-client langchain-pinecone -y
-pip install -r requirements.txt
-```
-
-### **Issue 2: gRPC/Protobuf Errors**
-
-```bash
-pip install --upgrade grpcio grpcio-tools protobuf googleapis-common-protos
-```
-
-### **Issue 3: Pinecone Authentication Failed**
-
-- Verify API key in `.env` (no extra spaces or quotes)
-- Check key is active in [Pinecone Dashboard](https://app.pinecone.io)
-- Ensure index name is `medicalbot`
-
-### **Issue 4: Database Connection Error (Vercel)**
-
-```bash
-# Vercel shows: Read-only file system error
-# Solution: Add DATABASE_URL to Vercel environment variables
-# Use Neon PostgreSQL with -pooler endpoint
-```
-
-### **Issue 5: Embedding API Timeouts**
-
-```python
-# src/embeddings.py already includes fallback logic:
-# Jina AI → HuggingFace → Error
-# Check both API keys are valid
-```
-
-### **Issue 6: Module Import Errors**
-
-```bash
-# Ensure you're in the virtual environment
-source venv/bin/activate  # Linux/Mac
-.\venv\Scripts\activate   # Windows
-
-# Reinstall dependencies
-pip install -r requirements.txt
-```
-
-### **Issue 7: Port Already in Use**
-
-```bash
-# Find and kill process on port 8080
-# Windows
-netstat -ano | findstr :8080
-taskkill /PID <PID> /F
-
-# Linux/Mac
-lsof -ti:8080 | xargs kill -9
-```
-
-</details>
-
-<details>
-<summary><b>📖 Additional Resources</b></summary>
-
-- 📘 [Setup Guide](SETUP_GUIDE.md) - Detailed installation instructions
-- 📙 [Documentation](DOCUMENTATION.md) - API & architecture docs
-- 📕 [Changelog](CHANGELOG.md) - Version history
-- 📗 [Quick Start](QUICKSTART.md) - Get running in 5 minutes
-
-</details>
-
----
-
-<div align="center">
-
-## 🎯 **API Endpoints**
-
-</div>
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/health` | Health check & system status | ❌ |
-| `GET` | `/` | Chat interface | ✅ |
-| `POST` | `/login` | User authentication | ❌ |
-| `POST` | `/signup` | Create new account | ❌ |
-| `GET` | `/logout` | Logout user | ✅ |
-| `POST` | `/get` | Send message & get AI response | ✅ |
-| `POST` | `/new-chat` | Create new conversation | ✅ |
-| `GET` | `/load-chat/<id>` | Load conversation history | ✅ |
-| `POST` | `/delete-chat/<id>` | Delete conversation | ✅ |
-| `GET` | `/get-conversations` | List all conversations | ✅ |
-| `GET` | `/profile` | User profile page | ✅ |
-| `POST` | `/change-password` | Update password | ✅ |
-
----
-
-## 🔐 **Environment Variables**
-
-<details>
-<summary><b>📝 Complete .env Reference</b></summary>
-
-```ini
-# ============================================================
-# REQUIRED API KEYS
-# ============================================================
-
-# Pinecone Vector Database
-PINECONE_API_KEY=your-pinecone-api-key
-
-# OpenRouter (Primary LLM)
-OPENROUTER_API_KEY=your-openrouter-api-key
-
-# Flask Secret Key (generate with: python -c "import secrets; print(secrets.token_hex(32))")
-SECRET_KEY=your-random-secret-key
-
-# ============================================================
-# EMBEDDINGS (at least one required)
-# ============================================================
-
-# Jina AI (Primary - 768 dims, 10M free tokens/month)
-JINA_API_KEY=your-jina-api-key
-
-# HuggingFace (Fallback - 768 dims, free)
-HUGGINGFACE_API_KEY=your-huggingface-token
-
-# ============================================================
-# DATABASE
-# ============================================================
-
-# Development: Uses SQLite (automatic)
-# Production: Use Neon PostgreSQL
-DATABASE_URL=postgresql://user:pass@ep-xxx-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
-
-# ============================================================
-# OPTIONAL
-# ============================================================
-
-# Groq (LLM Fallback - 30 req/min free)
-GROQ_API_KEY=your-groq-api-key
-
-# Environment Mode
-FLASK_ENV=development  # or 'production'
-
-# Application URL
-APP_URL=http://localhost:8080
-
-# Rate Limiting (use Upstash Redis for production)
-RATELIMIT_STORAGE_URI=memory://  # or redis://...
-```
-
-</details>
-
----
-
-## 🤝 **Contributing**
-
-<div align="center">
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
-### **Development Workflow**
-
-```bash
-# 1. Fork & clone
-git clone https://github.com/YOUR_USERNAME/medical-chatbot-rag.git
-
-# 2. Create feature branch
-git checkout -b feature/amazing-feature
-
-# 3. Make changes & commit
-git commit -m "Add amazing feature"
-
-# 4. Push & create PR
-git push origin feature/amazing-feature
-```
-
-[![Contributors](https://img.shields.io/github/contributors/keshav-077/medical-chatbot-rag?style=for-the-badge)](https://github.com/keshav-077/medical-chatbot-rag/graphs/contributors)
-
-</div>
-
----
-
-## 📄 **License**
-
-<div align="center">
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-
-</div>
-
----
-
-## �‍💻 **Author**
-
-<div align="center">
-
-### **Keshav Ardhan**
-
-[![GitHub](https://img.shields.io/badge/GitHub-keshav--077-181717?style=for-the-badge&logo=github)](https://github.com/keshav-077)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/your-profile)
-[![Email](https://img.shields.io/badge/Email-Contact-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:your-email@example.com)
-
-</div>
-
----
-
-## 🙏 **Acknowledgments**
-
-<div align="center">
-
-| Technology | Purpose |
-|------------|---------|
-| [LangChain](https://langchain.com) | RAG framework & orchestration |
-| [OpenRouter](https://openrouter.ai) | Multi-LLM gateway |
-| [Pinecone](https://pinecone.io) | Vector database |
-| [Jina AI](https://jina.ai) | Embedding API |
-| [Groq](https://groq.com) | Fast LLM inference |
-| [Neon](https://neon.tech) | Serverless PostgreSQL |
-| [Vercel](https://vercel.com) | Serverless hosting |
-
-</div>
-
----
-
-<div align="center">
-
-### ⭐ **If you found this helpful, please star the repository!**
-
-![Star History](https://img.shields.io/github/stars/keshav-077/medical-chatbot-rag?style=social)
-
----
-
-**Made with ❤️ by [Keshav](https://github.com/keshav-077)**
-
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&duration=3000&pause=1000&color=808080&center=true&vCenter=true&width=400&lines=Thanks+for+visiting!;Happy+Coding+%F0%9F%9A%80" alt="Footer" />
-
-</div>
+MIT. See [LICENSE](LICENSE).

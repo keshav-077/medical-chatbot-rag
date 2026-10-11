@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Shared conversation — bloom{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="font-heading font-extrabold text-2xl text-[#4A5D23]">Shared conversation</h1>
+    {% if expired %}
+        <p class="mt-4">This link has expired.</p>
+    {% else %}
+        <p class="text-sm text-[#4A5D23]/70 mt-1">{{ conversation.title }} · read only · educational, not a diagnosis</p>
+        <div class="mt-4 space-y-3">
+            {% for msg in messages %}
+            <article class="rounded-2xl p-4 {% if msg.is_user %}bg-[#E3256B] text-white{% else %}bg-white{% endif %}">
+                <p class="text-xs font-bold">{% if msg.is_user %}Person{% else %}bloom{% endif %}</p>
+                <p class="text-sm whitespace-pre-wrap mt-1">{{ msg.content }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

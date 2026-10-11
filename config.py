@@ -33,9 +33,20 @@ def _get_database_url() -> str:
         )
         return "sqlite:///medical_chatbot.db"
 
+    # Flask-SQLAlchemy uses a sync engine. Async driver URLs cannot create tables.
+    url = url.replace("sqlite+aiosqlite://", "sqlite://", 1)
+    url = url.replace("postgresql+asyncpg://", "postgresql://", 1)
+
     # Neon and Heroku use 'postgres://' but SQLAlchemy requires 'postgresql://'
     if url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql://", 1)
+
+    # Current SQLAlchemy treats plain postgresql:// as the psycopg 3 driver.
+    # This image installs psycopg2.
+    if url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg2://", 1)
+    elif url.startswith("postgresql+psycopg://"):
+        url = url.replace("postgresql+psycopg://", "postgresql+psycopg2://", 1)
 
     # Neon requires SSL
     if "neon.tech" in url and "sslmode" not in url:
@@ -78,6 +89,12 @@ class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = _get_database_url()
     SESSION_COOKIE_SECURE = True  # HTTPS only in production
+    # Upstash Redis (or any Redis URI). memory:// does not share counters across Vercel instances.
+    RATELIMIT_STORAGE_URI = (
+        os.environ.get("RATELIMIT_STORAGE_URI")
+        or os.environ.get("UPSTASH_REDIS_URL")
+        or "memory://"
+    )
 
     # Engine options for PostgreSQL (NullPool for serverless)
     # Computed at class-load time since Flask's from_object() doesn't resolve @property
@@ -107,4 +124,11 @@ def get_config():
     env = os.environ.get("FLASK_ENV", "development").lower()
     config_class = _configs.get(env, DevelopmentConfig)
     logger.info(f"Using {env} configuration ({config_class.__name__})")
+    if env == "production":
+        uri = os.environ.get("RATELIMIT_STORAGE_URI") or os.environ.get("UPSTASH_REDIS_URL") or "memory://"
+        if uri.startswith("memory"):
+            logger.warning(
+                "Production rate limits are using memory://. "
+                "Set RATELIMIT_STORAGE_URI or UPSTASH_REDIS_URL to Upstash Redis."
+            )
     return config_class()

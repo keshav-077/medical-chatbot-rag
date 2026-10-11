@@ -1,0 +1,29 @@
+{% extends "partials/shell.html" %}
+{% block title %}My medicines — bloom{% endblock %}
+{% block page %}
+<section class="clay-card rounded-[28px] p-6">
+    <h1 class="font-heading font-extrabold text-2xl text-[#4A5D23]">My medicines</h1>
+    <p class="text-sm mt-1 text-[#4A5D23]/70">Saved only for your account. bloom uses this list when you ask about interactions. It does not prescribe.</p>
+    <form method="post" class="grid sm:grid-cols-4 gap-3 mt-5">
+        <input name="name" required placeholder="Name (e.g. metformin)" class="clay-input rounded-2xl px-3 py-2 text-sm sm:col-span-2">
+        <input name="dose" placeholder="Dose on the pack" class="clay-input rounded-2xl px-3 py-2 text-sm">
+        <input name="frequency" placeholder="How often" class="clay-input rounded-2xl px-3 py-2 text-sm">
+        <button class="sm:col-span-4 bg-[#E3256B] text-white rounded-2xl py-2 font-heading font-bold" type="submit">Save medicine</button>
+    </form>
+    <ul class="mt-6 space-y-3">
+        {% for med in medications %}
+        <li class="flex items-center justify-between bg-white/70 rounded-2xl px-4 py-3">
+            <div>
+                <p class="font-bold">{{ med.name }}</p>
+                <p class="text-xs text-[#4A5D23]/70">{{ med.dose }} {% if med.frequency %}· {{ med.frequency }}{% endif %}</p>
+            </div>
+            <form method="post" action="{{ url_for('platform.delete_med', med_id=med.id) }}">
+                <button class="text-xs text-rose-600 font-bold" type="submit">Remove</button>
+            </form>
+        </li>
+        {% else %}
+        <li class="text-sm text-[#4A5D23]/70">No medicines saved yet.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

@@ -63,6 +63,13 @@ def set_webhook(webhook_url: str) -> dict:
     return response.json()
 
 
+def _invoke_runner(rag_chain, text: str):
+    """Accept a callable runner or a LangChain object with invoke()."""
+    if callable(rag_chain) and not hasattr(rag_chain, "invoke"):
+        return rag_chain(text)
+    return rag_chain.invoke(text)
+
+
 def process_telegram_update(update: dict, rag_chain) -> None:
     """
     Process a single Telegram update (message).
@@ -122,9 +129,8 @@ def process_telegram_update(update: dict, rag_chain) -> None:
     send_typing_action(chat_id)
 
     try:
-        # Invoke the existing RAG chain directly
-        # rag_chain is the same chain used by your web UI
-        response = rag_chain.invoke(text)
+        # Same graph the web UI uses. rag_chain may be a callable or LCEL chain.
+        response = _invoke_runner(rag_chain, text)
 
         # Handle both string responses and dict responses
         if isinstance(response, dict):

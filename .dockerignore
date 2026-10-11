@@ -1,0 +1,16 @@
+.git
+.env
+.env.*
+venv
+.venv
+__pycache__
+*.pyc
+instance
+tests
+research
+screenshots
+Data
+*.md
+.cursor
+.idea
+.vscode

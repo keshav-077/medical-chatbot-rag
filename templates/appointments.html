@@ -1,0 +1,49 @@
+{% extends "partials/shell.html" %}
+{% block title %}Appointments — bloom{% endblock %}
+{% block page %}
+<section class="clay-card rounded-[28px] p-6">
+    <h1 class="font-heading font-extrabold text-2xl text-[#4A5D23]">Appointments</h1>
+    <p class="text-sm mt-1 text-[#4A5D23]/70">Draft a visit and call the clinic yourself. bloom does not confirm a booking.</p>
+    <p class="text-sm mt-3">Suggested times: {{ slots|join(', ') }}</p>
+    {% if calendar_ready %}
+        <a class="text-sm font-bold text-[#E3256B]" href="{{ url_for('platform.calendar_connect') }}">Connect Google Calendar</a>
+    {% else %}
+        <p class="text-xs text-[#4A5D23]/60">Calendar connect appears after Google OAuth keys are set.</p>
+    {% endif %}
+    <form method="post" class="grid sm:grid-cols-2 gap-3 mt-4">
+        <input name="specialty" placeholder="Specialty" class="clay-input rounded-2xl px-3 py-2 text-sm" value="general physician">
+        <input name="preferred_times" placeholder="Preferred time" class="clay-input rounded-2xl px-3 py-2 text-sm">
+        <input name="place_name" placeholder="Clinic or hospital" class="clay-input rounded-2xl px-3 py-2 text-sm">
+        <input name="phone" placeholder="Phone" class="clay-input rounded-2xl px-3 py-2 text-sm">
+        <textarea name="reason" placeholder="Reason for the visit" class="clay-input rounded-2xl px-3 py-2 text-sm sm:col-span-2" rows="3"></textarea>
+        <label class="text-xs sm:col-span-2">Remind me at
+            <input type="datetime-local" name="remind_at" class="clay-input rounded-2xl px-3 py-2 text-sm w-full mt-1">
+        </label>
+        <button class="bg-[#E3256B] text-white rounded-2xl py-2 font-bold sm:col-span-2" type="submit">Save draft</button>
+    </form>
+    <ul class="mt-6 space-y-3">
+        {% for appt in appointments %}
+        <li class="bg-white/80 rounded-2xl p-4 text-sm">
+            <p class="font-bold">{{ appt.specialty }} · {{ appt.status }}</p>
+            <p>{{ appt.reason }}</p>
+            <p class="text-xs mt-1">{{ appt.place_name }} {{ appt.phone }} · {{ appt.preferred_times }}</p>
+            {% if appt.phone %}<a class="text-[#E3256B] font-bold text-xs" href="tel:{{ appt.phone }}">Call</a>{% endif %}
+            <p class="text-xs mt-2">Script: Hello, I would like a {{ appt.specialty }} appointment. Reason: {{ appt.reason }}. Preferred time: {{ appt.preferred_times }}.</p>
+            <form method="post" action="{{ url_for('platform.remind_now', appt_id=appt.id) }}" class="mt-2">
+                <button class="text-xs font-bold" type="submit">Send reminder now</button>
+            </form>
+        </li>
+        {% else %}
+        <li class="text-sm text-[#4A5D23]/70">No drafts yet. You can also ask in chat to “book an appointment”.</li>
+        {% endfor %}
+    </ul>
+    {% if reminders %}
+    <h2 class="font-heading font-bold mt-6">Reminders</h2>
+    <ul class="mt-2 space-y-2 text-sm">
+        {% for note in reminders %}
+        <li class="bg-emerald-50 rounded-2xl px-4 py-2">{{ note.message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+{% endblock %}

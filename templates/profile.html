@@ -44,6 +44,7 @@
             </div>
         </div>
     </header>
+    {% include "partials/nav.html" %}
 
     <!-- Main Content Portal -->
     <div class="flex-1 flex items-center justify-center py-6">
@@ -115,6 +116,17 @@
                     </div>
                 </div>
             </div>
+
+            </div>
+
+            <form method="post" action="{{ url_for('platform.save_health') }}" class="flex flex-col gap-3 pb-5 border-b border-[#4A5D23]/10">
+                <h3 class="font-heading font-extrabold text-sm text-[#4A5D23]">Health profile</h3>
+                <textarea name="allergies" rows="2" placeholder="Allergies" class="clay-input rounded-2xl px-3 py-2 text-sm">{{ health.allergies if health else '' }}</textarea>
+                <textarea name="conditions" rows="2" placeholder="Conditions you want bloom to remember" class="clay-input rounded-2xl px-3 py-2 text-sm">{{ health.conditions if health else '' }}</textarea>
+                <textarea name="notes" rows="2" placeholder="Notes" class="clay-input rounded-2xl px-3 py-2 text-sm">{{ health.notes if health else '' }}</textarea>
+                <button class="bg-[#4A5D23] text-white rounded-2xl py-2 text-sm font-bold" type="submit">Save health profile</button>
+                <a href="{{ url_for('platform.meds') }}" class="text-xs font-bold text-[#E3256B]">Manage medicines</a>
+            </form>
 
             <!-- Change Password Form -->
             <div>

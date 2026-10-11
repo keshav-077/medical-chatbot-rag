@@ -83,12 +83,11 @@ class HuggingFaceEmbeddingProvider(EmbeddingProvider):
 
 class EmbeddingManager:
     """
-    Smart embedding manager with automatic fallback.
-    Priority: Jina AI → HuggingFace
+    Embedding manager for the Pinecone index.
 
-    Usage:
-        manager = get_embedding_manager()
-        embeddings = manager.get_embeddings()  # For vector stores
+    The medicalbot index is 1024-dimensional and must use Jina only.
+    HuggingFace (384-d) is not registered as a fallback, because mixing
+    dimensions in one index makes search invalid.
     """
 
     def __init__(self):
@@ -96,37 +95,30 @@ class EmbeddingManager:
 
         if not self.providers:
             raise ValueError(
-                "No embedding providers configured. "
-                "Set at least one of: JINA_API_KEY, HUGGINGFACE_API_KEY in .env"
+                "JINA_API_KEY is required. The Pinecone index is 1024-dimensional. "
+                "HuggingFace 384-d embeddings are not used on this index."
             )
 
         self.active_provider = self.providers[0]
         logger.info(f"Primary embedding provider: {self.active_provider.name}")
 
     def _initialize_providers(self):
-        """Initialize all available providers, in priority order."""
+        """Initialize Jina only so every vector matches the 1024-d index."""
         providers = []
-
-        # Priority 1: Jina AI (fast and accurate)
         jina_key = os.getenv("JINA_API_KEY")
         logger.info(f"JINA_API_KEY present: {bool(jina_key)}")
-        if jina_key:
-            try:
-                providers.append(JinaEmbeddingProvider())
-                logger.info("✅ Jina AI embeddings available")
-            except Exception as e:
-                logger.warning(f"⚠️ Jina AI failed to initialize: {e}")
-
-        # Priority 2: HuggingFace (fallback)
-        hf_key = os.getenv("HUGGINGFACE_API_KEY")
-        logger.info(f"HUGGINGFACE_API_KEY present: {bool(hf_key)}")
-        if hf_key:
-            try:
-                providers.append(HuggingFaceEmbeddingProvider())
-                logger.info("✅ HuggingFace embeddings available")
-            except Exception as e:
-                logger.warning(f"⚠️ HuggingFace failed to initialize: {e}")
-
+        if os.getenv("HUGGINGFACE_API_KEY"):
+            logger.info(
+                "HUGGINGFACE_API_KEY is set but ignored. "
+                "This index is Jina 1024-d only."
+            )
+        if not jina_key:
+            return providers
+        try:
+            providers.append(JinaEmbeddingProvider())
+            logger.info("Jina AI embeddings available (1024 dims)")
+        except Exception as e:
+            logger.warning(f"Jina AI failed to initialize: {e}")
         return providers
 
     def get_embeddings(self):

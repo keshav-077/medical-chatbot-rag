@@ -1,0 +1,9 @@
+sources:
+  - id: india_seed
+    type: local_json
+    path: data/medicines/india_seed.json
+    country: IN
+  - id: safety_notices
+    type: local_json
+    path: data/medicines/safety_notices.json
+    country: IN

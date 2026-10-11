@@ -8,9 +8,9 @@ This script:
 4. Creates or connects to a Pinecone index (768 dimensions)
 5. Uploads all embeddings to Pinecone
 
-IMPORTANT: The index dimension is 768 (matching Jina AI embeddings).
-If you previously used sentence-transformers (384 dims), you MUST
-delete the old index first — Pinecone cannot change index dimensions.
+IMPORTANT: The index dimension is 1024 (Jina embeddings v3 only).
+HuggingFace 384-d vectors must not be written into this index.
+If an older index has a different dimension, delete it and recreate it.
 
 Usage:
     python store_index.py
@@ -41,27 +41,23 @@ extracted_data = load_pdf_file(data='Data/')
 text_chunks = text_split(extracted_data)
 print(f"Extracted {len(text_chunks)} text chunks from documents")
 
-print("Loading embeddings (API-based, NO local downloads)...")
+print("Loading Jina embeddings (1024 dimensions only)...")
 embedding_manager = download_hugging_face_embeddings()
+embeddings = embedding_manager.get_embeddings()
+if embedding_manager.active_provider.name != "Jina AI":
+    raise RuntimeError("store_index.py requires the Jina AI embedding provider")
+if embedding_manager.active_provider.dimensions != 1024:
+    raise RuntimeError(
+        f"Expected 1024 dimensions, got {embedding_manager.active_provider.dimensions}"
+    )
 
-# Try to use Jina first, but if rate limited, use HuggingFace
-try:
-    embeddings = embedding_manager.get_embeddings()
-    print(f"Using embedding provider: {embedding_manager.active_provider.name}")
-    
-    # Quick test to see if we can generate an embedding
-    test_result = embeddings.embed_query("test")
-    print(f"✅ Provider is working (dimension: {len(test_result)})")
-except Exception as e:
-    if "rate limit" in str(e).lower():
-        print(f"⚠️ Rate limit hit on {embedding_manager.active_provider.name}, switching to fallback...")
-        if embedding_manager.fallback_to_next():
-            embeddings = embedding_manager.get_embeddings()
-            print(f"Using fallback provider: {embedding_manager.active_provider.name}")
-        else:
-            raise RuntimeError("All embedding providers failed")
-    else:
-        raise
+test_result = embeddings.embed_query("test")
+print(f"Using embedding provider: {embedding_manager.active_provider.name}")
+print(f"Provider is working (dimension: {len(test_result)})")
+if len(test_result) != 1024:
+    raise RuntimeError(
+        f"Jina returned {len(test_result)} dimensions; refusing to write a mixed index"
+    )
 
 print("Connecting to Pinecone...")
 pc = Pinecone(api_key=PINECONE_API_KEY)
@@ -156,60 +152,10 @@ except Exception as e:
     error_msg = str(e)
     print(f"Error: {e}")
     
-    # Check if it's a rate limit error and try fallback
     if "rate limit" in error_msg.lower():
-        print("⚠️ Rate limit hit, trying fallback provider...")
-        if embedding_manager.fallback_to_next():
-            embeddings = embedding_manager.get_embeddings()
-            print(f"Switched to: {embedding_manager.active_provider.name}")
-            
-            # NOTE: If dimensions changed, we need to recreate the index
-            new_dimension = embedding_manager.active_provider.dimensions
-            if new_dimension != EMBEDDING_DIMENSION:
-                print(f"⚠️ Dimension changed from {EMBEDDING_DIMENSION} to {new_dimension}")
-                print(f"Deleting old index and recreating...")
-                pc.delete_index(index_name)
-                time.sleep(5)
-                pc.create_index(
-                    name=index_name,
-                    dimension=new_dimension,
-                    metric="cosine",
-                    spec=ServerlessSpec(cloud="aws", region="us-east-1")
-                )
-                print("Waiting for new index to be ready...")
-                time.sleep(15)
-                EMBEDDING_DIMENSION = new_dimension
-            
-            # Retry with fallback embeddings in batches
-            print("Retrying with fallback provider in batches...")
-            docsearch = PineconeVectorStore.from_existing_index(
-                index_name=index_name,
-                embedding=embeddings
-            )
-            
-            for i in range(0, len(text_chunks), BATCH_SIZE):
-                batch = text_chunks[i:i+BATCH_SIZE]
-                batch_num = (i // BATCH_SIZE) + 1
-                
-                try:
-                    docsearch.add_documents(batch)
-                    print(f"✅ Batch {batch_num}/{total_batches} uploaded ({len(batch)} documents)")
-                except Exception as retry_error:
-                    if "504" in str(retry_error) or "timeout" in str(retry_error).lower():
-                        print(f"⚠️ Timeout on batch {batch_num}, waiting 30 seconds...")
-                        time.sleep(30)
-                        docsearch.add_documents(batch)
-                        print(f"✅ Batch {batch_num}/{total_batches} uploaded (after retry)")
-                    else:
-                        raise
-                
-                if i + BATCH_SIZE < len(text_chunks):
-                    time.sleep(3)
-            
-            print(f"✅ Successfully stored {len(text_chunks)} embeddings in Pinecone!")
-        else:
-            print("❌ No fallback provider available")
-            raise
+        print("Rate limit from Jina or Pinecone. Wait and rerun store_index.py.")
+        print("This script does not fall back to another embedding size.")
+        raise
     else:
         print("\nTroubleshooting tips:")
         print("1. Verify your PINECONE_API_KEY in .env file")

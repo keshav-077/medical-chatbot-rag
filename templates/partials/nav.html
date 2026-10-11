@@ -1,0 +1,17 @@
+<nav class="flex flex-wrap gap-2 px-1 pb-3" aria-label="Primary">
+    {% set items = [
+        ('index', 'Chat', 'ti-message'),
+        ('platform.care_map', 'Map', 'ti-map-pin'),
+        ('platform.meds', 'Meds', 'ti-pill'),
+        ('platform.labs', 'Labs', 'ti-file-text'),
+        ('platform.appointments', 'Appointments', 'ti-calendar'),
+        ('platform.learn', 'Learn', 'ti-book'),
+        ('profile', 'Profile', 'ti-user')
+    ] %}
+    {% for endpoint, label, icon in items %}
+        <a href="{{ url_for(endpoint) }}"
+           class="px-3 py-1.5 rounded-full text-xs font-heading font-bold {% if request.endpoint == endpoint %}clay-pill-active{% else %}clay-card text-[#4A5D23]/80{% endif %}">
+            <i class="ti {{ icon }} mr-1 align-middle"></i>{{ label }}
+        </a>
+    {% endfor %}
+</nav>

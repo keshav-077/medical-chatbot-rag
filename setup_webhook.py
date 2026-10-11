@@ -28,7 +28,7 @@ choice = input("\nEnter your choice (1-4): ").strip()
 
 if choice == "1":
     # Set webhook
-    url = input("\nEnter your webhook URL (e.g., https://your-app.vercel.app): ").strip()
+    url = input("\nEnter your webhook URL (e.g., https://dwa21x631l5fr.cloudfront.net): ").strip()
     
     if not url.startswith("https://"):
         print("❌ ERROR: Webhook URL must start with https://")
@@ -130,4 +130,4 @@ print("\n📚 Useful Commands:")
 print("   • Test bot: python test_bot.py")
 print("   • Run app: python app.py")
 print("   • Check logs: See Flask console output")
-print("\n🔗 Your Bot: https://t.me/medical7725_Bot")
+print("\n🔗 Your Bot: https://t.me/bloom531134_bot")

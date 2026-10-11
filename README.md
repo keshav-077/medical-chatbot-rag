@@ -1,34 +1,39 @@
 <div align="center">
 
-<img src="docs/brand/bloom-icon.png" width="72" alt="bloom">
+<table>
+<tr>
+<td width="88" valign="middle"><img src="docs/brand/bloom-icon.png" width="56" alt="bloom mark"></td>
+<td align="left" valign="middle">
+  <h1 style="margin:0;font-size:2.4em;line-height:1.1;">bloom</h1>
+  <p style="margin:4px 0 0;font-size:0.75em;letter-spacing:0.14em;text-transform:uppercase;opacity:0.75;">Organic Care</p>
+</td>
+</tr>
+</table>
 
-# bloom
-
-### India-first health companion · cited answers · care nearby · Telegram
+<h3><em>Listen first. Cite always. Care nearby.</em></h3>
+<p>India-first health companion on the web and Telegram — empathic chat, medicine context, maps, labs, and voice.</p>
 
 <br/>
+
+<a href="https://dwa21x631l5fr.cloudfront.net">
+  <img src="https://img.shields.io/badge/🌸_OPEN_LIVE_APP-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="44" alt="Open bloom live app">
+</a>
+&nbsp;&nbsp;
+<a href="https://t.me/bloom531134_bot">
+  <img src="https://img.shields.io/badge/💬_CHAT_ON_TELEGRAM-@bloom531134_bot-2AABEE?style=for-the-badge&labelColor=1D9BF0" height="44" alt="Chat on Telegram">
+</a>
+
+<br/><br/>
 
 | | |
-|:---:|:---:|
-| **🌐 LIVE WEBSITE** | **💬 TELEGRAM BOT** |
-| [**https://dwa21x631l5fr.cloudfront.net**](https://dwa21x631l5fr.cloudfront.net) | [**@bloom531134_bot**](https://t.me/bloom531134_bot) |
-| [Open app →](https://dwa21x631l5fr.cloudfront.net) | [Chat now →](https://t.me/bloom531134_bot) |
+|---|---|
+| **Web** | https://dwa21x631l5fr.cloudfront.net |
+| **Telegram** | https://t.me/bloom531134_bot |
+| **Health** | https://dwa21x631l5fr.cloudfront.net/health |
+| **Webhook** | `https://dwa21x631l5fr.cloudfront.net/api/telegram` |
+| **Calendar OAuth** | `https://dwa21x631l5fr.cloudfront.net/calendar/callback` |
 
 <br/>
-
-```
-╔══════════════════════════════════════════════════════════════════╗
-║  PRODUCTION  →  https://dwa21x631l5fr.cloudfront.net           ║
-║  TELEGRAM    →  https://t.me/bloom531134_bot                   ║
-║  WEBHOOK     →  https://dwa21x631l5fr.cloudfront.net/api/telegram
-║  OAUTH       →  https://dwa21x631l5fr.cloudfront.net/calendar/callback
-║  HEALTH      →  https://dwa21x631l5fr.cloudfront.net/health    ║
-╚══════════════════════════════════════════════════════════════════╝
-```
-
-<br/>
-
-The browser tab uses the same five-petal mark as [`static/favicon.svg`](static/favicon.svg).
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3-000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
@@ -236,27 +241,6 @@ Everything used in this repository, grouped by layer.
 |------|--------|
 | **unittest** | `tests/evals/test_platform.py` |
 | **Eval cases JSON** | `tests/evals/cases.json` |
-
-### Explicitly not used (by design)
-
-| Removed / avoided | Reason |
-|-------------------|--------|
-| CrewAI, AutoGen, Semantic Kernel, A2A | single LangGraph supervisor |
-| Local **torch** / **sentence-transformers** | API-only embeddings |
-| Mixed 384-d / 1024-d vectors | Jina 1024-only Pinecone index |
-| Separate MCP server processes | in-process tools in `tools/` |
-
----
-
-## Brand assets
-
-| File | Purpose |
-|------|---------|
-| [`static/brand/bloom-logo.svg`](static/brand/bloom-logo.svg) | Animated logo (site + docs) |
-| [`static/favicon.svg`](static/favicon.svg) | Tab icon |
-| [`templates/partials/bloom_logo.html`](templates/partials/bloom_logo.html) | Inline animated logo in UI |
-
----
 
 ## Run locally
 

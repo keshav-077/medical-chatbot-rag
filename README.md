@@ -1,11 +1,10 @@
 <div align="center">
 
 <a href="https://dwa21x631l5fr.cloudfront.net">
-<img src="docs/brand/readme-hero.gif" width="720" alt="Bloom — Organic Care. Animated logo with name and tagline.">
+<img src="docs/brand/readme-hero.gif" width="720" alt="Bloom — empathic guidance, every answer cited">
 </a>
 
-<p><strong>Ask anything health-related.</strong> Cited guidance with India meds, maps, labs, and voice.<br/>
-<em>Bloom</em> on the web and Telegram — LangGraph safety, RAG, and empathic care nearby.</p>
+<p>India-first health companion on the web and Telegram — chat with citations, medicine context, care map, labs, and voice.</p>
 
 <a href="https://dwa21x631l5fr.cloudfront.net">
   <img src="https://img.shields.io/badge/🌸_OPEN_LIVE_APP-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="44" alt="Open Bloom live app">
@@ -401,7 +400,7 @@ MIT — [LICENSE](LICENSE)
 
 <div align="center">
 
-<h3><em>Listen first. Cite always. Care nearby.</em></h3>
+<h3><em>Empathic guidance. Every answer cited.</em></h3>
 
 <a href="https://dwa21x631l5fr.cloudfront.net">
   <img src="https://img.shields.io/badge/Live-dwa21x631l5fr.cloudfront.net-E3256B?style=for-the-badge&labelColor=4A5D23" height="40" alt="Live app">

@@ -291,49 +291,70 @@ def generate_hero_pngs() -> None:
     print("Wrote README hero PNGs under docs/brand/")
 
 
+def _gradient_card(w: int, h: int) -> Image.Image:
+    """Soft bloom-tinted card background."""
+    card = Image.new("RGB", (w, h), (253, 249, 246))
+    draw = ImageDraw.Draw(card)
+    for y in range(h):
+        blend = y / max(h - 1, 1)
+        r = int(253 + (255 - 253) * blend * 0.4)
+        g = int(249 - 18 * blend)
+        b = int(246 - 8 * blend)
+        draw.line([(0, y), (w, y)], fill=(r, g, b))
+    return card
+
+
 def _compose_readme_hero_frame(logo: Image.Image, t: float) -> Image.Image:
-    """Dark banner + cream card; logo left, Bloom wordmark right (layout inspired by premium README heroes)."""
-    w, h = 780, 196
-    dark = (18, 16, 24)
-    cream = (255, 245, 238)
-    canvas = Image.new("RGB", (w, h), dark)
+    """README brand lockup: animated mark + Bloom + original tagline."""
+    outer_w, outer_h = 820, 210
+    pad = 28
+    card_w, card_h = outer_w - pad * 2, outer_h - pad * 2
+    dark = (15, 14, 20)
+
+    canvas = Image.new("RGB", (outer_w, outer_h), dark)
+    card = _gradient_card(card_w, card_h)
+    mask = Image.new("L", (card_w, card_h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, card_w, card_h), radius=22, fill=255)
+    canvas.paste(card, (pad, pad), mask)
+
     draw = ImageDraw.Draw(canvas)
-
-    cx1, cy1, cx2, cy2 = 36, 32, w - 36, h - 32
-    draw.rounded_rectangle((cx1, cy1, cx2, cy2), radius=20, fill=cream, outline=(74, 68, 88), width=1)
-
-    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 56)
-    organic_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 10)
-    tag_font = _font(("segoeuisl.ttf", "Segoe UI Italic.ttf", "DejaVuSans-Oblique.ttf"), 15)
-    sub_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 14)
-
-    lx, ly, tile = 56, 48, 108
     draw.rounded_rectangle(
-        (lx, ly, lx + tile, ly + tile),
-        radius=18,
-        fill=(255, 236, 243),
-        outline=(227, 37, 107),
-        width=2,
+        (pad, pad, pad + card_w, pad + card_h),
+        radius=22,
+        outline=(225, 200, 210),
+        width=1,
     )
-    draw.ellipse((lx + tile - 18, ly + 10, lx + tile - 6, ly + 22), fill=(255, 77, 141))
 
-    canvas.paste(logo, (lx + 10, ly + 10), logo)
+    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 64)
+    tag_font = _font(("seguisb.ttf", "Segoe UI Semibold.ttf", "DejaVuSans-Bold.ttf"), 19)
+    sub_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 13)
 
-    tx = lx + tile + 28
-    ty = 52
-    draw.text((tx, ty), "Bloom", font=title_font, fill=(26, 31, 18))
-    draw.text((tx, ty + 58), "ORGANIC CARE", font=organic_font, fill=(107, 115, 85))
+    # Logo with soft halo (breathing halo tied to logo animation)
+    breathe = 1 + 0.06 * math.sin(2 * math.pi * t / 4)
+    lx, ly = pad + 44, pad + 38
+    halo_r = int(58 * breathe)
+    hx, hy = lx + 52, ly + 52
+    draw.ellipse(
+        (hx - halo_r, hy - halo_r, hx + halo_r, hy + halo_r),
+        fill=(255, 220, 232),
+    )
+    draw.ellipse(
+        (hx - 44, hy - 44, hx + 44, hy + 44),
+        fill=(255, 255, 255),
+        outline=(240, 230, 234),
+        width=1,
+    )
+    canvas.paste(logo, (lx + 4, ly + 4), logo)
 
-    pulse = (math.sin(2 * math.pi * t / 2.4) + 1) / 2
-    bar_w = int(28 + 36 * pulse)
-    draw.rectangle((tx, ty + 78, tx + bar_w, ty + 82), fill=(227, 37, 107))
-
-    draw.text((tx, ty + 92), "Listen first. Cite always. Care nearby.", font=tag_font, fill=(74, 93, 35))
+    tx = lx + 120
+    ty = pad + 46
+    draw.text((tx, ty), "Bloom", font=title_font, fill=(30, 36, 22))
+    draw.text((tx, ty + 72), "Empathic guidance. Every answer cited.", font=tag_font, fill=(74, 93, 35))
     draw.text(
-        (tx, ty + 114),
-        "India-first health companion — web, Telegram, cited RAG.",
+        (tx, ty + 102),
+        "India-first health companion  ·  Web & Telegram  ·  Meds · Maps · Labs",
         font=sub_font,
-        fill=(90, 98, 72),
+        fill=(110, 118, 98),
     )
     return canvas
 
@@ -349,7 +370,7 @@ def generate_readme_hero_gif(chrome: str) -> None:
             t = i / HERO_FPS
             logo_png = tmp_path / f"logo_{i:03d}.png"
             screenshot_svg(chrome, logo_svg(t, petal_opacity=0.34), logo_png, logo_px, logo_px)
-            logo = Image.open(logo_png).convert("RGBA").resize((88, 88), Image.Resampling.LANCZOS)
+            logo = Image.open(logo_png).convert("RGBA").resize((96, 96), Image.Resampling.LANCZOS)
 
             frame = _compose_readme_hero_frame(logo, t)
             logo.close()

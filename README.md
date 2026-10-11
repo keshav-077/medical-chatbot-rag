@@ -2,11 +2,8 @@
 
 <p align="center">
   <a href="https://dwa21x631l5fr.cloudfront.net">
-    <img src="docs/brand/bloom-logo.gif" width="64" height="64" alt="bloom logo" style="vertical-align:middle;">
-    <span style="display:inline-block;vertical-align:middle;text-align:left;margin-left:12px;">
-      <strong style="font-size:1.75rem;line-height:1.1;color:#4A5D23;">bloom</strong><br>
-      <span style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.75;">Organic Care</span>
-    </span>
+    <img src="docs/brand/bloom-logo.gif" width="56" height="56" alt="bloom" style="vertical-align:middle;">
+    <img src="docs/brand/bloom-wordmark.png" width="220" alt="bloom Organic Care" style="vertical-align:middle;margin-left:8px;">
   </a>
 </p>
 

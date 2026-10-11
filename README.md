@@ -6,36 +6,11 @@
 
 <br/>
 
-<table cellpadding="0" cellspacing="0">
-<tr>
-<td bgcolor="#FFF8F4" align="center">
-
-<table cellpadding="0" cellspacing="0">
-<tr>
-<td width="108" align="center" valign="middle">
 <a href="https://dwa21x631l5fr.cloudfront.net">
-<img src="docs/brand/bloom-logo.gif" width="84" height="84" alt="Bloom animated logo">
+<img src="docs/brand/readme-hero.gif" width="660" alt="Bloom — animated logo, serif title, and tagline">
 </a>
-</td>
-<td align="left" valign="middle" style="padding: 20px 28px 20px 8px;">
 
-<img src="docs/brand/bloom-serif-title.png" height="52" alt="Bloom"><br/>
-
-<img src="docs/brand/bloom-hero-tagline.png" alt="Listen first · Cite always · Care nearby"><br/>
-
-<img src="docs/brand/accent-bar.png" width="44" height="3" alt=""><br/>
-
-<img src="docs/brand/bloom-hero-subtitle.png" alt="Every answer traced to sources and nearby care.">
-
-</td>
-</tr>
-</table>
-
-</td>
-</tr>
-</table>
-
-<br/>
+<br/><br/>
 
 <img src="docs/brand/readme-hero-lead.png" alt="Ask anything health-related. Get cited guidance with India meds, maps, and labs.">
 

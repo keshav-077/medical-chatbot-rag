@@ -305,57 +305,58 @@ def _gradient_card(w: int, h: int) -> Image.Image:
 
 
 def _compose_readme_hero_frame(logo: Image.Image, t: float) -> Image.Image:
-    """README brand lockup: animated mark + Bloom + original tagline."""
-    outer_w, outer_h = 820, 210
-    pad = 28
+    """README brand lockup: tight crop — logo + Bloom + one tagline only."""
+    outer_w, outer_h = 720, 132
+    pad = 6
     card_w, card_h = outer_w - pad * 2, outer_h - pad * 2
     dark = (15, 14, 20)
 
     canvas = Image.new("RGB", (outer_w, outer_h), dark)
     card = _gradient_card(card_w, card_h)
     mask = Image.new("L", (card_w, card_h), 0)
-    ImageDraw.Draw(mask).rounded_rectangle((0, 0, card_w, card_h), radius=22, fill=255)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, card_w, card_h), radius=16, fill=255)
     canvas.paste(card, (pad, pad), mask)
 
     draw = ImageDraw.Draw(canvas)
     draw.rounded_rectangle(
         (pad, pad, pad + card_w, pad + card_h),
-        radius=22,
+        radius=16,
         outline=(225, 200, 210),
         width=1,
     )
 
-    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 64)
-    tag_font = _font(("seguisb.ttf", "Segoe UI Semibold.ttf", "DejaVuSans-Bold.ttf"), 19)
-    sub_font = _font(("segoeui.ttf", "Segoe UI.ttf", "DejaVuSans.ttf"), 13)
+    title_font = _font(("georgiab.ttf", "Georgia Bold.ttf", "DejaVuSerif-Bold.ttf"), 52)
+    tag_font = _font(("seguisb.ttf", "Segoe UI Semibold.ttf", "DejaVuSans-Bold.ttf"), 17)
 
-    # Logo with soft halo (breathing halo tied to logo animation)
-    breathe = 1 + 0.06 * math.sin(2 * math.pi * t / 4)
-    lx, ly = pad + 44, pad + 38
-    halo_r = int(58 * breathe)
-    hx, hy = lx + 52, ly + 52
+    logo_side = logo.size[0]
+    ring = logo_side + 10
+    lx = pad + 18
+    ly = pad + (card_h - ring) // 2
+
+    breathe = 1 + 0.05 * math.sin(2 * math.pi * t / 4)
+    hx = lx + ring // 2
+    hy = ly + ring // 2
+    halo_r = int((ring // 2 + 4) * breathe)
     draw.ellipse(
         (hx - halo_r, hy - halo_r, hx + halo_r, hy + halo_r),
         fill=(255, 220, 232),
     )
+    r = ring // 2
     draw.ellipse(
-        (hx - 44, hy - 44, hx + 44, hy + 44),
+        (hx - r, hy - r, hx + r, hy + r),
         fill=(255, 255, 255),
         outline=(240, 230, 234),
         width=1,
     )
-    canvas.paste(logo, (lx + 4, ly + 4), logo)
+    canvas.paste(logo, (lx + (ring - logo_side) // 2, ly + (ring - logo_side) // 2), logo)
 
-    tx = lx + 120
-    ty = pad + 46
+    tx = lx + ring + 22
+    title_h, tag_h = 52, 22
+    gap = 6
+    block_h = title_h + gap + tag_h
+    ty = pad + (card_h - block_h) // 2
     draw.text((tx, ty), "Bloom", font=title_font, fill=(30, 36, 22))
-    draw.text((tx, ty + 72), "Empathic guidance. Every answer cited.", font=tag_font, fill=(74, 93, 35))
-    draw.text(
-        (tx, ty + 102),
-        "India-first health companion  ·  Web & Telegram  ·  Meds · Maps · Labs",
-        font=sub_font,
-        fill=(110, 118, 98),
-    )
+    draw.text((tx, ty + title_h + gap), "Empathic guidance. Every answer cited.", font=tag_font, fill=(74, 93, 35))
     return canvas
 
 
@@ -370,7 +371,7 @@ def generate_readme_hero_gif(chrome: str) -> None:
             t = i / HERO_FPS
             logo_png = tmp_path / f"logo_{i:03d}.png"
             screenshot_svg(chrome, logo_svg(t, petal_opacity=0.34), logo_png, logo_px, logo_px)
-            logo = Image.open(logo_png).convert("RGBA").resize((96, 96), Image.Resampling.LANCZOS)
+            logo = Image.open(logo_png).convert("RGBA").resize((84, 84), Image.Resampling.LANCZOS)
 
             frame = _compose_readme_hero_frame(logo, t)
             logo.close()

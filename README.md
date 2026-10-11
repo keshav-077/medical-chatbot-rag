@@ -1,12 +1,10 @@
 <div align="center">
 
-<!-- Same mark as templates/partials/bloom_wordmark.html on the live login page -->
-<p>
-  <img src="docs/brand/bloom-logo.svg" width="48" height="48" alt="bloom" style="vertical-align:middle;margin-right:12px;">
-  <span style="display:inline-block;vertical-align:middle;text-align:left;">
-    <strong style="font-size:1.75rem;display:block;line-height:1.1;">bloom</strong>
-    <span style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.72;">Organic Care</span>
-  </span>
+<!-- PNG export of the live login header — GitHub dark mode breaks SVG + HTML wordmark styling -->
+<p align="center">
+  <a href="https://dwa21x631l5fr.cloudfront.net">
+    <img src="docs/brand/bloom-wordmark-readme.png" width="260" alt="bloom Organic Care">
+  </a>
 </p>
 
 <h3><em>Listen first. Cite always. Care nearby.</em></h3>

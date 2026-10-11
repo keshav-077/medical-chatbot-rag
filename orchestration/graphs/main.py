@@ -91,7 +91,16 @@ def run_turn(message: str, user_id: int | None = None, extra: dict | None = None
         {"message": (message or "")[:500]},
         request_id=request_id,
     )
-    extra = extra or {}
+    extra = dict(extra or {})
+    if user_id and extra.get("lat") is None:
+        try:
+            from services.location import get_user_location
+
+            coords = get_user_location(user_id)
+            if coords:
+                extra["lat"], extra["lng"] = coords
+        except Exception:
+            pass
     state = {
         "message": message or "",
         "user_id": user_id,

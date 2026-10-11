@@ -1,1 +1,1 @@
-"""In-process tools. Same contracts can be exposed as MCP servers later."""
+"""In-process tools. mcp_bloom.registry exposes the same contracts over MCP."""

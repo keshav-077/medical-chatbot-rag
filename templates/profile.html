@@ -113,6 +113,20 @@
 
             </div>
 
+            <div class="flex flex-col gap-3 pb-5 border-b border-[#4A5D23]/10">
+                <h3 class="font-heading font-extrabold text-sm text-[#4A5D23]">Telegram link</h3>
+                <p class="text-xs text-[#4A5D23]/70">
+                    One-time step. In Telegram send this command, then Bloom will push visit packs, lab reviews, and digests to your phone.
+                </p>
+                {% if telegram_linked %}
+                <p class="text-xs font-bold text-emerald-700">Linked. You will get automatic updates on Telegram.</p>
+                {% endif %}
+                <code class="clay-card p-3 rounded-2xl text-xs break-all">/start bloom_{{ telegram_token }}</code>
+                <h3 class="font-heading font-extrabold text-sm text-[#4A5D23] mt-3">Optional MCP client</h3>
+                <p class="text-xs text-[#4A5D23]/70">Paste once into Cursor or Claude Desktop. Bloom tools stay the same as the website.</p>
+                <textarea readonly rows="10" class="clay-input rounded-2xl px-3 py-2 text-[11px] font-mono">{{ mcp_snippet }}</textarea>
+            </div>
+
             <form method="post" action="{{ url_for('platform.save_health') }}" class="flex flex-col gap-3 pb-5 border-b border-[#4A5D23]/10">
                 <h3 class="font-heading font-extrabold text-sm text-[#4A5D23]">Health profile</h3>
                 <textarea name="allergies" rows="2" placeholder="Allergies" class="clay-input rounded-2xl px-3 py-2 text-sm">{{ health.allergies if health else '' }}</textarea>

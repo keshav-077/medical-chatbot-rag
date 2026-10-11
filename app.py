@@ -244,9 +244,30 @@ def logout():
 @login_required
 def profile():
     from models import UserHealthProfile
+    from services.telegram_link import ensure_link_token
 
     health = UserHealthProfile.query.filter_by(user_id=current_user.id).first()
-    return render_template("profile.html", health=health)
+    token = ensure_link_token(current_user)
+    mcp_snippet = {
+        "mcpServers": {
+            "bloom": {
+                "command": "python",
+                "args": ["-m", "mcp_bloom"],
+                "env": {
+                    "BLOOM_MCP_TOKEN": os.getenv("BLOOM_MCP_TOKEN") or "set-BLOOM_MCP_TOKEN",
+                    "BLOOM_MCP_CLIENT_TOKEN": os.getenv("BLOOM_MCP_TOKEN") or "set-BLOOM_MCP_TOKEN",
+                    "BLOOM_MCP_USER_ID": str(current_user.id),
+                },
+            }
+        }
+    }
+    return render_template(
+        "profile.html",
+        health=health,
+        telegram_token=token,
+        telegram_linked=bool(current_user.telegram_chat_id),
+        mcp_snippet=json.dumps(mcp_snippet, indent=2),
+    )
 
 
 @app.route("/change-password", methods=["POST"])
@@ -313,9 +334,16 @@ def chat():
     try:
         from orchestration.graphs.main import run_turn
 
+        extra = {}
+        from services.location import get_user_location
+
+        coords = get_user_location(current_user.id)
+        if coords:
+            extra["lat"], extra["lng"] = coords
         result = run_turn(
             msg,
             user_id=current_user.id,
+            extra=extra,
             request_id=getattr(g, "request_id", ""),
         )
         response = result.get("answer") or ""
@@ -341,6 +369,10 @@ def chat():
             )
 
         db.session.commit()
+        if result.get("intent") != "emergency":
+            from missions.enqueue import maybe_enqueue_after_turn
+
+            maybe_enqueue_after_turn(current_user.id, msg, result)
 
         return jsonify(
             {

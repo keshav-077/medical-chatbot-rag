@@ -1,4 +1,4 @@
-<nav class="flex flex-wrap gap-2 px-1 pb-3" aria-label="Primary">
+<nav class="flex flex-wrap gap-2 px-1 pb-3 items-center" aria-label="Primary">
     {% set items = [
         ('index', 'Chat', 'ti-message'),
         ('platform.care_map', 'Map', 'ti-map-pin'),
@@ -14,4 +14,13 @@
             <i class="ti {{ icon }} mr-1 align-middle"></i>{{ label }}
         </a>
     {% endfor %}
+    {% if current_user is defined and current_user.is_authenticated %}
+    <div class="relative ml-auto" id="bloomBellWrap">
+        <button type="button" id="bloomBell" class="clay-card px-3 py-1.5 rounded-full text-xs font-heading font-bold text-[#4A5D23]/80" aria-label="Notifications">
+            <i class="ti ti-bell mr-1 align-middle"></i>Updates
+            <span id="bloomBellCount" class="hidden ml-1 bg-[#E3256B] text-white rounded-full px-1.5 text-[10px]">0</span>
+        </button>
+        <div id="bloomBellList" class="hidden absolute right-0 mt-2 w-80 max-h-80 overflow-y-auto clay-card rounded-2xl p-3 z-50 text-left bg-white"></div>
+    </div>
+    {% endif %}
 </nav>

@@ -13,6 +13,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     last_login = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    telegram_chat_id = db.Column(db.String(32), unique=True, nullable=True, index=True)
+    telegram_link_token = db.Column(db.String(64), unique=True, nullable=True, index=True)
     conversations = db.relationship('Conversation', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def set_password(self, password):
@@ -48,6 +50,9 @@ class UserHealthProfile(db.Model):
     conditions = db.Column(db.Text, default="")
     notes = db.Column(db.Text, default="")
     google_refresh_token = db.Column(db.Text, nullable=True)
+    last_lat = db.Column(db.Float, nullable=True)
+    last_lng = db.Column(db.Float, nullable=True)
+    last_located_at = db.Column(db.DateTime, nullable=True)
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     user = db.relationship('User', backref=db.backref('health_profile', uselist=False))
 
@@ -160,5 +165,20 @@ class Notification(db.Model):
     message = db.Column(db.Text, nullable=False)
     kind = db.Column(db.String(32), default="info")
     read = db.Column(db.Boolean, default=False)
+    payload_json = db.Column(db.Text, default="")
+    href = db.Column(db.String(300), default="")
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     user = db.relationship('User', backref=db.backref('notifications', lazy=True, cascade='all, delete-orphan'))
+
+
+class Mission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, index=True)
+    kind = db.Column(db.String(40), nullable=False, index=True)
+    payload_json = db.Column(db.Text, default="{}")
+    status = db.Column(db.String(20), default="queued", index=True)
+    result_json = db.Column(db.Text, default="")
+    dedupe_key = db.Column(db.String(180), unique=True, nullable=True, index=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    user = db.relationship('User', backref=db.backref('missions', lazy=True, cascade='all, delete-orphan'))

@@ -27,6 +27,12 @@ def care_node(state: dict) -> dict:
         if found:
             lat = float(found.group(1))
             lng = float(found.group(2))
+    if lat is None or lng is None:
+        from services.location import get_user_location
+
+        coords = get_user_location(state.get("user_id"))
+        if coords:
+            lat, lng = coords
     kind = extra.get("kind") or _kind(message)
     if lat is None or lng is None:
         return {
@@ -41,6 +47,22 @@ def care_node(state: dict) -> dict:
             "disclaimer": DISCLAIMER,
         }
     payload = search_nearby(float(lat), float(lng), kind)
+    extra = extra or {}
+    user_id = state.get("user_id")
+    if user_id and lat is not None and lng is not None:
+        try:
+            from services.location import save_user_location
+
+            save_user_location(user_id, float(lat), float(lng), commit=False)
+        except Exception:
+            pass
+    aqi_line = ""
+    if lat is not None and lng is not None:
+        from mcp_bloom.sources.aqi import get_aqi, is_respiratory
+
+        if is_respiratory(message):
+            aqi = get_aqi(float(lat), float(lng))
+            aqi_line = aqi.get("summary") or ""
     if payload.get("error"):
         answer = f"I could not search places: {payload['error']}"
     elif not payload.get("places"):
@@ -54,6 +76,8 @@ def care_node(state: dict) -> dict:
             lines.append(f"- {place['name']} ({dist}{phone})")
         lines.append("Open the Care Map to see pins and directions. This is not a medical referral.")
         answer = "\n".join(lines)
+    if aqi_line:
+        answer = answer.rstrip() + "\n\n" + aqi_line
     return {
         "intent": "care",
         "answer": answer,

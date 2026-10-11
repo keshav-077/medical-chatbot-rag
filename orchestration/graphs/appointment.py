@@ -29,7 +29,20 @@ def appointment_node(state: dict) -> dict:
         r"\b(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*|\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b",
         lowered,
     )
-    preferred = ", ".join(times[:4]) or "next weekday morning"
+    preferred = ", ".join(times[:4])
+    if not preferred:
+        refresh = None
+        user_id = state.get("user_id")
+        if user_id:
+            from models import UserHealthProfile
+            from services.calendar import suggest_slots
+
+            profile = UserHealthProfile.query.filter_by(user_id=user_id).first()
+            refresh = profile.google_refresh_token if profile else None
+            slots = suggest_slots(refresh)
+            preferred = ", ".join(slots[:2]) if slots else "next weekday morning"
+        else:
+            preferred = "next weekday morning"
     script = (
         f"Hello, I would like a {specialty} appointment. "
         f"Reason: {message[:240]}. Preferred time: {preferred}."

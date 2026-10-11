@@ -46,6 +46,10 @@ langgraph>=0.2.0
 pyyaml>=6.0
 reportlab>=4.0.0
 langfuse>=2.0.0
+mcp>=1.2.0,<2.0.0
+# CrewAI / AutoGen are optional. missions/* fall back to sequential complete()
+# if they are not installed. To enable the native runners:
+#   pip install "crewai>=0.80.0,<1.0.0" "autogen-agentchat>=0.4.0,<0.8.0"
 opentelemetry-api>=1.20.0
 opentelemetry-sdk>=1.20.0
 opentelemetry-instrumentation-flask>=0.45b0

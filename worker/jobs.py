@@ -1,13 +1,9 @@
 """Background jobs: ingest, reminders, and medicine safety notices."""
 
-import json
 from datetime import datetime, timezone
-from pathlib import Path
 
 from models import AppointmentRequest, IngestJob, Notification, UserMedication, db
 from ingestion.pipeline import run_ingest
-
-ROOT = Path(__file__).resolve().parents[1]
 
 
 def run_reminders() -> int:
@@ -36,9 +32,12 @@ def run_reminders() -> int:
 
 
 def run_safety_notices() -> int:
-    path = ROOT / "data" / "medicines" / "safety_notices.json"
-    notices = json.loads(path.read_text(encoding="utf-8"))
+    from mcp_bloom.sources.notices import list_safety_notices
+    from missions.enqueue import enqueue_mission
+
+    notices = list_safety_notices()
     created = 0
+    pending_cards = []
     meds = UserMedication.query.all()
     for med in meds:
         name = med.name.lower()
@@ -53,6 +52,7 @@ def run_safety_notices() -> int:
                     Notification(user_id=med.user_id, kind="safety", message=text)
                 )
                 created += 1
+                pending_cards.append((med.user_id, med.name))
     db.session.add(
         IngestJob(
             source_id="safety_notices",
@@ -62,4 +62,11 @@ def run_safety_notices() -> int:
         )
     )
     db.session.commit()
+    for user_id, med_name in pending_cards:
+        enqueue_mission(
+            "med_card",
+            user_id,
+            payload={"name": med_name, "message": med_name, "auto_add": False},
+            dedupe_key=f"med:{user_id}:{med_name.lower()}:notice",
+        )
     return created

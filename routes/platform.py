@@ -34,8 +34,12 @@ from models import (
     UserMedication,
     db,
 )
+from missions.enqueue import enqueue_mission
+from missions.runner import run_missions
 from orchestration.graphs.main import run_turn
 from services.calendar import auth_url, exchange_code, oauth_configured, suggest_slots
+from services.location import get_user_location, save_user_location
+from services.notify import serialize_notification
 from services.pdf_export import build_visit_pdf
 from services.storage import save_bytes
 from services.voice import transcribe_audio
@@ -84,7 +88,13 @@ def meds():
                 )
             )
             db.session.commit()
-            flash("Medicine saved to your profile.", "success")
+            enqueue_mission(
+                "med_card",
+                current_user.id,
+                payload={"name": name, "message": name, "auto_add": False},
+                dedupe_key=f"med:{current_user.id}:{name.lower()}",
+            )
+            flash("Medicine saved. Bloom is writing a safety card for you.", "success")
         return redirect(url_for("platform.meds"))
     rows = (
         UserMedication.query.filter_by(user_id=current_user.id)
@@ -139,6 +149,7 @@ def api_places():
     except (TypeError, ValueError):
         return jsonify({"error": "lat and lng are required"}), 400
     kind = request.args.get("kind") or "hospital"
+    save_user_location(current_user.id, lat, lng)
     return jsonify(search_nearby(lat, lng, kind))
 
 
@@ -209,22 +220,16 @@ def labs():
         db.session.add(doc)
         db.session.commit()
         if text:
-            result = run_turn(
-                "Explain my lab report",
-                user_id=current_user.id,
-                extra={"intent": "lab", "lab_text": text[:8000]},
+            enqueue_mission(
+                "lab_review",
+                current_user.id,
+                payload={"lab_text": text[:8000], "document_id": doc.id},
+                dedupe_key=f"lab:{current_user.id}:{doc.id}",
             )
-            rows = ((result.get("extra") or {}).get("lab_rows")) or []
-            db.session.add(
-                LabResult(
-                    user_id=current_user.id,
-                    document_id=doc.id,
-                    summary=result.get("answer") or "",
-                    rows_json=json.dumps(rows),
-                )
+            flash(
+                "Report received. Bloom is reviewing it and will notify you. This is not a diagnosis.",
+                "success",
             )
-            db.session.commit()
-            flash("Report explained below. This is not a diagnosis.", "success")
         return redirect(url_for("platform.labs"))
     documents = (
         UploadedDocument.query.filter_by(user_id=current_user.id)
@@ -238,9 +243,15 @@ def labs():
     )
     for result in results:
         try:
-            result.parsed_rows = json.loads(result.rows_json or "[]")
+            parsed = json.loads(result.rows_json or "[]")
         except json.JSONDecodeError:
-            result.parsed_rows = []
+            parsed = []
+        if isinstance(parsed, dict):
+            result.parsed_rows = parsed.get("rows") or []
+            result.reviewed = bool(parsed.get("reviewed"))
+        else:
+            result.parsed_rows = parsed
+            result.reviewed = False
     return render_template("labs.html", documents=documents, results=results)
 
 
@@ -268,7 +279,13 @@ def appointments():
                 row.remind_at = datetime.now(timezone.utc)
         db.session.add(row)
         db.session.commit()
-        flash("Appointment draft saved. Call the clinic to confirm.", "success")
+        enqueue_mission(
+            "visit_pack",
+            current_user.id,
+            payload={"message": row.reason or row.specialty, "appointment_id": row.id},
+            dedupe_key=f"visit:{current_user.id}:appt:{row.id}",
+        )
+        flash("Appointment draft saved. Bloom is preparing a visit pack. Call the clinic to confirm.", "success")
         return redirect(url_for("platform.appointments"))
     rows = (
         AppointmentRequest.query.filter_by(user_id=current_user.id)
@@ -469,10 +486,45 @@ def voice_transcribe():
 def telegram_webhook():
     update = request.get_json(force=True, silent=True) or {}
 
-    def runner(text: str):
-        return run_turn(text, user_id=None)
+    def runner(text: str, user_id=None):
+        extra = {}
+        coords = get_user_location(user_id)
+        if coords:
+            extra["lat"], extra["lng"] = coords
+        result = run_turn(text, user_id=user_id, extra=extra)
+        if user_id and result.get("intent") != "emergency":
+            from missions.enqueue import maybe_enqueue_after_turn
+
+            maybe_enqueue_after_turn(user_id, text, result)
+        return result
 
     process_telegram_update(update, runner)
+    return jsonify({"ok": True})
+
+
+@bp.route("/api/notifications")
+@login_required
+def api_notifications():
+    rows = (
+        Notification.query.filter_by(user_id=current_user.id)
+        .order_by(Notification.created_at.desc())
+        .limit(20)
+        .all()
+    )
+    unread = Notification.query.filter_by(user_id=current_user.id, read=False).count()
+    return jsonify(
+        {
+            "unread": unread,
+            "items": [serialize_notification(row) for row in rows],
+        }
+    )
+
+
+@bp.route("/api/notifications/read", methods=["POST"])
+@login_required
+def api_notifications_read():
+    Notification.query.filter_by(user_id=current_user.id, read=False).update({"read": True})
+    db.session.commit()
     return jsonify({"ok": True})
 
 
@@ -485,5 +537,6 @@ def worker_run():
             "ingest": run_ingest(),
             "reminders": run_reminders(),
             "safety_notices": run_safety_notices(),
+            "missions": run_missions(),
         }
     )

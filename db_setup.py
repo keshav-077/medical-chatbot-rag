@@ -16,6 +16,44 @@ _MESSAGE_COLUMNS = {
     "intent": "VARCHAR(32)",
 }
 
+_USER_COLUMNS = {
+    "telegram_chat_id": "VARCHAR(32)",
+    "telegram_link_token": "VARCHAR(64)",
+}
+
+_PROFILE_COLUMNS = {
+    "last_lat": "FLOAT",
+    "last_lng": "FLOAT",
+    "last_located_at": "DATETIME",
+}
+
+_NOTIFICATION_COLUMNS = {
+    "payload_json": "TEXT",
+    "href": "VARCHAR(300)",
+}
+
+
+def _quote_ident(name: str) -> str:
+    if db.engine.dialect.name == "postgresql":
+        return f'"{name}"'
+    return name
+
+
+def _adapt_ddl(ddl: str) -> str:
+    if db.engine.dialect.name == "postgresql":
+        return ddl.replace("DATETIME", "TIMESTAMP")
+    return ddl
+
+
+def _add_columns(table: str, columns: dict[str, str], inspector) -> None:
+    existing = {col["name"] for col in inspector.get_columns(table)}
+    qtable = _quote_ident(table)
+    for name, ddl in columns.items():
+        if name not in existing:
+            col_ddl = _adapt_ddl(ddl)
+            db.session.execute(text(f"ALTER TABLE {qtable} ADD COLUMN {name} {col_ddl}"))
+            logger.info("Added %s.%s", table, name)
+
 
 def ensure_schema():
     uri = str(db.engine.url)
@@ -27,12 +65,14 @@ def ensure_schema():
     inspector = inspect(db.engine)
     tables = set(inspector.get_table_names())
     if "message" in tables:
-        existing = {col["name"] for col in inspector.get_columns("message")}
-        for name, ddl in _MESSAGE_COLUMNS.items():
-            if name not in existing:
-                db.session.execute(text(f"ALTER TABLE message ADD COLUMN {name} {ddl}"))
-                logger.info("Added message.%s", name)
-        db.session.commit()
+        _add_columns("message", _MESSAGE_COLUMNS, inspector)
+    if "user" in tables:
+        _add_columns("user", _USER_COLUMNS, inspector)
+    if "user_health_profile" in tables:
+        _add_columns("user_health_profile", _PROFILE_COLUMNS, inspector)
+    if "notification" in tables:
+        _add_columns("notification", _NOTIFICATION_COLUMNS, inspector)
+    db.session.commit()
 
 
 def seed_if_empty():

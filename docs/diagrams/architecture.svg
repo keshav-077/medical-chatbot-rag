@@ -1,50 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" font-family="Segoe UI, system-ui, sans-serif">
- <defs>
- <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFE4E1"/><stop offset="1" stop-color="#FFF5EE"/></linearGradient>
- <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity=".12"/></filter>
- </defs>
- <rect width="960" height="420" rx="24" fill="url(#g1)"/>
- <text x="480" y="42" text-anchor="middle" fill="#4A5D23" font-size="22" font-weight="700">Bloom - AWS production architecture (ap-southeast-2)</text>
- <g filter="url(#shadow)">
- <rect x="40" y="80" width="140" height="72" rx="16" fill="#fff" stroke="#E3256B" stroke-width="2"/>
- <text x="110" y="115" text-anchor="middle" fill="#4A5D23" font-weight="600">Browser</text>
- <text x="110" y="135" text-anchor="middle" fill="#4A5D23" fill-opacity=".7" font-size="12">Web + Telegram</text>
- <rect x="220" y="80" width="140" height="72" rx="16" fill="#fff" stroke="#232F3E" stroke-width="2"/>
- <text x="290" y="115" text-anchor="middle" fill="#232F3E" font-weight="600">CloudFront</text>
- <text x="290" y="135" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">HTTPS</text>
- <rect x="400" y="80" width="140" height="72" rx="16" fill="#fff" stroke="#232F3E" stroke-width="2"/>
- <text x="470" y="115" text-anchor="middle" fill="#232F3E" font-weight="600">ALB</text>
- <text x="470" y="135" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">:8080 /health</text>
- <rect x="580" y="80" width="160" height="72" rx="16" fill="#fff" stroke="#FF9900" stroke-width="2"/>
- <text x="660" y="115" text-anchor="middle" fill="#232F3E" font-weight="600">ECS Fargate</text>
- <text x="660" y="135" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">Gunicorn + Flask</text>
- <rect x="780" y="80" width="140" height="72" rx="16" fill="#fff" stroke="#FF9900" stroke-width="2"/>
- <text x="850" y="115" text-anchor="middle" fill="#232F3E" font-weight="600">ECR</text>
- <text x="850" y="135" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">bloom:latest</text>
- </g>
- <path d="M180 116h40M360 116h40M540 116h40M740 116h40" stroke="#E3256B" stroke-width="2" marker-end="url(#arr)"/>
- <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#E3256B"/></marker></defs>
- <text x="480" y="200" text-anchor="middle" fill="#4A5D23" font-size="14" font-weight="600">External services (API keys in ECS task env)</text>
- <g filter="url(#shadow)">
- <rect x="60" y="230" width="150" height="64" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
- <text x="135" y="258" text-anchor="middle" fill="#4A5D23" font-weight="600">Neon Postgres</text>
- <text x="135" y="276" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">users, chats, meds</text>
- <rect x="240" y="230" width="150" height="64" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
- <text x="315" y="258" text-anchor="middle" fill="#4A5D23" font-weight="600">Pinecone</text>
- <text x="315" y="276" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">Jina 1024-d RAG</text>
- <rect x="420" y="230" width="150" height="64" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
- <text x="495" y="258" text-anchor="middle" fill="#4A5D23" font-weight="600">OpenRouter / Groq</text>
- <text x="495" y="276" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">LLM + Whisper</text>
- <rect x="600" y="230" width="150" height="64" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
- <text x="675" y="258" text-anchor="middle" fill="#4A5D23" font-weight="600">Google APIs</text>
- <text x="675" y="276" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">Maps, Calendar</text>
- <rect x="780" y="230" width="120" height="64" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
- <text x="840" y="258" text-anchor="middle" fill="#4A5D23" font-weight="600">Langfuse</text>
- <text x="840" y="276" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">traces</text>
- </g>
- <path d="M660 152v60" stroke="#FF9900" stroke-width="2" stroke-dasharray="6 4"/>
- <path d="M660 212v18" stroke="#FF9900" stroke-width="2"/>
- <path d="M135 230v-40M315 230v-40M495 230v-40M675 230v-40M840 230v-40" stroke="#4A5D23" stroke-opacity=".35" stroke-width="1.5"/>
- <text x="480" y="360" text-anchor="middle" fill="#E3256B" font-size="13" font-weight="700">Live: dwa21x631l5fr.cloudfront.net</text>
- <text x="480" y="382" text-anchor="middle" fill="#4A5D23" fill-opacity=".75" font-size="12">Telegram webhook &#8594; /api/telegram &#183; OAuth &#8594; /calendar/callback</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFE4E1"/><stop offset="1" stop-color="#FFF5EE"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity=".12"/></filter>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#E3256B"/></marker>
+  </defs>
+  <rect width="960" height="560" rx="24" fill="url(#g1)"/>
+  <text x="480" y="36" text-anchor="middle" fill="#4A5D23" font-size="22" font-weight="700">Bloom — AWS production architecture (ap-southeast-2)</text>
+  <g filter="url(#shadow)">
+    <rect x="30" y="58" width="150" height="64" rx="16" fill="#fff" stroke="#E3256B" stroke-width="2"/>
+    <text x="105" y="86" text-anchor="middle" fill="#4A5D23" font-weight="600">Browser</text>
+    <text x="105" y="104" text-anchor="middle" fill="#4A5D23" fill-opacity=".7" font-size="12">Web + Telegram</text>
+    <rect x="210" y="58" width="150" height="64" rx="16" fill="#fff" stroke="#232F3E" stroke-width="2"/>
+    <text x="285" y="86" text-anchor="middle" fill="#232F3E" font-weight="600">CloudFront</text>
+    <text x="285" y="104" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">HTTPS</text>
+    <rect x="390" y="58" width="150" height="64" rx="16" fill="#fff" stroke="#232F3E" stroke-width="2"/>
+    <text x="465" y="86" text-anchor="middle" fill="#232F3E" font-weight="600">ALB</text>
+    <text x="465" y="104" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">:8080 /health</text>
+    <rect x="570" y="58" width="170" height="64" rx="16" fill="#fff" stroke="#FF9900" stroke-width="2"/>
+    <text x="655" y="86" text-anchor="middle" fill="#232F3E" font-weight="600">ECS Fargate</text>
+    <text x="655" y="104" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">Gunicorn + Flask</text>
+    <rect x="770" y="58" width="160" height="64" rx="16" fill="#fff" stroke="#FF9900" stroke-width="2"/>
+    <text x="850" y="86" text-anchor="middle" fill="#232F3E" font-weight="600">ECR</text>
+    <text x="850" y="104" text-anchor="middle" fill="#232F3E" fill-opacity=".7" font-size="12">bloom:latest</text>
+  </g>
+  <path d="M180 90h30M360 90h30M540 90h30M740 90h30" stroke="#E3256B" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="480" y="160" text-anchor="middle" fill="#4A5D23" font-size="14" font-weight="600">Services called from the Fargate task</text>
+  <g filter="url(#shadow)" font-size="13">
+    <rect x="24" y="180" width="176" height="70" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="112" y="208" text-anchor="middle" fill="#4A5D23" font-weight="600">Neon Postgres</text>
+    <text x="112" y="228" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">users, chats, missions</text>
+    <rect x="212" y="180" width="176" height="70" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="300" y="208" text-anchor="middle" fill="#4A5D23" font-weight="600">Pinecone</text>
+    <text x="300" y="228" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">Jina 1024-d RAG</text>
+    <rect x="400" y="180" width="176" height="70" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="488" y="208" text-anchor="middle" fill="#4A5D23" font-weight="600">OpenRouter / Groq</text>
+    <text x="488" y="228" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">LLM + Whisper</text>
+    <rect x="588" y="180" width="176" height="70" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="676" y="208" text-anchor="middle" fill="#4A5D23" font-weight="600">Google APIs</text>
+    <text x="676" y="228" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">Maps, Calendar</text>
+    <rect x="776" y="180" width="160" height="70" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="856" y="208" text-anchor="middle" fill="#4A5D23" font-weight="600">Langfuse</text>
+    <text x="856" y="228" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">turn + mission traces</text>
+  </g>
+  <g filter="url(#shadow)" font-size="13">
+    <rect x="24" y="270" width="176" height="78" rx="12" fill="#fff" stroke="#FF9900" stroke-width="2"/>
+    <text x="112" y="300" text-anchor="middle" fill="#232F3E" font-weight="700">Bedrock</text>
+    <text x="112" y="318" text-anchor="middle" fill="#232F3E" fill-opacity=".75" font-size="11">InvokeGuardrailChecks</text>
+    <text x="112" y="334" text-anchor="middle" fill="#232F3E" fill-opacity=".6" font-size="11">detect-only, no resource</text>
+    <rect x="212" y="270" width="176" height="78" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="300" y="302" text-anchor="middle" fill="#4A5D23" font-weight="600">PubMed</text>
+    <text x="300" y="322" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">NCBI title search</text>
+    <rect x="400" y="270" width="176" height="78" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="488" y="302" text-anchor="middle" fill="#4A5D23" font-weight="600">Open-Meteo</text>
+    <text x="488" y="322" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">AQI for symptoms</text>
+    <rect x="588" y="270" width="176" height="78" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="676" y="302" text-anchor="middle" fill="#4A5D23" font-weight="600">MCP tools</text>
+    <text x="676" y="322" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">drugs, care, profile</text>
+    <rect x="776" y="270" width="160" height="78" rx="12" fill="#fff" stroke="#4A5D23" stroke-opacity=".3"/>
+    <text x="856" y="302" text-anchor="middle" fill="#4A5D23" font-weight="600">Missions</text>
+    <text x="856" y="322" text-anchor="middle" fill="#4A5D23" fill-opacity=".65" font-size="11">visit, meds, huddles</text>
+  </g>
+  <path d="M655 122v40" stroke="#FF9900" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="480" y="390" text-anchor="middle" fill="#E3256B" font-size="13" font-weight="700">Live: dwa21x631l5fr.cloudfront.net</text>
+  <text x="480" y="414" text-anchor="middle" fill="#4A5D23" fill-opacity=".8" font-size="12">Telegram webhook → /api/telegram · OAuth → /calendar/callback</text>
+  <text x="480" y="438" text-anchor="middle" fill="#4A5D23" fill-opacity=".8" font-size="12">Guardrail checks run in the app before OpenRouter and Groq see the text</text>
+  <text x="480" y="500" text-anchor="middle" fill="#4A5D23" fill-opacity=".55" font-size="11">Optional: Upstash Redis rate limits · S3 or R2 uploads</text>
 </svg>

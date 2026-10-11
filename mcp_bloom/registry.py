@@ -8,12 +8,38 @@ import logging
 from mcp_bloom.sources.aqi import get_aqi
 from mcp_bloom.sources.notices import list_safety_notices
 from mcp_bloom.sources.pubmed import search_pubmed
+from orchestration.guardrails import screen_context, screen_user_text
 from orchestration.safety import emergency_answer, is_emergency
 from tools.drugs import catalog_names, find_monograph, interaction_notes
 from tools.places import search_nearby
 from tools.rag import search_knowledge
 
 logger = logging.getLogger(__name__)
+
+ALLOWED_TOOLS = frozenset(
+    {
+        "bloom_safety_screen",
+        "bloom_lookup_drug",
+        "bloom_search_medical_knowledge",
+        "bloom_find_nearby_care",
+        "bloom_list_safety_notices",
+        "bloom_get_aqi",
+        "bloom_search_pubmed",
+        "bloom_get_my_meds",
+        "bloom_get_profile",
+    }
+)
+
+
+def guard_query(text: str) -> tuple[dict | None, str]:
+    """Screen a tool argument. On block, return an error payload and an empty query."""
+    decision = screen_user_text(text or "")
+    if decision.blocked:
+        return (
+            {"blocked": True, "answer": decision.text, "risk_level": "blocked"},
+            "",
+        )
+    return None, decision.text
 
 
 def safety_screen(text: str) -> dict:
@@ -27,6 +53,9 @@ def safety_screen(text: str) -> dict:
 
 
 def lookup_drug(query: str) -> dict:
+    blocked, query = guard_query(query)
+    if blocked:
+        return blocked
     from models import DrugMonograph
 
     rows = DrugMonograph.query.all()
@@ -46,7 +75,10 @@ def lookup_drug(query: str) -> dict:
     }
 
 
-def search_medical_knowledge(query: str) -> list[dict]:
+def search_medical_knowledge(query: str) -> list[dict] | dict:
+    blocked, query = guard_query(query)
+    if blocked:
+        return blocked
     return search_knowledge(query)
 
 
@@ -103,5 +135,11 @@ def interaction_scan(asked_name: str, user_id: int | None) -> list[str]:
     return notes
 
 
-def tool_json(value) -> str:
-    return json.dumps(value, default=str)[:8000]
+def tool_json(value, tool_name: str = "") -> str:
+    if tool_name and tool_name not in ALLOWED_TOOLS:
+        return json.dumps({"error": "tool_not_allowed", "tool": tool_name})
+    raw = json.dumps(value, default=str)[:8000]
+    decision = screen_context(raw)
+    if decision.blocked:
+        return json.dumps({"error": "tool_output_blocked", "tool": tool_name})
+    return decision.text[:8000]

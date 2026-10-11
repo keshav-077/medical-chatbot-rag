@@ -363,13 +363,16 @@ def chat():
         # Update conversation timestamp and title if it's the first message
         conversation.updated_at = datetime.now(timezone.utc)
         if conversation.title == "New Conversation" and len(msg.strip()) > 0:
-            # Use first 50 characters of user message as title
-            conversation.title = msg.strip()[:50] + (
-                "..." if len(msg.strip()) > 50 else ""
-            )
+            if result.get("intent") == "guardrail" or result.get("risk_level") == "blocked":
+                conversation.title = "Blocked request"
+            else:
+                from orchestration.guardrails import preview_for_log
+
+                shown = preview_for_log(msg.strip())
+                conversation.title = shown[:50] + ("..." if len(shown) > 50 else "")
 
         db.session.commit()
-        if result.get("intent") != "emergency":
+        if result.get("intent") not in {"emergency", "guardrail"} and result.get("risk_level") != "blocked":
             from missions.enqueue import maybe_enqueue_after_turn
 
             maybe_enqueue_after_turn(current_user.id, msg, result)
@@ -387,6 +390,7 @@ def chat():
                 "trace_id": result.get("trace_id"),
                 "message_id": assistant_message.id,
                 "appointment": result.get("appointment") or {},
+                "guardrail_action": result.get("guardrail_action") or "allow",
             }
         )
     except Exception as e:

@@ -29,7 +29,7 @@ def symptom_node(state: dict) -> dict:
         "Keep the reply under 120 words.\n\n"
         f"Context:\n{context}"
     )
-    answer = complete(system, question)
+    answer = complete(system, question, context=context)
     if not answer:
         answer = (
             "I can help you prepare notes for a clinician, and I cannot diagnose this.\n"

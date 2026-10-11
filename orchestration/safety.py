@@ -19,6 +19,9 @@ EMERGENCY_PATTERNS = [
     r"face droop",
     r"slurred speech",
     r"suicid",
+    r"self[- ]harm",
+    r"hurt myself",
+    r"end my life",
     r"kill myself",
     r"want to die",
     r"severe bleeding",
@@ -60,9 +63,28 @@ def safety_node(state: dict) -> dict:
             "citations": [],
             "disclaimer": "Emergency guidance only. Call local emergency services.",
             "map_payload": {},
+            "guardrail_action": "allow",
         }
-    return {
+    from orchestration.guardrails import screen_user_text
+
+    decision = screen_user_text(message)
+    if decision.blocked:
+        return {
+            "skip_rag": True,
+            "intent": "guardrail",
+            "risk_level": "blocked",
+            "answer": decision.text,
+            "citations": [],
+            "disclaimer": DISCLAIMER,
+            "map_payload": {},
+            "guardrail_action": "block",
+        }
+    update = {
         "skip_rag": False,
         "risk_level": state.get("risk_level") or "info",
         "disclaimer": DISCLAIMER,
+        "guardrail_action": decision.action,
     }
+    if decision.text != message:
+        update["message"] = decision.text
+    return update

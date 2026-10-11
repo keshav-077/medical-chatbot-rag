@@ -34,6 +34,7 @@
 [![Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599)](https://neon.tech)
 [![Pinecone](https://img.shields.io/badge/Pinecone-vector-000)](https://pinecone.io)
 [![Langfuse](https://img.shields.io/badge/Langfuse-traces-000)](https://langfuse.com)
+[![Bedrock Guardrails](https://img.shields.io/badge/Bedrock-Guardrail_checks-232F3E?logo=amazonaws&logoColor=white)](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails-use-invoke-guardrail-checks.html)
 [![MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 </div>
@@ -62,13 +63,16 @@
 
 | Module | What users get |
 |--------|----------------|
-| **Chat** | Safety triage → LangGraph route → cited RAG answers |
-| **Meds** | India monographs — composition, warnings, interactions, freshness |
+| **Chat** | Emergency screen, then guardrail checks, then a LangGraph route and cited RAG answers |
+| **Guardrails** | Bedrock `InvokeGuardrailChecks` on user text, retrieved context, tool output, and the model reply. Local fallback for prompt attacks and identifier redaction |
+| **Meds** | India monographs — composition, warnings, interactions, PubMed titles, freshness |
 | **Care map** | Hospitals, doctors, pharmacies (Google Maps / Places) |
 | **Labs** | PDF upload → plain-language explanation |
 | **Appointments** | Call script + reminders (assisted, not clinic API booking) |
 | **Voice** | Browser Web Speech + Groq Whisper on uploads |
 | **Telegram** | Same orchestration via webhook |
+| **Missions** | After a turn: visit pack, med card, interaction huddle, lab review, weekly digest |
+| **MCP tools** | In-process FastMCP tools for drugs, library search, care, AQI, PubMed, and profile |
 | **Share / PDF** | 7-day share links + visit PDF (ReportLab) |
 
 ---
@@ -100,6 +104,8 @@ flowchart LR
   ECR -.->|pull on deploy| ECS
 ```
 
+Vector source: [`docs/diagrams/architecture.svg`](docs/diagrams/architecture.svg).
+
 | Hop | Component | Role |
 |-----|-----------|------|
 | 1 | **CloudFront** | TLS termination, CDN in front of the ALB |
@@ -122,6 +128,8 @@ flowchart TB
   APP --> GMAPS[Google Maps / Places<br/>care map]
   APP --> GCAL[Google OAuth<br/>calendar readonly]
   APP --> LF[Langfuse<br/>trace bloom.turn]
+  APP --> BR[Amazon Bedrock<br/>InvokeGuardrailChecks]
+  APP --> LIVE[PubMed + Open-Meteo<br/>titles and AQI]
   APP --> REDIS[(Upstash Redis<br/>optional rate limits)]
   APP --> S3[(S3 / R2<br/>optional file storage)]
 
@@ -136,7 +144,10 @@ flowchart TB
 | **OpenRouter / Groq** | LLM turns in LangGraph nodes; Groq also for Whisper transcription |
 | **Google Places** | Nearby hospitals, doctors, pharmacies on the care map |
 | **Google Calendar OAuth** | Callback **`/calendar/callback`** for reminder scheduling |
-| **Langfuse** | End-to-end **`bloom.turn`** traces (optional OTLP via OpenTelemetry) |
+| **Langfuse** | End-to-end **`bloom.turn`** and **`bloom.mission`** traces (optional OTLP via OpenTelemetry) |
+| **Amazon Bedrock Guardrails** | `InvokeGuardrailChecks` in **ap-southeast-2**. Detect-only scores; the app blocks, redacts, or allows. No guardrail resource to create |
+| **PubMed E-utilities** | Title search on medication answers (`mcp_bloom/sources/pubmed.py`) |
+| **Open-Meteo** | Air quality on respiratory symptom turns (`mcp_bloom/sources/aqi.py`) |
 | **Telegram** | Same orchestration as web via webhook **`/api/telegram`** |
 
 ### Deploy shape (summary)
@@ -159,7 +170,7 @@ Web chat uses **`POST /get`**; Telegram uses **`POST /api/telegram`**. Both call
 
 ```mermaid
 flowchart TD
-  IN([User message]) --> SAFETY[safety_node<br/>emergency patterns, disclaimers]
+  IN([User message]) --> SAFETY[safety_node<br/>emergency, then guardrail checks]
   SAFETY -->|skip_rag| OUT([Fixed safety reply])
   SAFETY -->|continue| ROUTE[route_node<br/>classify_intent + catalog]
   ROUTE --> PICK{intent}
@@ -181,20 +192,42 @@ flowchart TD
   VER --> END([JSON response])
 ```
 
+Vector source: [`docs/diagrams/system-design.svg`](docs/diagrams/system-design.svg).
+
 | Stage | Node | What it does |
 |-------|------|----------------|
-| **1. Safety** | `safety_node` | Regex / rules for emergencies; may set **`skip_rag`** and return early with helpline text |
+| **1. Safety** | `safety_node` | Emergency regex first (crisis text skips the guardrail). Then Amazon Bedrock **`InvokeGuardrailChecks`** for prompt attack, content, and sensitive information, with a local fallback. May set **`skip_rag`**. |
 | **2. Route** | `route_node` | **`classify_intent()`** or forced intent from client; uses drug catalog names when relevant |
 | **3. Specialist** | One of six nodes | Retrieves context (Pinecone, DB, Places, PDF text), calls LLM with node-specific prompts |
-| **4. Verify** | `verify_node` | Citation checks, dose guardrails, freshness badges; normalizes payload |
+| **4. Verify** | `verify_node` | Citation checks, dose guardrails, output guardrail check, freshness badges; normalizes payload |
+
+Guardrail checkpoints around the model call. Emergency text never reaches these checks.
+
+```mermaid
+flowchart LR
+  USER[User message] --> INP[Input checks<br/>attack, content, PII]
+  CTX[Retrieved context<br/>and tool output] --> MID[Context checks<br/>attack and PII]
+  INP --> LLM[OpenRouter / Groq]
+  MID --> LLM
+  LLM --> OUTP[Output checks<br/>content and PII]
+  OUTP --> REPLY[Reply or refusal]
+```
+
+| Check | Categories | App action |
+|-------|------------|------------|
+| **Prompt attack** | Jailbreak, prompt injection, prompt leakage | Block at score **0.6** |
+| **Content** | Hate, insults, sexual, violence, misconduct | Block at **0.8**. On input, violence and insults stay open so injury descriptions are not dropped. Context and tool text are not content-filtered |
+| **Sensitive information** | Email, phone, cards, keys, passwords, government and bank ids, plus local Aadhaar groups | Redact at confidence **0.6** before the third-party model call |
+
+Bedrock is used when `BEDROCK_GUARDRAILS_ENABLED=1` or when the task has AWS credentials. Otherwise local patterns still block obvious prompt attacks and redact identifiers. Content scores require Bedrock.
 
 ### Specialist intents
 
 | Intent | Typical triggers | Main data sources |
 |--------|------------------|-------------------|
 | **general** | Open health questions | Pinecone RAG, conversation history |
-| **medication** | Drug names, doses, interactions | `DrugMonograph`, seed catalog, RAG |
-| **symptom** | “I feel…”, symptom lists | RAG + safety-aware prompting |
+| **medication** | Drug names, doses, interactions | `DrugMonograph`, seed catalog, RAG, PubMed, safety notices |
+| **symptom** | “I feel…”, symptom lists | RAG, Open-Meteo AQI for respiratory symptoms |
 | **lab** | “Explain my report” | User’s uploaded PDF text (`UploadedDocument` / lab flow) |
 | **care** | “Hospital near me” | Google Places, favorites, **`map_payload`** for UI |
 | **appointment** | Booking help | Templates + calendar context (assisted, not clinic API) |
@@ -210,7 +243,8 @@ After **`verify`**, the API returns JSON consumed by the web UI and Telegram for
 | **`risk_level`** | Triage hint from safety + verify |
 | **`map_payload`** | Optional care-map markers and place details |
 | **`trace_id`** | Langfuse / debug correlation id |
-| **`intent`** | Routed specialist (for analytics and UI chips) |
+| **`intent`** | Routed specialist (for analytics and UI chips). **`guardrail`** when the input check blocks the turn |
+| **`guardrail_action`** | `allow`, `redact`, or `block` |
 
 Observability: **`start_trace("bloom.turn", …)`** wraps each invocation when Langfuse is configured.
 
@@ -275,8 +309,33 @@ Everything used in this repository, grouped by layer.
 | **LangChain Pinecone** | `tools/rag.py`, `store_index.py` |
 | **LangChain text splitters** | `store_index.py` indexing |
 | **LangChain HuggingFace** | listed in requirements; **not used for live embeddings** (Jina-only 1024-d) |
-| **LCEL-style chains** | retriever + prompt patterns in graphs |
-| **TypedDict graph state** | `orchestration/state.py` |
+| **TypedDict graph state** | `orchestration/state.py` (`guardrail_action` included) |
+| **Amazon Bedrock Guardrails** | `orchestration/guardrails.py` — `InvokeGuardrailChecks` via **boto3** |
+| **FastMCP** | `mcp` package, `mcp_bloom/server.py` |
+| **CrewAI / AutoGen** | optional mission runners; sequential `complete()` when those packages are absent |
+
+### Agentic safety
+
+| Piece | Where |
+|-------|--------|
+| **Emergency regex** | `orchestration/safety.py` — runs before any guardrail check |
+| **InvokeGuardrailChecks** | User input, retrieved context, tool arguments and output, model reply |
+| **Local fallback** | Prompt-attack phrases, email, phone, Aadhaar groups, card numbers (Luhn), cloud keys |
+| **Dose strip** | `verify_node` removes an invented “take N mg” when that dose is not in retrieved context |
+| **Lab huddle review** | `missions/huddles/safety_review.py` rejects diagnosis, dosing, and start/stop language |
+| **IAM** | `bedrock:InvokeGuardrailChecks` on `*` in **ap-southeast-2**. The API is resourceless |
+
+### Missions and tools
+
+| Piece | Where |
+|-------|--------|
+| **Mission queue** | `Mission` model, `missions/enqueue.py`, `missions/runner.py` |
+| **Visit pack, med card, digest** | `missions/crews/` |
+| **Lab review, interaction huddle** | `missions/huddles/` |
+| **MCP tool registry** | `mcp_bloom/registry.py` — same functions the graph calls |
+| **PubMed** | `mcp_bloom/sources/pubmed.py` |
+| **Open-Meteo AQI** | `mcp_bloom/sources/aqi.py` |
+| **India safety notices** | `mcp_bloom/sources/notices.py`, `Data/medicines/safety_notices.json` |
 
 ### Embeddings & vector search
 
@@ -307,6 +366,9 @@ Everything used in this repository, grouped by layer.
 | **OpenTelemetry** | Flask instrumentation + OTLP HTTP — `services/telemetry.py` |
 | **Upstash Redis** (optional) | `RATELIMIT_STORAGE_URI` / `UPSTASH_REDIS_URL` |
 | **Amazon S3 / S3-compatible (R2)** (optional) | `services/storage.py` via **boto3** |
+| **Amazon Bedrock Runtime** | `InvokeGuardrailChecks` in `orchestration/guardrails.py` |
+| **NCBI E-utilities** | PubMed title search |
+| **Open-Meteo Air Quality API** | Respiratory symptom context |
 
 ### Documents & ingestion
 
@@ -321,7 +383,7 @@ Everything used in this repository, grouped by layer.
 
 ### Data models (Postgres / SQLite)
 
-`User`, `Conversation`, `Message` (citations, risk, trace, intent), `UserHealthProfile`, `UserMedication`, `DrugMonograph`, `UserFavoritePlace`, `UploadedDocument`, `LabResult`, `AppointmentRequest`, `IngestJob`, `Feedback`, `ShareToken`, `Notification` — `models.py`
+`User`, `Conversation`, `Message` (citations, risk, trace, intent), `UserHealthProfile`, `UserMedication`, `DrugMonograph`, `UserFavoritePlace`, `UploadedDocument`, `LabResult`, `AppointmentRequest`, `IngestJob`, `Feedback`, `ShareToken`, `Notification`, `Mission` — `models.py`
 
 ### Observability & ops
 
@@ -342,6 +404,7 @@ Everything used in this repository, grouped by layer.
 | **Amazon ECS Fargate** | cluster `bloom`, service `bloom-web` |
 | **Application Load Balancer** | public HTTP → targets :8080 |
 | **Amazon CloudFront** | `dwa21x631l5fr.cloudfront.net` |
+| **Amazon Bedrock** | Guardrail checks only (`bedrock:InvokeGuardrailChecks`). No guardrail resource |
 | **AWS IAM** | `bloom-ecs-execution`, `bloom-apprunner-ecr` roles |
 | **VPC / public subnets / security groups** | ECS tasks |
 | **PowerShell deploy script** | `deploy/aws.ps1` |
@@ -352,7 +415,8 @@ Everything used in this repository, grouped by layer.
 |------|--------|
 | **Docker** | `Dockerfile` (python:3.11-slim-bookworm, non-root user) |
 | **python-dotenv** | `.env` loading |
-| **requests** | HTTP clients (voice, places, telegram setup) |
+| **requests** | HTTP clients (voice, places, PubMed, Open-Meteo, telegram setup) |
+| **boto3 ≥ 1.43** | S3 uploads and Bedrock `InvokeGuardrailChecks` |
 
 ### Alternate / legacy deploy path
 
@@ -364,7 +428,7 @@ Everything used in this repository, grouped by layer.
 
 | Tech | Where |
 |------|--------|
-| **unittest** | `tests/evals/test_platform.py` |
+| **unittest** | `tests/evals/test_platform.py`, `tests/evals/test_guardrails.py` |
 | **Eval cases JSON** | `tests/evals/cases.json` |
 
 ## Run locally
@@ -389,6 +453,8 @@ pytest tests/evals/test_platform.py
 .\deploy\aws.ps1
 aws ecs update-service --cluster bloom --service bloom-web --force-new-deployment --region ap-southeast-2
 ```
+
+On the ECS task, set `BEDROCK_GUARDRAILS_ENABLED=1` and `BEDROCK_GUARDRAILS_REGION=ap-southeast-2`. The task role needs `bedrock:InvokeGuardrailChecks` on `*`. Without that permission the app keeps the local prompt-attack and redaction checks and logs that Bedrock was skipped.
 
 ---
 

@@ -21,3 +21,4 @@ class BloomState(TypedDict, total=False):
     appointment: dict
     request_id: str
     extra: dict[str, Any]
+    guardrail_action: str

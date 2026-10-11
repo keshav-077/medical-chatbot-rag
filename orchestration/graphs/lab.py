@@ -48,7 +48,7 @@ def lab_node(state: dict) -> dict:
         "End with three questions to ask a doctor. Under 180 words.\n\n"
         f"Report:\n{lab_text[:6000]}"
     )
-    answer = complete(system, question)
+    answer = complete(system, question, context=lab_text[:6000])
     if not answer:
         listed = ", ".join(f"{row['name']} {row['value']} {row['unit']}" for row in rows[:8])
         answer = (

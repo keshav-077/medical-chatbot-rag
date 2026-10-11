@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 os.environ.setdefault("FLASK_ENV", "development")
 os.environ["BLOOM_INLINE_MISSIONS"] = "0"
 os.environ["BLOOM_FORCE_DIGEST"] = "0"
+os.environ["BEDROCK_GUARDRAILS_ENABLED"] = "0"
 
 from orchestration.graphs.common import verify_node
 from orchestration.intent import classify_intent

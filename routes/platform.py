@@ -492,7 +492,11 @@ def telegram_webhook():
         if coords:
             extra["lat"], extra["lng"] = coords
         result = run_turn(text, user_id=user_id, extra=extra)
-        if user_id and result.get("intent") != "emergency":
+        if (
+            user_id
+            and result.get("intent") not in {"emergency", "guardrail"}
+            and result.get("risk_level") != "blocked"
+        ):
             from missions.enqueue import maybe_enqueue_after_turn
 
             maybe_enqueue_after_turn(user_id, text, result)

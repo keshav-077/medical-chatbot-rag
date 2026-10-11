@@ -11,8 +11,9 @@ from orchestration.graphs.common import general_node, verify_node
 from orchestration.graphs.lab import lab_node
 from orchestration.graphs.medication import medication_node
 from orchestration.graphs.symptom import symptom_node
+from orchestration.guardrails import preview_for_log
 from orchestration.intent import classify_intent
-from orchestration.safety import safety_node
+from orchestration.safety import is_emergency, safety_node
 from orchestration.state import BloomState
 from services.observability import start_trace
 from tools.drugs import catalog_names
@@ -85,10 +86,13 @@ def get_graph():
 
 
 def run_turn(message: str, user_id: int | None = None, extra: dict | None = None, request_id: str = "") -> dict:
+    logged = message or ""
+    if logged and not is_emergency(logged):
+        logged = preview_for_log(logged)
     trace = start_trace(
         "bloom.turn",
         user_id,
-        {"message": (message or "")[:500]},
+        {"message": logged[:500]},
         request_id=request_id,
     )
     extra = dict(extra or {})

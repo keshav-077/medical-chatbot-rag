@@ -14,7 +14,7 @@ def general_node(state: dict) -> dict:
     citations = search_knowledge(question)
     context = "\n\n".join(item["excerpt"] for item in citations) or "No retrieved context."
     system = system_prompt.replace("{context}", context)
-    answer = complete(system, question)
+    answer = complete(system, question, context=context)
     if not answer:
         answer = (
             "I could not reach a language model. Add OPENROUTER_API_KEY or GROQ_API_KEY. "
@@ -48,13 +48,45 @@ def verify_node(state: dict) -> dict:
             answer += "\n\nInteraction notes are not exhaustive."
         if "pharmacist" not in disclaimer.lower():
             disclaimer += " Confirm medicines with a pharmacist."
-    if not state.get("citations") and state.get("intent") in ("general", "medication", "symptom"):
+    from orchestration.guardrails import (
+        CONTEXT_BLOCKED_REPLY,
+        OUTPUT_BLOCKED_REPLY,
+        USER_BLOCKED_REPLY,
+        screen_output,
+    )
+
+    upstream_block = any(
+        reply in (state.get("answer") or "")
+        for reply in (USER_BLOCKED_REPLY, CONTEXT_BLOCKED_REPLY, OUTPUT_BLOCKED_REPLY)
+    )
+    if (
+        not upstream_block
+        and not state.get("citations")
+        and state.get("intent") in ("general", "medication", "symptom")
+    ):
         if "no library excerpt" not in answer.lower():
             answer += "\n\nNo library excerpt was retrieved for part of this reply."
+    screened = screen_output(answer)
+    prior = state.get("guardrail_action") or "allow"
+    if screened.blocked or upstream_block:
+        if screened.blocked:
+            answer = screened.text
+        action = "block"
+        risk = "blocked"
+        citations_cleared = True
+    else:
+        answer = screened.text
+        action = "redact" if screened.action == "redact" or prior == "redact" else "allow"
+        risk = state.get("risk_level") or "info"
+        citations_cleared = False
     if disclaimer not in answer:
         answer = answer.rstrip() + "\n\n" + disclaimer
-    return {
+    update = {
         "answer": answer,
         "disclaimer": disclaimer,
-        "risk_level": state.get("risk_level") or "info",
+        "risk_level": risk,
+        "guardrail_action": action,
     }
+    if citations_cleared:
+        update["citations"] = []
+    return update

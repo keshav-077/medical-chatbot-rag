@@ -1,14 +1,13 @@
 <div align="center">
 
-<table>
-<tr>
-<td width="88" valign="middle"><img src="docs/brand/bloom-icon.png" width="56" alt="bloom mark"></td>
-<td align="left" valign="middle">
-  <h1 style="margin:0;font-size:2.4em;line-height:1.1;">bloom</h1>
-  <p style="margin:4px 0 0;font-size:0.75em;letter-spacing:0.14em;text-transform:uppercase;opacity:0.75;">Organic Care</p>
-</td>
-</tr>
-</table>
+<!-- Same mark as templates/partials/bloom_wordmark.html on the live login page -->
+<p>
+  <img src="docs/brand/bloom-logo.svg" width="48" height="48" alt="bloom" style="vertical-align:middle;margin-right:12px;">
+  <span style="display:inline-block;vertical-align:middle;text-align:left;">
+    <strong style="font-size:1.75rem;display:block;line-height:1.1;">bloom</strong>
+    <span style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0.72;">Organic Care</span>
+  </span>
+</p>
 
 <h3><em>Listen first. Cite always. Care nearby.</em></h3>
 <p>India-first health companion on the web and Telegram — empathic chat, medicine context, maps, labs, and voice.</p>
